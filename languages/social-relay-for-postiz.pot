@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-10T11:14:41+00:00\n"
+"POT-Creation-Date: 2026-11-10T11:42:19+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -201,7 +201,7 @@ msgstr ""
 #: src/Admin/DashboardWidget.php:99
 #: src/Admin/LogPage.php:49
 #: src/Admin/LogPage.php:50
-#: src/Admin/LogPage.php:81
+#: src/Admin/LogPage.php:84
 #: build/editor-panel.js:4
 #: build/log.js:1
 msgid "Log"
@@ -215,6 +215,18 @@ msgstr ""
 
 #: src/Admin/DashboardWidget.php:102
 msgid "Open Postiz"
+msgstr ""
+
+#: src/Admin/Privacy.php:36
+msgid "Social Relay for Postiz does not collect data from your visitors. It only acts when you publish content."
+msgstr ""
+
+#: src/Admin/Privacy.php:37
+msgid "When we publish a post, the message we wrote for social networks, the link to the post and its featured image address are sent to our Postiz instance, which publishes them on the social networks we connected. Postiz then makes that content public on those networks."
+msgstr ""
+
+#: src/Admin/Privacy.php:38
+msgid "If we use Postiz Cloud, that information is processed by Postiz according to its privacy policy: https://postiz.com/privacy"
 msgstr ""
 
 #: src/Admin/SettingsPage.php:45
@@ -644,6 +656,18 @@ msgid "Create as draft in Postiz"
 msgstr ""
 
 #: build/settings.js:1
+msgid "Delete all plugin data when the plugin is deleted"
+msgstr ""
+
+#: build/settings.js:1
+msgid "Removes the settings, the log, the record of what was sent and the per-post options. Nothing is deleted in Postiz."
+msgstr ""
+
+#: build/settings.js:1
+msgid "Forced by SOCIALRELAYCVI_DELETE_DATA in wp-config.php."
+msgstr ""
+
+#: build/settings.js:1
 msgid "Read from the POSTIZ_API_KEY environment variable."
 msgstr ""
 
@@ -857,4 +881,8 @@ msgstr ""
 
 #: build/settings.js:6
 msgid "Webhook"
+msgstr ""
+
+#: build/settings.js:6
+msgid "Advanced"
 msgstr ""

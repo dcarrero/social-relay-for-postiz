@@ -73,7 +73,11 @@ bin/build-release.sh            # dist/social-relay-for-postiz.zip, ready to ins
 git tag -a v1.0.0 -m "1.0.0" && git push --tags   # CI builds the zip and publishes the release
 ```
 
-The release workflow deploys to wordpress.org SVN when the repository has the `SVN_USERNAME` and `SVN_PASSWORD` secrets (after the plugin is approved). Banner, icon and screenshots go in `.wordpress-org/`.
+The release workflow deploys to wordpress.org SVN when the repository has the `SVN_USERNAME` and `SVN_PASSWORD` secrets (after the plugin is approved). Banner, icon, screenshots and the Live Preview blueprint live in `.wordpress-org/` (they go to the SVN `assets/` folder, not into the plugin zip).
+
+## Brand
+
+Social Relay has its own identity (a node passing the baton and fanning out into signals) in Relay Violet `#5B3DF5`, Signal Coral `#FF6A3D` and Ink `#14122B`, with Space Grotesk and Inter. It is a product by [Color Vivo](https://colorvivo.com).
 
 ## Translations
 

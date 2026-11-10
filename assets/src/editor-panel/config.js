@@ -21,6 +21,16 @@ export const channelsById = Object.fromEntries(
 	( config?.channels || [] ).map( ( channel ) => [ channel.id, channel ] )
 );
 
+/**
+ * "Name · network", so channels with the same name on different networks can be told apart.
+ *
+ * @param {Object} channel Channel.
+ * @return {string} Label.
+ */
+export function channelLabel( channel ) {
+	return channel ? `${ channel.name } · ${ channel.identifier }` : '';
+}
+
 export const STATUS_COLORS = {
 	queued: '#3858e9',
 	published: '#007a1f',

@@ -1,7 +1,14 @@
 import { PluginPrePublishPanel } from '@wordpress/editor';
 import { __, _n, sprintf } from '@wordpress/i18n';
 
-import { channelsById, config, ICON, META, modeLabel } from '../config';
+import {
+	channelLabel,
+	channelsById,
+	config,
+	ICON,
+	META,
+	modeLabel,
+} from '../config';
 import { effectiveChannels, usePostMeta } from '../hooks';
 
 /**
@@ -18,7 +25,7 @@ export default function PrePublish() {
 
 	const enabled = meta[ META.enabled ] !== false;
 	const names = effectiveChannels( meta )
-		.map( ( id ) => channelsById[ id ]?.name )
+		.map( ( id ) => channelLabel( channelsById[ id ] ) )
 		.filter( Boolean );
 
 	return (

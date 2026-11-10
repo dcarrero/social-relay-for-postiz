@@ -28,6 +28,11 @@ use WP_Term;
 final class AdminController implements Module {
 
 	/**
+	 * Option read by uninstall.php.
+	 */
+	public const OPTION_DELETE_DATA = 'socialrelaycvi_delete_data_on_uninstall';
+
+	/**
 	 * Constructor.
 	 *
 	 * @param Plugin $plugin Plugin instance.
@@ -88,6 +93,22 @@ final class AdminController implements Module {
 				'args'                => array(
 					'profiles' => array(
 						'type'     => 'object',
+						'required' => true,
+					),
+				),
+			)
+		);
+
+		register_rest_route(
+			$ns,
+			'/admin/advanced',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'save_advanced' ),
+				'permission_callback' => $admin,
+				'args'                => array(
+					'delete_on_uninstall' => array(
+						'type'     => 'boolean',
 						'required' => true,
 					),
 				),
@@ -214,6 +235,17 @@ final class AdminController implements Module {
 	}
 
 	/**
+	 * POST /admin/advanced — options that are not part of a profile.
+	 *
+	 * @param WP_REST_Request<array<string, mixed>> $request Request.
+	 */
+	public function save_advanced( WP_REST_Request $request ): WP_REST_Response {
+		update_option( self::OPTION_DELETE_DATA, (bool) $request['delete_on_uninstall'], false );
+
+		return new WP_REST_Response( $this->settings_payload() );
+	}
+
+	/**
 	 * POST /admin/webhook/regenerate
 	 */
 	public function regenerate_webhook(): WP_REST_Response {
@@ -313,6 +345,10 @@ final class AdminController implements Module {
 				'masked_key'   => $connection->masked_key(),
 			),
 			'webhook'       => $this->webhook_payload(),
+			'advanced'      => array(
+				'delete_on_uninstall' => (bool) get_option( self::OPTION_DELETE_DATA, false ),
+				'delete_constant'     => defined( 'SOCIALRELAYCVI_DELETE_DATA' ) && SOCIALRELAYCVI_DELETE_DATA,
+			),
 			'channels'      => $channels,
 			'channelsError' => $error,
 			'postTypes'     => $this->post_types(),

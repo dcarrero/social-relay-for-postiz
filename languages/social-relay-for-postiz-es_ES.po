@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-11-10T10:13:03+00:00\n"
-"PO-Revision-Date: 2026-11-10T11:14:41+00:00\n"
+"PO-Revision-Date: 2026-11-10T11:42:20+00:00\n"
 "Language: es_ES\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -187,7 +187,7 @@ msgid "Nothing scheduled."
 msgstr "No hay nada programado."
 
 #: src/Admin/DashboardWidget.php:99 src/Admin/LogPage.php:49
-#: src/Admin/LogPage.php:50 src/Admin/LogPage.php:81 build/editor-panel.js:4
+#: src/Admin/LogPage.php:50 src/Admin/LogPage.php:84 build/editor-panel.js:4
 #: build/log.js:1
 msgid "Log"
 msgstr "Registro"
@@ -200,6 +200,18 @@ msgstr "Ajustes"
 #: src/Admin/DashboardWidget.php:102
 msgid "Open Postiz"
 msgstr "Abrir Postiz"
+
+#: src/Admin/Privacy.php:36
+msgid "Social Relay for Postiz does not collect data from your visitors. It only acts when you publish content."
+msgstr "Social Relay for Postiz no recoge datos de tus visitantes. Solo actúa cuando publicas contenido."
+
+#: src/Admin/Privacy.php:37
+msgid "When we publish a post, the message we wrote for social networks, the link to the post and its featured image address are sent to our Postiz instance, which publishes them on the social networks we connected. Postiz then makes that content public on those networks."
+msgstr "Cuando publicamos una entrada, el mensaje que hemos escrito para las redes sociales, el enlace a la entrada y la dirección de su imagen destacada se envían a nuestra instancia de Postiz, que los publica en las redes sociales que hemos conectado. A partir de ahí, Postiz hace público ese contenido en esas redes."
+
+#: src/Admin/Privacy.php:38
+msgid "If we use Postiz Cloud, that information is processed by Postiz according to its privacy policy: https://postiz.com/privacy"
+msgstr "Si usamos Postiz Cloud, Postiz trata esa información según su política de privacidad: https://postiz.com/privacy"
 
 #: src/Admin/SettingsPage.php:45 build/editor-panel.js:4
 msgid "Social Relay"
@@ -612,6 +624,18 @@ msgid "Create as draft in Postiz"
 msgstr "Crear como borrador en Postiz"
 
 #: build/settings.js:1
+msgid "Delete all plugin data when the plugin is deleted"
+msgstr "Borrar todos los datos del plugin al eliminarlo"
+
+#: build/settings.js:1
+msgid "Removes the settings, the log, the record of what was sent and the per-post options. Nothing is deleted in Postiz."
+msgstr "Elimina los ajustes, el registro, el historial de envíos y las opciones de cada entrada. En Postiz no se borra nada."
+
+#: build/settings.js:1
+msgid "Forced by SOCIALRELAYCVI_DELETE_DATA in wp-config.php."
+msgstr "Forzado por SOCIALRELAYCVI_DELETE_DATA en wp-config.php."
+
+#: build/settings.js:1
 msgid "Read from the POSTIZ_API_KEY environment variable."
 msgstr "Se lee de la variable de entorno POSTIZ_API_KEY."
 
@@ -823,3 +847,7 @@ msgstr "Perfiles de publicación"
 #: build/settings.js:6
 msgid "Webhook"
 msgstr "Webhook"
+
+#: build/settings.js:6
+msgid "Advanced"
+msgstr "Avanzado"

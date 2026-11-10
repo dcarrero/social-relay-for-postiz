@@ -6,6 +6,7 @@ import { Notice, Spinner, TabPanel } from '@wordpress/components';
 import { createRoot, useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
+import AdvancedTab from './components/AdvancedTab';
 import ConnectionTab from './components/ConnectionTab';
 import ProfilesTab from './components/ProfilesTab';
 import WebhookTab from './components/WebhookTab';
@@ -44,6 +45,10 @@ function SettingsApp() {
 			title: __( 'Publishing profiles', 'social-relay-for-postiz' ),
 		},
 		{ name: 'webhook', title: __( 'Webhook', 'social-relay-for-postiz' ) },
+		{
+			name: 'advanced',
+			title: __( 'Advanced', 'social-relay-for-postiz' ),
+		},
 	];
 
 	return (
@@ -64,6 +69,9 @@ function SettingsApp() {
 					}
 					if ( tab.name === 'webhook' ) {
 						return <WebhookTab { ...props } />;
+					}
+					if ( tab.name === 'advanced' ) {
+						return <AdvancedTab { ...props } />;
 					}
 					return <ProfilesTab { ...props } />;
 				} }

@@ -21,8 +21,13 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - Plugin Check: every query uses `%i` for table names and static SQL (no interpolated clauses); `load_plugin_textdomain()` removed, translations come from translate.wordpress.org language packs.
 - Uninstall also removes the webhook options, the per-post channel and text meta, and the cached channel lists.
 
-### Planned for 1.0
-- wordpress.org assets (banner, icon, screenshots) and Live Preview blueprint.
+- "Advanced" settings tab: delete all plugin data when the plugin is deleted (also forced by `SOCIALRELAYCVI_DELETE_DATA`).
+- Suggested privacy policy text (Settings → Privacy → Policy Guide).
+- wordpress.org assets in `.wordpress-org/`: icon, banner and five screenshots, plus a Live Preview blueprint.
+- readme.txt rewritten for wordpress.org: features, FAQ, screenshots, external services, privacy.
+
+### Changed
+- Channel names show their network ("Acme Agency · x") in the pre-publish summary, the editor preview, the per-network list and the log, so channels with the same name on different networks can be told apart.
 
 ## [0.3.1] - 2026-11-10
 

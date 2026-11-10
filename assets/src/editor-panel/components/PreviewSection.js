@@ -37,7 +37,7 @@ function PreviewItem( { item } ) {
 					fontWeight: 600,
 				} }
 			>
-				<span>{ item.name }</span>
+				<span>{ `${ item.name } · ${ item.identifier }` }</span>
 				<span style={ { color: over ? '#cc1818' : '#007a1f' } }>
 					{ item.limit
 						? `${ longest } / ${ item.limit }`

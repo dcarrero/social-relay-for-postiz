@@ -2,7 +2,7 @@ import { Button, TextareaControl } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
-import { channelsById, META } from '../config';
+import { channelLabel, channelsById, META } from '../config';
 import { effectiveChannels } from '../hooks';
 
 /**
@@ -72,7 +72,7 @@ export default function MessageSection( { meta, setMeta } ) {
 							aria-expanded={ isOpen }
 							onClick={ () => setOpen( isOpen ? null : id ) }
 						>
-							{ channelsById[ id ].name + suffix }
+							{ channelLabel( channelsById[ id ] ) + suffix }
 						</Button>
 						{ isOpen && (
 							<TextareaControl
