@@ -62,9 +62,24 @@ final class ConnectionTester {
 			}
 
 			$last_error = $result;
+			$status     = (int) ( ( (array) $result->get_error_data() )['status'] ?? 0 );
+
+			// Every candidate is on the same host: if it cannot be reached, the next path won't be either.
+			if ( 0 === $status ) {
+				$last_error = new WP_Error(
+					'socialrelaycvi_unreachable',
+					sprintf(
+						/* translators: 1: host name, 2: technical error. */
+						__( 'Could not reach %1$s. Check the URL, DNS and firewall. (%2$s)', 'social-relay-for-postiz' ),
+						(string) wp_parse_url( $base, PHP_URL_HOST ),
+						$result->get_error_message()
+					),
+					$result->get_error_data()
+				);
+				break;
+			}
 
 			// A 401/403 means we found the API and the key is wrong: no point trying other paths.
-			$status = (int) ( ( (array) $result->get_error_data() )['status'] ?? 0 );
 			if ( in_array( $status, array( 401, 403 ), true ) ) {
 				break;
 			}
