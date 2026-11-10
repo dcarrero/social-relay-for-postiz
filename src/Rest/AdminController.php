@@ -16,8 +16,10 @@ use SocialRelayCvi\Postiz\EndpointResolver;
 use SocialRelayCvi\Postiz\ProviderRules;
 use SocialRelayCvi\Postiz\RequestCounter;
 use SocialRelayCvi\Profiles\ProfileRepository;
+use SocialRelayCvi\Profiles\ProfileTransfer;
 use SocialRelayCvi\Settings\Connection;
 use SocialRelayCvi\Settings\ConnectionTester;
+use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -94,6 +96,32 @@ final class AdminController implements Module {
 				'permission_callback' => $admin,
 				'args'                => array(
 					'profiles' => array(
+						'type'     => 'object',
+						'required' => true,
+					),
+				),
+			)
+		);
+
+		register_rest_route(
+			$ns,
+			'/admin/profiles/export',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'export_profiles' ),
+				'permission_callback' => $admin,
+			)
+		);
+
+		register_rest_route(
+			$ns,
+			'/admin/profiles/import',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'import_profiles' ),
+				'permission_callback' => $admin,
+				'args'                => array(
+					'data' => array(
 						'type'     => 'object',
 						'required' => true,
 					),
@@ -246,6 +274,67 @@ final class AdminController implements Module {
 		update_option( ProfileRepository::OPTION, $profiles, false );
 
 		return new WP_REST_Response( $this->settings_payload() );
+	}
+
+	/**
+	 * GET /admin/profiles/export — every stored profile, terms by slug.
+	 */
+	public function export_profiles(): WP_REST_Response {
+		return new WP_REST_Response(
+			ProfileTransfer::pack(
+				$this->plugin->profiles->all(),
+				array( ProfileTransfer::class, 'term_ref' ),
+				home_url(),
+				SOCIALRELAYCVI_VERSION
+			)
+		);
+	}
+
+	/**
+	 * POST /admin/profiles/import — replaces the profiles of the post types in the file.
+	 *
+	 * Post types the file does not have keep their profile.
+	 *
+	 * @param WP_REST_Request<array<string, mixed>> $request Request.
+	 */
+	public function import_profiles( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		$result = ProfileTransfer::unpack(
+			$request['data'],
+			array_keys( $this->post_types() ),
+			array( ProfileTransfer::class, 'find_term' )
+		);
+
+		if ( null === $result ) {
+			return new WP_Error( 'socialrelaycvi_bad_import', __( 'This file is not an export of Social Relay profiles.', 'social-relay-for-postiz' ), array( 'status' => 400 ) );
+		}
+
+		$channels = $this->plugin->channels->all();
+		$ids      = is_wp_error( $channels ) ? array() : array_column( $channels, 'identifier', 'id' );
+		$stored   = $this->plugin->profiles->all();
+		$unknown  = array();
+
+		foreach ( $result['profiles'] as $post_type => $profile ) {
+			$profile              = ProfileRepository::sanitize( $profile, $ids );
+			$stored[ $post_type ] = $profile;
+
+			if ( array() !== $ids ) {
+				$unknown = array_merge( $unknown, array_diff( $profile['channels'], array_keys( $ids ) ) );
+			}
+		}
+
+		update_option( ProfileRepository::OPTION, $stored, false );
+
+		return new WP_REST_Response(
+			array(
+				'settings' => $this->settings_payload(),
+				'report'   => array(
+					'imported'         => array_keys( $result['profiles'] ),
+					'skipped_types'    => $result['skipped_types'],
+					'missing_terms'    => $result['missing_terms'],
+					'unknown_channels' => count( array_unique( $unknown ) ),
+				),
+			)
+		);
 	}
 
 	/**

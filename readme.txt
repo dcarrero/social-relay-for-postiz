@@ -26,6 +26,7 @@ Works with self-hosted Postiz and with Postiz Cloud.
 * **Conditions**: share only posts in some categories or tags, never posts in others.
 * **UTM parameters per network**, Postiz link shortener and Postiz tags from your categories.
 * **Featured image** uploaded to Postiz automatically.
+* **Export and import profiles** to copy your setup to another site.
 
 = In the editor =
 

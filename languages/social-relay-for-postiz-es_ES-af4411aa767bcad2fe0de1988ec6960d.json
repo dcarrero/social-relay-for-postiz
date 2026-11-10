@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T17:02:39+00:00",
+    "translation-revision-date": "2026-11-10T19:37:16+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/settings.js",
     "domain": "messages",
@@ -22,6 +22,9 @@
             "(no title)": [
                 "(sin t\u00edtulo)"
             ],
+            "This file is not an export of Social Relay profiles.": [
+                "Este archivo no es una exportaci\u00f3n de perfiles de Social Relay."
+            ],
             "Next free slot in Postiz": [
                 "Siguiente hueco libre en Postiz"
             ],
@@ -42,6 +45,9 @@
             "This post does not match the profile conditions and will not be shared.": [
                 "Esta entrada no cumple las condiciones del perfil y no se compartir\u00e1."
             ],
+            "Cancel": [
+                "Cancelar"
+            ],
             "Message": [
                 "Mensaje"
             ],
@@ -54,11 +60,54 @@
             "Create as draft in Postiz": [
                 "Crear como borrador en Postiz"
             ],
+            "Imported: %s.": [
+                "Importados: %s."
+            ],
+            "Not on this site, skipped: %s.": [
+                "No existen en este sitio, omitidos: %s."
+            ],
+            "Categories or tags this site does not have, left out of the conditions: %s.": [
+                "Categor\u00edas o etiquetas que este sitio no tiene y que se han quitado de las condiciones: %s."
+            ],
+            "%d channel is not in your Postiz instance. Review the profiles to remove it.": [
+                "%d canal no est\u00e1 en tu instancia de Postiz. Revisa los perfiles para quitarlo.",
+                "%d canales no est\u00e1n en tu instancia de Postiz. Revisa los perfiles para quitarlos."
+            ],
+            "Publishing profiles": [
+                "Perfiles de publicaci\u00f3n"
+            ],
+            "Copy your profiles to another site: channels, messages, timing and conditions. The connection to Postiz is not included.": [
+                "Copia tus perfiles a otro sitio: canales, mensajes, cu\u00e1ndo publicar y condiciones. La conexi\u00f3n con Postiz no se incluye."
+            ],
+            "Export profiles": [
+                "Exportar perfiles"
+            ],
+            "Import profiles\u2026": [
+                "Importar perfiles\u2026"
+            ],
+            "Import profiles?": [
+                "\u00bfImportar perfiles?"
+            ],
+            "\u201c%1$s\u201d replaces the profiles of: %2$s.": [
+                "\u00ab%1$s\u00bb sustituye los perfiles de: %2$s."
+            ],
+            "Other post types keep their profile. Posts already shared are not touched.": [
+                "Los dem\u00e1s tipos de contenido conservan su perfil. Las entradas ya compartidas no se tocan."
+            ],
+            "Import": [
+                "Importar"
+            ],
+            "Notifications": [
+                "Avisos"
+            ],
             "Email me when a share fails": [
                 "Avisarme por correo cuando falle un env\u00edo"
             ],
             "A summary to %s, at most once an hour, only for failures that were not retried with success. Admins also see a notice in the dashboard.": [
                 "Un resumen a %s, como mucho una vez por hora, solo de los fallos que no se han reintentado con \u00e9xito. Los administradores tambi\u00e9n ven un aviso en el escritorio."
+            ],
+            "Plugin data": [
+                "Datos del plugin"
             ],
             "Delete all plugin data when the plugin is deleted": [
                 "Borrar todos los datos del plugin al eliminarlo"
@@ -229,9 +278,6 @@
             ],
             "Connection": [
                 "Conexi\u00f3n"
-            ],
-            "Publishing profiles": [
-                "Perfiles de publicaci\u00f3n"
             ],
             "Webhook": [
                 "Webhook"
