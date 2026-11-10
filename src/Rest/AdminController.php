@@ -9,6 +9,7 @@ declare( strict_types=1 );
 
 namespace SocialRelayCvi\Rest;
 
+use SocialRelayCvi\Admin\ErrorAlerts;
 use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
 use SocialRelayCvi\Postiz\EndpointResolver;
@@ -119,8 +120,10 @@ final class AdminController implements Module {
 				'permission_callback' => $admin,
 				'args'                => array(
 					'delete_on_uninstall' => array(
-						'type'     => 'boolean',
-						'required' => true,
+						'type' => 'boolean',
+					),
+					'error_email'         => array(
+						'type' => 'boolean',
 					),
 				),
 			)
@@ -268,7 +271,13 @@ final class AdminController implements Module {
 	 * @param WP_REST_Request<array<string, mixed>> $request Request.
 	 */
 	public function save_advanced( WP_REST_Request $request ): WP_REST_Response {
-		update_option( self::OPTION_DELETE_DATA, (bool) $request['delete_on_uninstall'], false );
+		if ( $request->has_param( 'delete_on_uninstall' ) ) {
+			update_option( self::OPTION_DELETE_DATA, (bool) $request['delete_on_uninstall'], false );
+		}
+
+		if ( $request->has_param( 'error_email' ) ) {
+			update_option( ErrorAlerts::OPTION_EMAIL, (bool) $request['error_email'], false );
+		}
 
 		return new WP_REST_Response( $this->settings_payload() );
 	}
@@ -376,6 +385,8 @@ final class AdminController implements Module {
 			'advanced'      => array(
 				'delete_on_uninstall' => (bool) get_option( self::OPTION_DELETE_DATA, false ),
 				'delete_constant'     => defined( 'SOCIALRELAYCVI_DELETE_DATA' ) && SOCIALRELAYCVI_DELETE_DATA,
+				'error_email'         => (bool) get_option( ErrorAlerts::OPTION_EMAIL, false ),
+				'admin_email'         => (string) get_option( 'admin_email' ),
 			),
 			'channels'      => $channels,
 			'channelsError' => $error,

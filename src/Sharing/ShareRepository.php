@@ -296,4 +296,31 @@ final class ShareRepository {
 
 		return array_values( array_map( 'intval', (array) $ids ) );
 	}
+
+	/**
+	 * Failed shares that are still the latest attempt for their post and channel.
+	 *
+	 * A failure that was retried with success later does not count.
+	 *
+	 * @param string $since_utc Only rows updated after this UTC datetime (Y-m-d H:i:s).
+	 * @param int    $limit     Maximum rows.
+	 * @return list<array<string, mixed>> Newest first.
+	 */
+	public function open_errors( string $since_utc, int $limit = 20 ): array {
+		global $wpdb;
+
+		$table = Installer::tables()['shares'];
+		$rows  = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT s.* FROM %i s WHERE s.status = 'error' AND s.updated_at > %s AND s.id = ( SELECT MAX( l.id ) FROM %i l WHERE l.post_id = s.post_id AND l.integration_id = s.integration_id ) ORDER BY s.updated_at DESC LIMIT %d",
+				$table,
+				$since_utc,
+				$table,
+				$limit
+			),
+			ARRAY_A
+		);
+
+		return is_array( $rows ) ? array_values( $rows ) : array();
+	}
 }

@@ -42,6 +42,7 @@ Works with self-hosted Postiz and with Postiz Cloud.
 
 * **One request per post for every channel**, to respect the Postiz API rate limit.
 * **Background sending** with Action Scheduler, automatic retries and duplicate protection.
+* **Failure alerts**: a notice in the dashboard and, if you turn it on, an email summary at most once an hour.
 * **Status sync** with Postiz, triggered by the Postiz webhook or every 15 minutes.
 * Pending posts are **cancelled in Postiz** when a post is unpublished or trashed.
 * A **"Test this profile"** panel: pick a post and see what the profile would send, without sending anything.

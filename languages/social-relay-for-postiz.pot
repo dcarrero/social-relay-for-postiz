@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-10T16:59:43+00:00\n"
+"POT-Creation-Date: 2026-11-10T17:02:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: social-relay-for-postiz.php:3
 #: src/Admin/SettingsPage.php:44
 #: src/Admin/SettingsPage.php:89
-#: build/settings.js:9
+#: build/settings.js:10
 msgid "Social Relay for Postiz"
 msgstr ""
 
@@ -145,7 +145,7 @@ msgstr ""
 
 #: src/Admin/ClassicMetabox.php:79
 #: build/editor-panel.js:13
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Channels"
 msgstr ""
 
@@ -174,7 +174,7 @@ msgstr ""
 #: src/Admin/ClassicMetabox.php:99
 #: build/editor-panel.js:11
 #: build/editor-panel.js:13
-#: build/settings.js:6
+#: build/settings.js:7
 msgid "When"
 msgstr ""
 
@@ -239,6 +239,7 @@ msgid "Nothing scheduled."
 msgstr ""
 
 #: src/Admin/DashboardWidget.php:99
+#: src/Admin/ErrorAlerts.php:92
 #: src/Admin/LogPage.php:49
 #: src/Admin/LogPage.php:50
 #: src/Admin/LogPage.php:84
@@ -255,6 +256,59 @@ msgstr ""
 
 #: src/Admin/DashboardWidget.php:102
 msgid "Open Postiz"
+msgstr ""
+
+#: src/Admin/ErrorAlerts.php:80
+msgid "Social Relay: some shares failed in Postiz."
+msgstr ""
+
+#: src/Admin/ErrorAlerts.php:87
+msgid "And more."
+msgstr ""
+
+#: src/Admin/ErrorAlerts.php:91
+msgid "Posts with errors"
+msgstr ""
+
+#: src/Admin/ErrorAlerts.php:93
+msgid "Hide until new errors"
+msgstr ""
+
+#: src/Admin/ErrorAlerts.php:106
+msgid "Sorry, you are not allowed to do that."
+msgstr ""
+
+#. translators: %s: site name.
+#: src/Admin/ErrorAlerts.php:147
+#, php-format
+msgid "[%s] Some social media shares failed"
+msgstr ""
+
+#: src/Admin/ErrorAlerts.php:151
+msgid "These shares to Postiz failed and were not retried with success:"
+msgstr ""
+
+#. translators: %s: URL of the posts list filtered by errors.
+#: src/Admin/ErrorAlerts.php:154
+#, php-format
+msgid "Posts with errors: %s"
+msgstr ""
+
+#: src/Admin/ErrorAlerts.php:155
+msgid "You get this email because failure emails are on in Social Relay → Settings → Advanced."
+msgstr ""
+
+#: src/Admin/ErrorAlerts.php:178
+#: build/log.js:1
+#: build/settings.js:9
+msgid "(no title)"
+msgstr ""
+
+#: src/Admin/ErrorAlerts.php:179
+#: src/Admin/StatusLabels.php:26
+#: build/editor-panel.js:3
+#: build/log.js:1
+msgid "Error"
 msgstr ""
 
 #: src/Admin/PostsColumn.php:81
@@ -307,12 +361,6 @@ msgstr ""
 #: src/Admin/StatusLabels.php:25
 #: build/editor-panel.js:3
 msgid "Published"
-msgstr ""
-
-#: src/Admin/StatusLabels.php:26
-#: build/editor-panel.js:3
-#: build/log.js:1
-msgid "Error"
 msgstr ""
 
 #: src/Admin/StatusLabels.php:28
@@ -625,7 +673,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: build/editor-panel.js:5
-#: build/settings.js:6
+#: build/settings.js:7
 msgid "Remove them"
 msgstr ""
 
@@ -673,7 +721,7 @@ msgstr ""
 
 #. translators: %d: number of parts in a thread.
 #: build/editor-panel.js:7
-#: build/settings.js:7
+#: build/settings.js:8
 #, js-format
 msgid "Thread of %d part."
 msgid_plural "Thread of %d parts."
@@ -681,13 +729,13 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: build/editor-panel.js:7
-#: build/settings.js:7
+#: build/settings.js:8
 msgid "Longer than the network allows: it will be shortened."
 msgstr ""
 
 #. translators: 1: reason, 2: number of channels.
 #: build/editor-panel.js:8
-#: build/settings.js:8
+#: build/settings.js:9
 #, js-format
 msgid "%1$s (%2$d channel)"
 msgid_plural "%1$s (%2$d channels)"
@@ -695,7 +743,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: build/editor-panel.js:8
-#: build/settings.js:8
+#: build/settings.js:9
 msgid "This post does not match the profile conditions and will not be shared."
 msgstr ""
 
@@ -866,7 +914,7 @@ msgstr ""
 
 #: build/editor-panel.js:13
 #: build/log.js:1
-#: build/settings.js:6
+#: build/settings.js:7
 msgid "Message"
 msgstr ""
 
@@ -880,11 +928,6 @@ msgstr ""
 
 #: build/log.js:1
 msgid "Info"
-msgstr ""
-
-#: build/log.js:1
-#: build/settings.js:8
-msgid "(no title)"
 msgstr ""
 
 #: build/log.js:1
@@ -955,253 +998,263 @@ msgid "Create as draft in Postiz"
 msgstr ""
 
 #: build/settings.js:1
+msgid "Email me when a share fails"
+msgstr ""
+
+#. translators: %s: email address.
+#: build/settings.js:2
+#, js-format
+msgid "A summary to %s, at most once an hour, only for failures that were not retried with success. Admins also see a notice in the dashboard."
+msgstr ""
+
+#: build/settings.js:2
 msgid "Delete all plugin data when the plugin is deleted"
 msgstr ""
 
-#: build/settings.js:1
+#: build/settings.js:2
 msgid "Removes the settings, the log, the record of what was sent and the per-post options. Nothing is deleted in Postiz."
 msgstr ""
 
-#: build/settings.js:1
+#: build/settings.js:2
 msgid "Forced by SOCIALRELAYCVI_DELETE_DATA in wp-config.php."
 msgstr ""
 
-#: build/settings.js:1
+#: build/settings.js:2
 msgid "Read from the POSTIZ_API_KEY environment variable."
 msgstr ""
 
-#: build/settings.js:1
+#: build/settings.js:2
 msgid "Defined in wp-config.php (SOCIALRELAYCVI_POSTIZ_API_KEY)."
 msgstr ""
 
 #. translators: %d: number of channels.
-#: build/settings.js:2
+#: build/settings.js:3
 #, js-format
 msgid "Connected to Postiz. %d channel available."
 msgid_plural "Connected to Postiz. %d channels available."
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/settings.js:2
+#: build/settings.js:3
 msgid "Postiz URL"
 msgstr ""
 
 #. translators: %s: detected API URL.
-#: build/settings.js:3
+#: build/settings.js:4
 #, js-format
 msgid "Detected API: %s"
 msgstr ""
 
-#: build/settings.js:3
+#: build/settings.js:4
 msgid "Your self-hosted Postiz address. For Postiz Cloud, use https://api.postiz.com."
 msgstr ""
 
-#: build/settings.js:3
+#: build/settings.js:4
 msgid "API key"
 msgstr ""
 
-#: build/settings.js:3
+#: build/settings.js:4
 msgid "Paste your API key"
 msgstr ""
 
-#: build/settings.js:3
+#: build/settings.js:4
 msgid "Postiz → Settings → Developers → Public API. Leave empty to keep the current key. For better security define SOCIALRELAYCVI_POSTIZ_API_KEY in wp-config.php or the POSTIZ_API_KEY environment variable."
 msgstr ""
 
-#: build/settings.js:3
+#: build/settings.js:4
 msgid "Save and test connection"
 msgstr ""
 
-#: build/settings.js:3
+#: build/settings.js:4
 msgid "Postiz public API documentation"
 msgstr ""
 
-#: build/settings.js:3
+#: build/settings.js:4
 msgid "Only"
 msgstr ""
 
-#: build/settings.js:3
+#: build/settings.js:4
 msgid "Never"
 msgstr ""
 
-#: build/settings.js:3
+#: build/settings.js:4
 msgid "Share only posts in at least one of the “Only” terms, and never posts in a “Never” term. Leave everything empty to share all posts."
 msgstr ""
 
-#: build/settings.js:3
+#: build/settings.js:4
 msgid "Tags"
 msgstr ""
 
-#: build/settings.js:3
+#: build/settings.js:4
 msgid "customized"
 msgstr ""
 
 #. translators: %d: character limit of the network.
-#: build/settings.js:4
+#: build/settings.js:5
 #, js-format
 msgid "Template for this network (limit: %d characters)"
 msgstr ""
 
-#: build/settings.js:4
+#: build/settings.js:5
 msgid "Template for this network"
 msgstr ""
 
-#: build/settings.js:4
+#: build/settings.js:5
 msgid "Empty = common template"
 msgstr ""
 
-#: build/settings.js:4
+#: build/settings.js:5
 msgid "Default"
 msgstr ""
 
-#: build/settings.js:4
+#: build/settings.js:5
 msgid "Tags: {title} {excerpt} {content} {url} {shortlink} {author} {date} {site_name} {categories} {tags} {hashtags:post_tag} {term:taxonomy} {meta:key} {seo_title} {seo_description}. Filters: |upper |lower |strip |hashtag |limit:100. A line with --- starts a new thread part."
 msgstr ""
 
 #. translators: %s: post type label, e.g. Posts.
-#: build/settings.js:5
+#: build/settings.js:6
 #, js-format
 msgid "Share %s when they are published"
 msgstr ""
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "No channels in Postiz yet. Add them in Postiz and reload this page."
 msgstr ""
 
 #. translators: %d: number of channels.
-#: build/settings.js:6
+#: build/settings.js:7
 #, js-format
 msgid "%d channel of this profile no longer exists in Postiz and is skipped."
 msgid_plural "%d channels of this profile no longer exist in Postiz and are skipped."
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/settings.js:6
+#: build/settings.js:7
 msgid "Message template"
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:7
 msgid "Optional. A network without its own template uses the common one."
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:7
 msgid "Delay in minutes"
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:7
 msgid "Attach the featured image"
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:7
 msgid "Allow sharing again on update (when requested from the editor)"
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:7
 msgid "Conditions"
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:7
 msgid "Links and tags"
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:7
 msgid "Add UTM parameters to {url} (utm_source = network, utm_medium = social)"
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:7
 msgid "Accepts tags, e.g. {slug}."
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:7
 msgid "Shorten links with Postiz"
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:7
 msgid "Tag the posts in Postiz with the post categories"
 msgstr ""
 
-#: build/settings.js:8
+#: build/settings.js:9
 msgid "Test this profile"
 msgstr ""
 
-#: build/settings.js:8
+#: build/settings.js:9
 msgid "Pick a post to see the messages the saved profile would send. Nothing is sent."
 msgstr ""
 
-#: build/settings.js:8
+#: build/settings.js:9
 msgid "Save the profile to test your latest changes."
 msgstr ""
 
-#: build/settings.js:8
+#: build/settings.js:9
 msgid "No channels selected."
 msgstr ""
 
-#: build/settings.js:8
+#: build/settings.js:9
 msgid "Connect Postiz first (Connection tab)."
 msgstr ""
 
-#: build/settings.js:8
+#: build/settings.js:9
 msgid "Profiles saved."
 msgstr ""
 
-#: build/settings.js:8
+#: build/settings.js:9
 msgid "Save profiles"
 msgstr ""
 
-#: build/settings.js:8
+#: build/settings.js:9
 msgid "Unsaved changes"
 msgstr ""
 
-#: build/settings.js:8
+#: build/settings.js:9
 msgid "Paste this URL in Postiz → Settings → Webhooks to update the status of your posts as soon as they are published. Without it, the plugin checks Postiz every 15 minutes."
 msgstr ""
 
-#: build/settings.js:8
+#: build/settings.js:9
 msgid "Webhook URL"
 msgstr ""
 
-#: build/settings.js:8
+#: build/settings.js:9
 msgid "Copied"
 msgstr ""
 
-#: build/settings.js:8
+#: build/settings.js:9
 msgid "Copy"
 msgstr ""
 
 #. translators: %s: time since the last webhook call, e.g. "5 minutes ago".
-#: build/settings.js:9
+#: build/settings.js:10
 #, js-format
 msgid "Last call received %s."
 msgstr ""
 
-#: build/settings.js:9
+#: build/settings.js:10
 msgid "No call received yet. Use “Send Test” in Postiz to check it."
 msgstr ""
 
-#: build/settings.js:9
+#: build/settings.js:10
 msgid "New webhook URL created. Update it in Postiz: the old one no longer works."
 msgstr ""
 
-#: build/settings.js:9
+#: build/settings.js:10
 msgid "Create a new URL"
 msgstr ""
 
-#: build/settings.js:9
+#: build/settings.js:10
 msgid "The current URL will stop working. Continue?"
 msgstr ""
 
-#: build/settings.js:9
+#: build/settings.js:10
 msgid "Connection"
 msgstr ""
 
-#: build/settings.js:9
+#: build/settings.js:10
 msgid "Publishing profiles"
 msgstr ""
 
-#: build/settings.js:9
+#: build/settings.js:10
 msgid "Webhook"
 msgstr ""
 
-#: build/settings.js:9
+#: build/settings.js:10
 msgid "Advanced"
 msgstr ""

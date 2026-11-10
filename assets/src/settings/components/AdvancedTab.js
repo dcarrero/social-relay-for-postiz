@@ -1,7 +1,7 @@
 import apiFetch from '@wordpress/api-fetch';
 import { Card, CardBody, Notice, ToggleControl } from '@wordpress/components';
 import { useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 import { config } from '../config';
 
@@ -18,12 +18,12 @@ export default function AdvancedTab( { settings, setSettings } ) {
 	const [ busy, setBusy ] = useState( false );
 	const [ error, setError ] = useState( '' );
 
-	const toggle = ( value ) => {
+	const save = ( data ) => {
 		setBusy( true );
 		apiFetch( {
 			path: `/${ config.namespace }/admin/advanced`,
 			method: 'POST',
-			data: { delete_on_uninstall: value },
+			data,
 		} )
 			.then( setSettings )
 			.catch( ( err ) => setError( err.message || String( err ) ) )
@@ -40,6 +40,25 @@ export default function AdvancedTab( { settings, setSettings } ) {
 				) }
 				<ToggleControl
 					label={ __(
+						'Email me when a share fails',
+						'social-relay-for-postiz'
+					) }
+					help={ sprintf(
+						/* translators: %s: email address. */
+						__(
+							'A summary to %s, at most once an hour, only for failures that were not retried with success. Admins also see a notice in the dashboard.',
+							'social-relay-for-postiz'
+						),
+						advanced.admin_email
+					) }
+					checked={ !! advanced.error_email }
+					disabled={ busy }
+					onChange={ ( value ) => save( { error_email: value } ) }
+					__nextHasNoMarginBottom
+				/>
+				<div style={ { height: 16 } } />
+				<ToggleControl
+					label={ __(
 						'Delete all plugin data when the plugin is deleted',
 						'social-relay-for-postiz'
 					) }
@@ -51,7 +70,9 @@ export default function AdvancedTab( { settings, setSettings } ) {
 						advanced.delete_on_uninstall || advanced.delete_constant
 					}
 					disabled={ busy || advanced.delete_constant }
-					onChange={ toggle }
+					onChange={ ( value ) =>
+						save( { delete_on_uninstall: value } )
+					}
 					__nextHasNoMarginBottom
 				/>
 				{ advanced.delete_constant && (

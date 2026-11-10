@@ -13,6 +13,7 @@ use SocialRelayCvi\Abilities\AbilitiesRegistration;
 use SocialRelayCvi\Admin\ClassicMetabox;
 use SocialRelayCvi\Admin\DashboardWidget;
 use SocialRelayCvi\Admin\EditorPanel;
+use SocialRelayCvi\Admin\ErrorAlerts;
 use SocialRelayCvi\Admin\LogPage;
 use SocialRelayCvi\Admin\PostsColumn;
 use SocialRelayCvi\Admin\Privacy;
@@ -205,6 +206,7 @@ final class Plugin {
 			'metabox'       => new ClassicMetabox( $this ),
 			'dashboard'     => new DashboardWidget( $this ),
 			'posts_column'  => new PostsColumn( $this ),
+			'error_alerts'  => new ErrorAlerts( $this ),
 			'privacy'       => new Privacy(),
 			'log_cleanup'   => $this->logger,
 			'post_meta'     => new PostMeta(),

@@ -22,7 +22,7 @@ import {
 	useState,
 } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
-import { addQueryArgs } from '@wordpress/url';
+import { addQueryArgs, getQueryArg } from '@wordpress/url';
 
 import './style.css';
 
@@ -73,7 +73,10 @@ function Row( { item } ) {
 
 function LogApp() {
 	const [ page, setPage ] = useState( 1 );
-	const [ level, setLevel ] = useState( '' );
+	// ?level=error comes from the "Log" button of the failure notice.
+	const [ level, setLevel ] = useState(
+		() => getQueryArg( window.location.href, 'level' ) || ''
+	);
 	const [ search, setSearch ] = useState( '' );
 	const [ query, setQuery ] = useState( '' );
 	const [ data, setData ] = useState( { items: [], total: 0, pages: 0 } );
