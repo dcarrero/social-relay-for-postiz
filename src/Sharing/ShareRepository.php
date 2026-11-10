@@ -63,7 +63,8 @@ final class ShareRepository {
 
 		return (bool) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT 1 FROM {$table} WHERE post_id = %d AND content_hash = %s AND status <> 'error' LIMIT 1", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $wpdb->prefix.
+				"SELECT 1 FROM %i WHERE post_id = %d AND content_hash = %s AND status <> 'error' LIMIT 1",
+				$table,
 				$post_id,
 				$content_hash
 			)
@@ -82,7 +83,8 @@ final class ShareRepository {
 
 		return (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(DISTINCT batch) FROM {$table} WHERE post_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $wpdb->prefix.
+				'SELECT COUNT(DISTINCT batch) FROM %i WHERE post_id = %d',
+				$table,
 				$post_id
 			)
 		);
@@ -100,7 +102,8 @@ final class ShareRepository {
 		$table = Installer::tables()['shares'];
 		$rows  = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM {$table} WHERE post_id = %d ORDER BY id DESC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $wpdb->prefix.
+				'SELECT * FROM %i WHERE post_id = %d ORDER BY id DESC',
+				$table,
 				$post_id
 			),
 			ARRAY_A
@@ -124,7 +127,8 @@ final class ShareRepository {
 		$table   = Installer::tables()['shares'];
 		$batches = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT DISTINCT batch FROM {$table} WHERE post_id = %d AND ( status = 'draft' OR ( status = 'queued' AND type = 'schedule' AND publish_at > %s ) )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $wpdb->prefix.
+				"SELECT DISTINCT batch FROM %i WHERE post_id = %d AND ( status = 'draft' OR ( status = 'queued' AND type = 'schedule' AND publish_at > %s ) )",
+				$table,
 				$post_id,
 				gmdate( 'Y-m-d H:i:s' )
 			)
@@ -168,7 +172,8 @@ final class ShareRepository {
 		$table = Installer::tables()['shares'];
 		$rows  = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM {$table} WHERE status IN ( 'queued', 'draft' ) AND postiz_post_id <> '' AND publish_at BETWEEN %s AND %s ORDER BY publish_at ASC LIMIT %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $wpdb->prefix.
+				"SELECT * FROM %i WHERE status IN ( 'queued', 'draft' ) AND postiz_post_id <> '' AND publish_at BETWEEN %s AND %s ORDER BY publish_at ASC LIMIT %d",
+				$table,
 				gmdate( 'Y-m-d H:i:s', time() - $past_days * DAY_IN_SECONDS ),
 				gmdate( 'Y-m-d H:i:s', time() + $future_days * DAY_IN_SECONDS ),
 				$limit
@@ -215,7 +220,8 @@ final class ShareRepository {
 		$table = Installer::tables()['shares'];
 		$rows  = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT status, COUNT(*) AS total FROM {$table} WHERE created_at >= %s GROUP BY status", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $wpdb->prefix.
+				'SELECT status, COUNT(*) AS total FROM %i WHERE created_at >= %s GROUP BY status',
+				$table,
 				gmdate( 'Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS )
 			),
 			ARRAY_A
@@ -241,28 +247,30 @@ final class ShareRepository {
 		global $wpdb;
 
 		$table = Installer::tables()['shares'];
-		$where = '1=1';
-		$args  = array();
 
-		if ( '' !== $status ) {
-			$where .= ' AND status = %s';
-			$args[] = $status;
-		}
-
-		if ( 'upcoming' === $order ) {
-			$where .= ' AND publish_at > %s';
-			$args[] = gmdate( 'Y-m-d H:i:s' );
-			$sort   = 'publish_at ASC';
-		} else {
-			$sort = 'updated_at DESC';
-		}
-
-		$args[] = $limit;
-
-		$rows = $wpdb->get_results(
-			$wpdb->prepare( "SELECT * FROM {$table} WHERE {$where} ORDER BY {$sort} LIMIT %d", $args ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name and fixed clauses only; values are placeholders.
-			ARRAY_A
-		);
+		// Static SQL per order; an empty status switches its condition off.
+		$rows = 'upcoming' === $order
+			? $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM %i WHERE ( %s = '' OR status = %s ) AND publish_at > %s ORDER BY publish_at ASC LIMIT %d",
+					$table,
+					$status,
+					$status,
+					gmdate( 'Y-m-d H:i:s' ),
+					$limit
+				),
+				ARRAY_A
+			)
+			: $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM %i WHERE ( %s = '' OR status = %s ) ORDER BY updated_at DESC LIMIT %d",
+					$table,
+					$status,
+					$status,
+					$limit
+				),
+				ARRAY_A
+			);
 
 		return is_array( $rows ) ? array_values( $rows ) : array();
 	}

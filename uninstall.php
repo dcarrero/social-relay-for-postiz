@@ -20,15 +20,20 @@ if ( ! $socialrelaycvi_delete ) {
 
 global $wpdb;
 
-// phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Dropping our own tables.
-$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}socialrelaycvi_shares" );
-$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}socialrelaycvi_log" );
+// phpcs:disable WordPress.DB.DirectDatabaseQuery -- Dropping our own tables.
+$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $wpdb->prefix . 'socialrelaycvi_shares' ) );
+$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $wpdb->prefix . 'socialrelaycvi_log' ) );
 // phpcs:enable
 
-foreach ( array( 'socialrelaycvi_instance_url', 'socialrelaycvi_api_base', 'socialrelaycvi_api_key', 'socialrelaycvi_profiles', 'socialrelaycvi_db_version', 'socialrelaycvi_delete_data_on_uninstall' ) as $socialrelaycvi_option ) {
+foreach ( array( 'socialrelaycvi_instance_url', 'socialrelaycvi_api_base', 'socialrelaycvi_api_key', 'socialrelaycvi_profiles', 'socialrelaycvi_db_version', 'socialrelaycvi_delete_data_on_uninstall', 'socialrelaycvi_webhook_secret', 'socialrelaycvi_webhook_last' ) as $socialrelaycvi_option ) {
 	delete_option( $socialrelaycvi_option );
 }
 
 delete_post_meta_by_key( '_socialrelaycvi_enabled' );
 delete_post_meta_by_key( '_socialrelaycvi_message' );
 delete_post_meta_by_key( '_socialrelaycvi_reshare' );
+delete_post_meta_by_key( '_socialrelaycvi_overrides' );
+delete_post_meta_by_key( '_socialrelaycvi_channels' );
+
+// Cached channel lists.
+$wpdb->query( $wpdb->prepare( 'DELETE FROM %i WHERE option_name LIKE %s OR option_name LIKE %s', $wpdb->options, $wpdb->esc_like( '_transient_socialrelaycvi_' ) . '%', $wpdb->esc_like( '_transient_timeout_socialrelaycvi_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Removing our own transients.

@@ -66,9 +66,18 @@ add_filter( 'socialrelaycvi_modules', function ( array $modules, \SocialRelayCvi
 
 Other hooks: `socialrelaycvi_gateway`, `socialrelaycvi_status_changed`, `socialrelaycvi_cancel_on_unpublish`, `socialrelaycvi_template_context`, `socialrelaycvi_payload`, `socialrelaycvi_should_share`, `socialrelaycvi_shared`, `socialrelaycvi_post_types`, `socialrelaycvi_allow_local_instance`, `socialrelaycvi_log_retention_days`.
 
+## Releases
+
+```bash
+bin/build-release.sh            # dist/social-relay-for-postiz.zip, ready to install or upload
+git tag -a v1.0.0 -m "1.0.0" && git push --tags   # CI builds the zip and publishes the release
+```
+
+The release workflow deploys to wordpress.org SVN when the repository has the `SVN_USERNAME` and `SVN_PASSWORD` secrets (after the plugin is approved). Banner, icon and screenshots go in `.wordpress-org/`.
+
 ## Translations
 
-All strings are written in English with the `social-relay-for-postiz` text domain. Bundled translations live in `languages/` (Spanish, `es_ES`, to start). Once the plugin is on wordpress.org, language packs from translate.wordpress.org take precedence.
+All strings are written in English with the `social-relay-for-postiz` text domain. `languages/` holds the `.pot` template and the Spanish (`es_ES`) translation, ready to import into translate.wordpress.org. On wordpress.org, WordPress loads translations from the language packs; the plugin does not call `load_plugin_textdomain()`.
 
 ```bash
 composer i18n   # regenerate the .pot, update the .po files and compile the .mo files

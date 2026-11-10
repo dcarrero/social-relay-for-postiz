@@ -14,8 +14,15 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - Settings and log screens rebuilt in React with WordPress components: tabs for connection, publishing profiles (one tab per post type, per-network panels, tag suggestions) and webhook; log with search, level filter and pagination. The old server-rendered forms are gone.
 - DataViews was evaluated for the log and discarded: it adds about 1.5 MB to the bundle; the log screen is 5 KB with core components.
 
+- `bin/build-release.sh`: builds the installable zip (production Composer dependencies, compiled JavaScript, `.distignore` applied).
+- Release workflow: on a `v*` tag, builds the zip, attaches it to a GitHub release and deploys to wordpress.org SVN once the `SVN_USERNAME`/`SVN_PASSWORD` secrets exist.
+
+### Fixed
+- Plugin Check: every query uses `%i` for table names and static SQL (no interpolated clauses); `load_plugin_textdomain()` removed, translations come from translate.wordpress.org language packs.
+- Uninstall also removes the webhook options, the per-post channel and text meta, and the cached channel lists.
+
 ### Planned for 1.0
-- wordpress.org release: Plugin Check, release zip and SVN deploy.
+- wordpress.org assets (banner, icon, screenshots) and Live Preview blueprint.
 
 ## [0.3.1] - 2026-11-10
 

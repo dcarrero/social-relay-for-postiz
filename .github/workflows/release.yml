@@ -1,0 +1,54 @@
+name: Release
+
+# On a version tag (v1.0.0…): build the plugin zip, attach it to a GitHub release
+# and, once the plugin is approved on wordpress.org and the SVN_USERNAME /
+# SVN_PASSWORD secrets exist, deploy the same build to the plugin's SVN.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      HAS_SVN: ${{ secrets.SVN_USERNAME != '' }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+          tools: composer
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Build the plugin zip
+        run: bin/build-release.sh dist
+
+      - name: Unzip for the SVN deploy
+        run: unzip -q dist/social-relay-for-postiz.zip -d dist/build
+
+      - name: GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/social-relay-for-postiz.zip
+          generate_release_notes: true
+
+      - name: Deploy to wordpress.org
+        if: env.HAS_SVN == 'true'
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: social-relay-for-postiz
+          BUILD_DIR: dist/build/social-relay-for-postiz
+          ASSETS_DIR: .wordpress-org

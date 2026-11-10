@@ -11,3 +11,8 @@
 /README.md
 /.phpunit.cache
 /CHANGELOG.md
+/bin
+/dist
+/package-lock.json
+/.phpunit.result.cache
+.DS_Store

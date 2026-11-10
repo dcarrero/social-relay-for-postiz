@@ -68,7 +68,7 @@ final class Logger implements Module {
 
 		$table = Installer::tables()['log'];
 		$rows  = $wpdb->get_results(
-			$wpdb->prepare( "SELECT * FROM {$table} ORDER BY id DESC LIMIT %d", $limit ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $wpdb->prefix.
+			$wpdb->prepare( 'SELECT * FROM %i ORDER BY id DESC LIMIT %d', $table, $limit ),
 			ARRAY_A
 		);
 
@@ -88,37 +88,39 @@ final class Logger implements Module {
 	public function query( int $page = 1, int $per_page = 20, string $level = '', string $search = '', int $post_id = 0 ): array {
 		global $wpdb;
 
-		$table = Installer::tables()['log'];
-		// Always one placeholder, so both queries can go through prepare().
-		$where = array( '1 = %d' );
-		$args  = array( 1 );
+		$table  = Installer::tables()['log'];
+		$level  = in_array( $level, array( 'info', 'error' ), true ) ? $level : '';
+		$like   = '' === $search ? '' : '%' . $wpdb->esc_like( $search ) . '%';
+		$limit  = max( 1, $per_page );
+		$offset = ( max( 1, $page ) - 1 ) * $limit;
 
-		if ( in_array( $level, array( 'info', 'error' ), true ) ) {
-			$where[] = 'level = %s';
-			$args[]  = $level;
-		}
-
-		if ( '' !== $search ) {
-			$where[] = 'message LIKE %s';
-			$args[]  = '%' . $wpdb->esc_like( $search ) . '%';
-		}
-
-		if ( $post_id > 0 ) {
-			$where[] = 'post_id = %d';
-			$args[]  = $post_id;
-		}
-
-		$where_sql = implode( ' AND ', $where );
-
+		// Static SQL: an empty filter value switches its condition off.
 		$total = (int) $wpdb->get_var(
-			$wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE {$where_sql}", $args ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Table name and fixed clauses; every value is a placeholder.
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM %i WHERE ( %s = '' OR level = %s ) AND ( %s = '' OR message LIKE %s ) AND ( %d = 0 OR post_id = %d )",
+				$table,
+				$level,
+				$level,
+				$like,
+				$like,
+				$post_id,
+				$post_id
+			)
 		);
 
-		$args[] = max( 1, $per_page );
-		$args[] = ( max( 1, $page ) - 1 ) * max( 1, $per_page );
-
 		$rows = $wpdb->get_results(
-			$wpdb->prepare( "SELECT * FROM {$table} WHERE {$where_sql} ORDER BY id DESC LIMIT %d OFFSET %d", $args ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Table name and fixed clauses; every value is a placeholder.
+			$wpdb->prepare(
+				"SELECT * FROM %i WHERE ( %s = '' OR level = %s ) AND ( %s = '' OR message LIKE %s ) AND ( %d = 0 OR post_id = %d ) ORDER BY id DESC LIMIT %d OFFSET %d",
+				$table,
+				$level,
+				$level,
+				$like,
+				$like,
+				$post_id,
+				$post_id,
+				$limit,
+				$offset
+			),
 			ARRAY_A
 		);
 
@@ -135,7 +137,7 @@ final class Logger implements Module {
 		global $wpdb;
 
 		$table = Installer::tables()['log'];
-		$wpdb->query( "TRUNCATE TABLE {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.SchemaChange -- Our own table.
+		$wpdb->query( $wpdb->prepare( 'TRUNCATE TABLE %i', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange -- Empties our own table.
 	}
 
 	/**
@@ -154,7 +156,8 @@ final class Logger implements Module {
 
 		$wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM {$table} WHERE created_at < %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $wpdb->prefix.
+				'DELETE FROM %i WHERE created_at < %s',
+				$table,
 				gmdate( 'Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS )
 			)
 		);
