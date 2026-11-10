@@ -9,15 +9,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-10T10:15:26+00:00\n"
+"POT-Creation-Date: 2026-11-10T10:25:33+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
 
 #. Plugin Name of the plugin
 #: social-relay-for-postiz.php:3
-#: src/Admin/SettingsPage.php:50
-#: src/Admin/SettingsPage.php:156
+#: src/Admin/SettingsPage.php:52
+#: src/Admin/SettingsPage.php:167
 msgid "Social Relay for Postiz"
 msgstr ""
 
@@ -84,200 +84,226 @@ msgstr ""
 msgid "Nothing logged yet."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:51
+#: src/Admin/SettingsPage.php:53
 msgid "Social Relay"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:59
-#: src/Admin/SettingsPage.php:69
+#: src/Admin/SettingsPage.php:61
+#: src/Admin/SettingsPage.php:71
 msgid "Settings"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:159
+#: src/Admin/SettingsPage.php:170
 msgid "Postiz connection"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:165
+#: src/Admin/SettingsPage.php:176
 msgid "Postiz URL"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:169
+#: src/Admin/SettingsPage.php:180
 msgid "Your self-hosted Postiz address. For Postiz Cloud, use https://api.postiz.com."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:171
+#: src/Admin/SettingsPage.php:182
 msgid "Detected API:"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:177
+#: src/Admin/SettingsPage.php:188
 msgid "API key"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:180
+#: src/Admin/SettingsPage.php:191
 msgid "Paste your API key"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:181
+#: src/Admin/SettingsPage.php:192
 msgid "Postiz → Settings → Developers → Public API. Leave empty to keep the current key. For better security define SOCIALRELAYCVI_POSTIZ_API_KEY in wp-config.php or the POSTIZ_API_KEY environment variable."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:188
+#: src/Admin/SettingsPage.php:199
 msgid "Read from the POSTIZ_API_KEY environment variable."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:189
+#: src/Admin/SettingsPage.php:200
 msgid "Defined in wp-config.php (SOCIALRELAYCVI_POSTIZ_API_KEY)."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:197
+#: src/Admin/SettingsPage.php:208
 msgid "Save and test connection"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:201
+#: src/Admin/SettingsPage.php:213
 msgid "Publishing profiles"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:211
+#: src/Admin/SettingsPage.php:223
 msgid "Save profiles"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:231
+#: src/Admin/SettingsPage.php:243
 msgid "Publish immediately"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:232
+#: src/Admin/SettingsPage.php:244
 msgid "Schedule with a delay"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:233
+#: src/Admin/SettingsPage.php:245
 msgid "Next free slot in Postiz"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:234
+#: src/Admin/SettingsPage.php:246
 msgid "Create as draft in Postiz"
 msgstr ""
 
 #. translators: %s: post type label, e.g. Posts.
-#: src/Admin/SettingsPage.php:244
+#: src/Admin/SettingsPage.php:256
 #, php-format
 msgid "Share %s when they are published"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:248
+#: src/Admin/SettingsPage.php:260
 msgid "Channels"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:250
+#: src/Admin/SettingsPage.php:262
 msgid "No channels in Postiz yet. Add them in Postiz and reload this page."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:260
+#: src/Admin/SettingsPage.php:272
 msgid "Message template"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:262
+#: src/Admin/SettingsPage.php:274
 msgid "Tags: {title} {excerpt} {content} {url} {shortlink} {author} {date} {site_name} {categories} {tags} {hashtags:post_tag} {term:taxonomy} {meta:key} {seo_title} {seo_description}. Filters: |upper |lower |strip |hashtag |limit:100. A line with --- starts a new thread part."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:265
+#: src/Admin/SettingsPage.php:277
 msgid "When"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:271
+#: src/Admin/SettingsPage.php:283
 msgid "Delay (minutes, for “Schedule”)"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:276
+#: src/Admin/SettingsPage.php:288
 msgid "Attach the featured image"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:278
+#: src/Admin/SettingsPage.php:290
 msgid "Allow sharing again on update (when requested from the editor)"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:284
+#: src/Admin/SettingsPage.php:296
 msgid "Links and tags"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:286
+#: src/Admin/SettingsPage.php:298
 msgid "Add UTM parameters to {url} (utm_source = network, utm_medium = social)"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:288
+#: src/Admin/SettingsPage.php:300
 msgid "utm_campaign"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:290
+#: src/Admin/SettingsPage.php:302
 msgid "Accepts tags, e.g. {slug}."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:292
+#: src/Admin/SettingsPage.php:304
 msgid "Shorten links with Postiz"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:294
+#: src/Admin/SettingsPage.php:306
 msgid "Tag the posts in Postiz with the post categories"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:312
+#: src/Admin/SettingsPage.php:324
 msgid "Per network"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:313
+#: src/Admin/SettingsPage.php:325
 msgid "Optional. A network without its own template uses the common one."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:335
+#: src/Admin/SettingsPage.php:347
 msgid "customized"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:340
+#: src/Admin/SettingsPage.php:352
 msgid "Template for this network"
 msgstr ""
 
 #. translators: %d: character limit of the network.
-#: src/Admin/SettingsPage.php:344
+#: src/Admin/SettingsPage.php:356
 #, php-format
 msgid "(limit: %d characters)"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:348
+#: src/Admin/SettingsPage.php:360
 msgid "Empty = common template"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:411
+#: src/Admin/SettingsPage.php:423
 msgid "Conditions"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:412
+#: src/Admin/SettingsPage.php:424
 msgid "Share only posts in at least one of the “Only” terms, and never posts in a “Never” term. Leave everything empty to share all posts."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:415
+#: src/Admin/SettingsPage.php:427
 msgid "Only"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:416
+#: src/Admin/SettingsPage.php:428
 msgid "Never"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:429
+#: src/Admin/SettingsPage.php:441
 msgid "Tags (comma-separated):"
 msgstr ""
 
+#: src/Admin/SettingsPage.php:456
+msgid "Postiz webhook (optional)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:457
+msgid "Paste this URL in Postiz → Settings → Webhooks to update the status of your posts as soon as they are published. Without it, the plugin checks Postiz every 15 minutes."
+msgstr ""
+
+#. translators: %s: time since the last webhook call, e.g. "5 mins".
+#: src/Admin/SettingsPage.php:463
+#, php-format
+msgid "Last call received %s ago."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:465
+msgid "No call received yet. Use “Send Test” in Postiz to check it."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:472
+msgid "Create a new URL"
+msgstr ""
+
 #. translators: %d: number of channels.
-#: src/Admin/SettingsPage.php:448
+#: src/Admin/SettingsPage.php:487
 #, php-format
 msgid "Connected to Postiz. %d channel available."
 msgid_plural "Connected to Postiz. %d channels available."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Admin/SettingsPage.php:451
+#: src/Admin/SettingsPage.php:490
+msgid "New webhook URL created. Update it in Postiz: the old one no longer works."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:492
 msgid "Profiles saved."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:494
+#: src/Admin/SettingsPage.php:535
 msgid "You are not allowed to do this."
 msgstr ""
 
@@ -484,4 +510,12 @@ msgstr ""
 #: src/Sharing/ShareService.php:576
 #, php-format
 msgid "Postiz could not fetch the featured image (%s). Sent without image."
+msgstr ""
+
+#: src/Sync/StatusSync.php:113
+msgid "Published on the network."
+msgstr ""
+
+#: src/Sync/StatusSync.php:115
+msgid "Postiz reports an error for this post."
 msgstr ""

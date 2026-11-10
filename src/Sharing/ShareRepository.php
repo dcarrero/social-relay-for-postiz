@@ -153,4 +153,117 @@ final class ShareRepository {
 			array( '%s' )
 		);
 	}
+
+	/**
+	 * Rows whose state may still change in Postiz: queued or draft, within a time window.
+	 *
+	 * @param int $past_days   How far back to look (publish date).
+	 * @param int $future_days How far ahead to look (publish date).
+	 * @param int $limit       Maximum rows.
+	 * @return list<array<string, mixed>>
+	 */
+	public function syncable( int $past_days = 14, int $future_days = 60, int $limit = 200 ): array {
+		global $wpdb;
+
+		$table = Installer::tables()['shares'];
+		$rows  = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$table} WHERE status IN ( 'queued', 'draft' ) AND postiz_post_id <> '' AND publish_at BETWEEN %s AND %s ORDER BY publish_at ASC LIMIT %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $wpdb->prefix.
+				gmdate( 'Y-m-d H:i:s', time() - $past_days * DAY_IN_SECONDS ),
+				gmdate( 'Y-m-d H:i:s', time() + $future_days * DAY_IN_SECONDS ),
+				$limit
+			),
+			ARRAY_A
+		);
+
+		return is_array( $rows ) ? array_values( $rows ) : array();
+	}
+
+	/**
+	 * Updates one row.
+	 *
+	 * @param int                                                          $id      Row id.
+	 * @param array{status?: string, release_url?: string, error?: string} $changes Columns to change.
+	 */
+	public function update_row( int $id, array $changes ): void {
+		global $wpdb;
+
+		if ( array() === $changes ) {
+			return;
+		}
+
+		$changes['updated_at'] = current_time( 'mysql', true );
+
+		$wpdb->update(
+			Installer::tables()['shares'],
+			$changes,
+			array( 'id' => $id ),
+			array_fill( 0, count( $changes ), '%s' ),
+			array( '%d' )
+		);
+	}
+
+	/**
+	 * Counts per status over the last days, for the dashboard.
+	 *
+	 * @param int $days Days back from now (by creation date).
+	 * @return array<string, int>
+	 */
+	public function counts( int $days = 7 ): array {
+		global $wpdb;
+
+		$table = Installer::tables()['shares'];
+		$rows  = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT status, COUNT(*) AS total FROM {$table} WHERE created_at >= %s GROUP BY status", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $wpdb->prefix.
+				gmdate( 'Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS )
+			),
+			ARRAY_A
+		);
+
+		$counts = array();
+		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+			$counts[ (string) $row['status'] ] = (int) $row['total'];
+		}
+
+		return $counts;
+	}
+
+	/**
+	 * Latest rows of any post, for the dashboard.
+	 *
+	 * @param string $status Optional status filter.
+	 * @param int    $limit  Maximum rows.
+	 * @param string $order  'upcoming' (by publish date ascending, future only) or 'recent'.
+	 * @return list<array<string, mixed>>
+	 */
+	public function latest( string $status = '', int $limit = 5, string $order = 'recent' ): array {
+		global $wpdb;
+
+		$table = Installer::tables()['shares'];
+		$where = '1=1';
+		$args  = array();
+
+		if ( '' !== $status ) {
+			$where .= ' AND status = %s';
+			$args[] = $status;
+		}
+
+		if ( 'upcoming' === $order ) {
+			$where .= ' AND publish_at > %s';
+			$args[] = gmdate( 'Y-m-d H:i:s' );
+			$sort   = 'publish_at ASC';
+		} else {
+			$sort = 'updated_at DESC';
+		}
+
+		$args[] = $limit;
+
+		$rows = $wpdb->get_results(
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE {$where} ORDER BY {$sort} LIMIT %d", $args ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name and fixed clauses only; values are placeholders.
+			ARRAY_A
+		);
+
+		return is_array( $rows ) ? array_values( $rows ) : array();
+	}
 }

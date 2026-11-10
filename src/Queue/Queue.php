@@ -22,6 +22,7 @@ final class Queue implements Module {
 	public const HOOK_SHARE   = 'socialrelaycvi_share_post';
 	public const HOOK_CLEANUP = 'socialrelaycvi_cleanup';
 	public const HOOK_CANCEL  = 'socialrelaycvi_cancel_post';
+	public const HOOK_SYNC    = 'socialrelaycvi_sync_status';
 
 	/**
 	 * {@inheritDoc}
@@ -75,12 +76,34 @@ final class Queue implements Module {
 	}
 
 	/**
+	 * Queues a status sync, unless one is already waiting.
+	 *
+	 * @param int $delay Seconds to wait before running.
+	 */
+	public function enqueue_sync( int $delay = 0 ): void {
+		if ( function_exists( 'as_schedule_single_action' ) && function_exists( 'as_has_scheduled_action' ) ) {
+			if ( ! as_has_scheduled_action( self::HOOK_SYNC, array( 'single' ), self::GROUP ) ) {
+				as_schedule_single_action( time() + max( 0, $delay ), self::HOOK_SYNC, array( 'single' ), self::GROUP );
+			}
+			return;
+		}
+
+		if ( ! wp_next_scheduled( self::HOOK_SYNC, array( 'single' ) ) ) {
+			wp_schedule_single_event( time() + max( 0, $delay ), self::HOOK_SYNC, array( 'single' ) );
+		}
+	}
+
+	/**
 	 * Schedules the daily cleanup once.
 	 */
 	public function schedule_recurring(): void {
 		if ( function_exists( 'as_has_scheduled_action' ) && function_exists( 'as_schedule_recurring_action' ) ) {
 			if ( ! as_has_scheduled_action( self::HOOK_CLEANUP, array(), self::GROUP ) ) {
 				as_schedule_recurring_action( time() + HOUR_IN_SECONDS, DAY_IN_SECONDS, self::HOOK_CLEANUP, array(), self::GROUP, true );
+			}
+			// Cheap when nothing is pending: the job returns after one query.
+			if ( ! as_has_scheduled_action( self::HOOK_SYNC, array(), self::GROUP ) ) {
+				as_schedule_recurring_action( time() + 15 * MINUTE_IN_SECONDS, 15 * MINUTE_IN_SECONDS, self::HOOK_SYNC, array(), self::GROUP );
 			}
 			return;
 		}
@@ -101,5 +124,6 @@ final class Queue implements Module {
 		wp_clear_scheduled_hook( self::HOOK_CLEANUP );
 		wp_unschedule_hook( self::HOOK_SHARE );
 		wp_unschedule_hook( self::HOOK_CANCEL );
+		wp_unschedule_hook( self::HOOK_SYNC );
 	}
 }

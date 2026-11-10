@@ -4,10 +4,14 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 
 ## [Unreleased]
 
+### Added
+- Status sync: reads `GET /posts` for queued and draft shares and records published (with the post URL), error (with the platform message) and draft states. Runs every 15 minutes while something is pending and two minutes after each send.
+- Postiz webhook receiver at `/wp-json/socialrelaycvi/v1/webhook/{secret}`: it only triggers the sync, so the payload format does not matter. URL, last call and "Create a new URL" in Settings.
+- `socialrelaycvi_status_changed` action.
+
 ### Planned for 0.3
-- Block editor sidebar panel (React): channels, per-network text, preview and per-network status after publishing.
+- Block editor sidebar panel: channels, per-network text, preview and per-network status after publishing.
 - Classic editor metabox.
-- Postiz webhook receiver, with polling as a fallback.
 - Dashboard widget.
 
 ## [0.2.0] - 2026-11-10

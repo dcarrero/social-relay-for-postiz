@@ -13,6 +13,7 @@ WordPress plugin that auto-publishes and schedules your content on social networ
 - Conditions on categories and tags, UTM parameters per network, Postiz shortener and tags.
 - Background sending (Action Scheduler) with retries, duplicate protection and an activity log.
 - Pending posts are cancelled in Postiz when a post is unpublished.
+- Status sync with Postiz (published URL, platform errors), triggered by the Postiz webhook or every 15 minutes.
 - REST routes for status, channels, a post's shares and a dry-run preview.
 - English base, Spanish (es_ES) translation included.
 
@@ -36,7 +37,8 @@ composer analyse   # PHPStan
 | `src/Sharing/` | Payload builder, share job and preview, conditions, UTM, shares table |
 | `src/Lifecycle/` | Installer (tables) and post listener |
 | `src/Connector/` | Settings → Connectors registration (WordPress 7) |
-| `src/Rest/` | `socialrelaycvi/v1` routes |
+| `src/Rest/` | `socialrelaycvi/v1` routes and the Postiz webhook |
+| `src/Sync/` | Status sync with Postiz |
 | `src/Admin/` | Settings and log screens |
 | `languages/` | `.pot` template and translations |
 
@@ -51,7 +53,7 @@ add_filter( 'socialrelaycvi_modules', function ( array $modules, \SocialRelayCvi
 }, 10, 2 );
 ```
 
-Other hooks: `socialrelaycvi_gateway`, `socialrelaycvi_cancel_on_unpublish`, `socialrelaycvi_template_context`, `socialrelaycvi_payload`, `socialrelaycvi_should_share`, `socialrelaycvi_shared`, `socialrelaycvi_post_types`, `socialrelaycvi_allow_local_instance`, `socialrelaycvi_log_retention_days`.
+Other hooks: `socialrelaycvi_gateway`, `socialrelaycvi_status_changed`, `socialrelaycvi_cancel_on_unpublish`, `socialrelaycvi_template_context`, `socialrelaycvi_payload`, `socialrelaycvi_should_share`, `socialrelaycvi_shared`, `socialrelaycvi_post_types`, `socialrelaycvi_allow_local_instance`, `socialrelaycvi_log_retention_days`.
 
 ## Translations
 

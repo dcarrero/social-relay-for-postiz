@@ -21,9 +21,11 @@ use SocialRelayCvi\Postiz\Gateway;
 use SocialRelayCvi\Profiles\ProfileRepository;
 use SocialRelayCvi\Queue\Queue;
 use SocialRelayCvi\Rest\ConnectionController;
+use SocialRelayCvi\Rest\WebhookController;
 use SocialRelayCvi\Settings\Connection;
 use SocialRelayCvi\Sharing\ShareRepository;
 use SocialRelayCvi\Sharing\ShareService;
+use SocialRelayCvi\Sync\StatusSync;
 
 /**
  * Owns the shared services and the list of modules.
@@ -185,6 +187,8 @@ final class Plugin {
 			'share_service' => $this->share_service,
 			'post_listener' => new PostListener( $this ),
 			'rest'          => new ConnectionController( $this ),
+			'webhook'       => new WebhookController( $this ),
+			'status_sync'   => new StatusSync( $this ),
 			'settings_page' => new SettingsPage( $this ),
 			'log_page'      => new LogPage( $this ),
 			'log_cleanup'   => $this->logger,

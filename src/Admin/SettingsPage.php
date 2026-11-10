@@ -14,6 +14,7 @@ use SocialRelayCvi\Plugin;
 use SocialRelayCvi\Postiz\EndpointResolver;
 use SocialRelayCvi\Postiz\ProviderRules;
 use SocialRelayCvi\Profiles\ProfileRepository;
+use SocialRelayCvi\Rest\WebhookController;
 use SocialRelayCvi\Settings\Connection;
 use SocialRelayCvi\Settings\ConnectionTester;
 
@@ -39,6 +40,7 @@ final class SettingsPage implements Module {
 		add_action( 'admin_menu', array( $this, 'add_menu' ) );
 		add_action( 'admin_post_socialrelaycvi_save_connection', array( $this, 'save_connection' ) );
 		add_action( 'admin_post_socialrelaycvi_save_profiles', array( $this, 'save_profiles' ) );
+		add_action( 'admin_post_socialrelaycvi_regenerate_webhook', array( $this, 'regenerate_webhook' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( SOCIALRELAYCVI_FILE ), array( $this, 'action_links' ) );
 	}
 
@@ -100,6 +102,15 @@ final class SettingsPage implements Module {
 					'socialrelaycvi_count'  => $result['channels'],
 				)
 		);
+	}
+
+	/**
+	 * Creates a new webhook secret.
+	 */
+	public function regenerate_webhook(): void {
+		$this->guard( 'socialrelaycvi_regenerate_webhook' );
+		WebhookController::regenerate();
+		$this->redirect( array( 'socialrelaycvi_notice' => 'webhook_regenerated' ) );
 	}
 
 	/**
@@ -198,6 +209,7 @@ final class SettingsPage implements Module {
 			</form>
 
 			<?php if ( $connection->is_configured() ) : ?>
+				<?php $this->render_webhook(); ?>
 				<h2><?php esc_html_e( 'Publishing profiles', 'social-relay-for-postiz' ); ?></h2>
 				<?php if ( is_wp_error( $channels ) ) : ?>
 					<div class="notice notice-error inline"><p><?php echo esc_html( $channels->get_error_message() ); ?></p></div>
@@ -436,6 +448,33 @@ final class SettingsPage implements Module {
 	}
 
 	/**
+	 * Webhook block: URL to paste in Postiz and last call received.
+	 */
+	private function render_webhook(): void {
+		$last = (int) get_option( WebhookController::OPTION_LAST, 0 );
+		?>
+		<h2><?php esc_html_e( 'Postiz webhook (optional)', 'social-relay-for-postiz' ); ?></h2>
+		<p><?php esc_html_e( 'Paste this URL in Postiz → Settings → Webhooks to update the status of your posts as soon as they are published. Without it, the plugin checks Postiz every 15 minutes.', 'social-relay-for-postiz' ); ?></p>
+		<p><input type="text" readonly class="large-text code" value="<?php echo esc_attr( WebhookController::url() ); ?>" onfocus="this.select()"></p>
+		<p class="description">
+			<?php
+			if ( $last > 0 ) {
+				/* translators: %s: time since the last webhook call, e.g. "5 mins". */
+				printf( esc_html__( 'Last call received %s ago.', 'social-relay-for-postiz' ), esc_html( human_time_diff( $last ) ) );
+			} else {
+				esc_html_e( 'No call received yet. Use “Send Test” in Postiz to check it.', 'social-relay-for-postiz' );
+			}
+			?>
+		</p>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+			<input type="hidden" name="action" value="socialrelaycvi_regenerate_webhook">
+			<?php wp_nonce_field( 'socialrelaycvi_regenerate_webhook' ); ?>
+			<?php submit_button( __( 'Create a new URL', 'social-relay-for-postiz' ), 'secondary small', 'submit', false ); ?>
+		</form>
+		<?php
+	}
+
+	/**
 	 * Shows the result of the last action.
 	 */
 	private function render_notice(): void {
@@ -447,6 +486,8 @@ final class SettingsPage implements Module {
 			/* translators: %d: number of channels. */
 			$text = sprintf( _n( 'Connected to Postiz. %d channel available.', 'Connected to Postiz. %d channels available.', $count, 'social-relay-for-postiz' ), $count );
 			printf( '<div class="notice notice-success is-dismissible"><p>%s</p></div>', esc_html( $text ) );
+		} elseif ( 'webhook_regenerated' === $notice ) {
+			printf( '<div class="notice notice-warning is-dismissible"><p>%s</p></div>', esc_html__( 'New webhook URL created. Update it in Postiz: the old one no longer works.', 'social-relay-for-postiz' ) );
 		} elseif ( 'profiles_saved' === $notice ) {
 			printf( '<div class="notice notice-success is-dismissible"><p>%s</p></div>', esc_html__( 'Profiles saved.', 'social-relay-for-postiz' ) );
 		} elseif ( 'error' === $notice ) {
