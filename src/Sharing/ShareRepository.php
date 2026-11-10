@@ -108,4 +108,49 @@ final class ShareRepository {
 
 		return is_array( $rows ) ? array_values( $rows ) : array();
 	}
+
+	/**
+	 * Batches of a post that can still be cancelled in Postiz.
+	 *
+	 * Only drafts and posts scheduled in the future: a "now" post or a past date may
+	 * already be live, and deleting it in Postiz would only remove Postiz's record.
+	 *
+	 * @param int $post_id Post id.
+	 * @return list<string> Batch (group) ids.
+	 */
+	public function cancellable_batches( int $post_id ): array {
+		global $wpdb;
+
+		$table   = Installer::tables()['shares'];
+		$batches = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT DISTINCT batch FROM {$table} WHERE post_id = %d AND ( status = 'draft' OR ( status = 'queued' AND type = 'schedule' AND publish_at > %s ) )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $wpdb->prefix.
+				$post_id,
+				gmdate( 'Y-m-d H:i:s' )
+			)
+		);
+
+		return array_values( array_map( 'strval', (array) $batches ) );
+	}
+
+	/**
+	 * Sets the status of every row of a batch.
+	 *
+	 * @param string $batch  Batch (group) id.
+	 * @param string $status New status.
+	 */
+	public function set_batch_status( string $batch, string $status ): void {
+		global $wpdb;
+
+		$wpdb->update(
+			Installer::tables()['shares'],
+			array(
+				'status'     => $status,
+				'updated_at' => current_time( 'mysql', true ),
+			),
+			array( 'batch' => $batch ),
+			array( '%s', '%s' ),
+			array( '%s' )
+		);
+	}
 }

@@ -63,6 +63,22 @@ final class ConnectionController implements Module {
 
 		register_rest_route(
 			self::NAMESPACE,
+			'/posts/(?P<id>\d+)/shares',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'shares' ),
+				'permission_callback' => static fn ( WP_REST_Request $request ): bool => current_user_can( 'edit_post', (int) $request['id'] ),
+				'args'                => array(
+					'id' => array(
+						'type'     => 'integer',
+						'required' => true,
+					),
+				),
+			)
+		);
+
+		register_rest_route(
+			self::NAMESPACE,
 			'/channels',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -107,6 +123,32 @@ final class ConnectionController implements Module {
 	}
 
 	/**
+	 * GET /posts/{id}/shares — what was sent to Postiz for a post, newest first.
+	 *
+	 * @param WP_REST_Request<array<string, mixed>> $request Request.
+	 */
+	public function shares( WP_REST_Request $request ): WP_REST_Response {
+		$rows = array_map(
+			static fn ( array $row ): array => array(
+				'id'             => (int) $row['id'],
+				'integration_id' => (string) $row['integration_id'],
+				'identifier'     => (string) $row['identifier'],
+				'batch'          => (string) $row['batch'],
+				'postiz_post_id' => (string) $row['postiz_post_id'],
+				'type'           => (string) $row['type'],
+				'status'         => (string) $row['status'],
+				'publish_at'     => null === $row['publish_at'] ? null : self::utc( (string) $row['publish_at'] ),
+				'release_url'    => (string) ( $row['release_url'] ?? '' ),
+				'error'          => (string) ( $row['error'] ?? '' ),
+				'created_at'     => self::utc( (string) $row['created_at'] ),
+			),
+			$this->plugin->shares->for_post( (int) $request['id'] )
+		);
+
+		return new WP_REST_Response( $rows );
+	}
+
+	/**
 	 * GET /channels
 	 *
 	 * @param WP_REST_Request<array<string, mixed>> $request Request.
@@ -116,5 +158,14 @@ final class ConnectionController implements Module {
 		$channels = $this->plugin->channels->all( (bool) $request->get_param( 'refresh' ) && current_user_can( 'manage_options' ) );
 
 		return is_wp_error( $channels ) ? $channels : new WP_REST_Response( $channels );
+	}
+
+	/**
+	 * Converts a stored UTC MySQL datetime to ISO 8601 with Z.
+	 *
+	 * @param string $mysql_utc Datetime in UTC, Y-m-d H:i:s.
+	 */
+	private static function utc( string $mysql_utc ): string {
+		return gmdate( 'Y-m-d\\TH:i:s\\Z', (int) strtotime( $mysql_utc . ' UTC' ) );
 	}
 }

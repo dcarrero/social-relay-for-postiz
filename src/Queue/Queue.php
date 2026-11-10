@@ -21,6 +21,7 @@ final class Queue implements Module {
 	public const GROUP        = 'socialrelaycvi';
 	public const HOOK_SHARE   = 'socialrelaycvi_share_post';
 	public const HOOK_CLEANUP = 'socialrelaycvi_cleanup';
+	public const HOOK_CANCEL  = 'socialrelaycvi_cancel_post';
 
 	/**
 	 * {@inheritDoc}
@@ -54,6 +55,26 @@ final class Queue implements Module {
 	}
 
 	/**
+	 * Queues the cancellation in Postiz of a post's pending shares.
+	 *
+	 * @param int $post_id Post id.
+	 */
+	public function enqueue_cancel( int $post_id ): void {
+		$args = array( $post_id );
+
+		if ( function_exists( 'as_enqueue_async_action' ) && function_exists( 'as_has_scheduled_action' ) ) {
+			if ( ! as_has_scheduled_action( self::HOOK_CANCEL, $args, self::GROUP ) ) {
+				as_enqueue_async_action( self::HOOK_CANCEL, $args, self::GROUP );
+			}
+			return;
+		}
+
+		if ( ! wp_next_scheduled( self::HOOK_CANCEL, $args ) ) {
+			wp_schedule_single_event( time(), self::HOOK_CANCEL, $args );
+		}
+	}
+
+	/**
 	 * Schedules the daily cleanup once.
 	 */
 	public function schedule_recurring(): void {
@@ -79,5 +100,6 @@ final class Queue implements Module {
 
 		wp_clear_scheduled_hook( self::HOOK_CLEANUP );
 		wp_unschedule_hook( self::HOOK_SHARE );
+		wp_unschedule_hook( self::HOOK_CANCEL );
 	}
 }

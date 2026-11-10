@@ -39,6 +39,31 @@ final class PostListener implements Module {
 	 */
 	public function register(): void {
 		add_action( 'wp_after_insert_post', array( $this, 'on_save' ), 20, 4 );
+		add_action( 'transition_post_status', array( $this, 'on_unpublish' ), 10, 3 );
+	}
+
+	/**
+	 * Cancels pending posts in Postiz when a published post goes back to draft, private or trash.
+	 *
+	 * @param string  $new_status New status.
+	 * @param string  $old_status Old status.
+	 * @param WP_Post $post       Post.
+	 */
+	public function on_unpublish( string $new_status, string $old_status, WP_Post $post ): void {
+		if ( 'publish' !== $old_status || 'publish' === $new_status ) {
+			return;
+		}
+
+		/**
+		 * Filters whether pending Postiz posts are cancelled when a post is unpublished.
+		 *
+		 * @param bool    $cancel     Default true.
+		 * @param WP_Post $post       Post.
+		 * @param string  $new_status New status.
+		 */
+		if ( apply_filters( 'socialrelaycvi_cancel_on_unpublish', true, $post, $new_status ) ) {
+			$this->plugin->queue->enqueue_cancel( $post->ID );
+		}
 	}
 
 	/**

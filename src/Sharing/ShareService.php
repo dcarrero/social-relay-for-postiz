@@ -53,6 +53,7 @@ final class ShareService implements Module {
 	 */
 	public function register(): void {
 		add_action( Queue::HOOK_SHARE, array( $this, 'handle' ), 10, 2 );
+		add_action( Queue::HOOK_CANCEL, array( $this, 'cancel' ) );
 	}
 
 	/**
@@ -159,6 +160,35 @@ final class ShareService implements Module {
 
 		if ( $reshare ) {
 			update_post_meta( $post_id, PostMeta::RESHARE, false );
+		}
+	}
+
+	/**
+	 * Cancels in Postiz what is still pending for a post (drafts and future schedules).
+	 *
+	 * @param int $post_id Post id.
+	 */
+	public function cancel( int $post_id ): void {
+		$batches = $this->plugin->shares->cancellable_batches( $post_id );
+		if ( array() === $batches ) {
+			return;
+		}
+
+		$client = $this->plugin->gateway();
+		if ( null === $client ) {
+			return;
+		}
+
+		foreach ( $batches as $batch ) {
+			$result = $client->delete_group( $batch );
+
+			if ( is_wp_error( $result ) ) {
+				$this->plugin->logger->error( 'cancel', $result->get_error_message(), $post_id, '', array( 'batch' => $batch ) );
+				continue;
+			}
+
+			$this->plugin->shares->set_batch_status( $batch, 'cancelled' );
+			$this->plugin->logger->info( 'cancel', __( 'Pending posts cancelled in Postiz.', 'social-relay-for-postiz' ), $post_id, '', array( 'batch' => $batch ) );
 		}
 	}
 
