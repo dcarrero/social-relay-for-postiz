@@ -3,7 +3,7 @@
 WordPress plugin that auto-publishes and schedules your content on social networks through **your own Postiz instance** (self-hosted or Postiz Cloud). WordPress talks directly to the Postiz public API: no middleman service.
 
 - Requires WordPress 7.0+ and PHP 8.2+.
-- Status: early development, version 0.3 (see [CHANGELOG.md](CHANGELOG.md)).
+- Status: early development, version 0.3.1 (see [CHANGELOG.md](CHANGELOG.md)).
 
 ## Features
 
@@ -22,6 +22,10 @@ WordPress plugin that auto-publishes and schedules your content on social networ
 
 ```bash
 composer install
+npm ci
+npm run build      # editor panel: assets/src → build/ (required, build/ is not in git)
+npm run start      # same, rebuilding on every change
+npm run lint:js    # WordPress ESLint rules
 composer test      # PHPUnit (unit tests, no WordPress needed)
 composer lint      # PHPCS with WordPress Coding Standards + PHPCompatibility
 composer analyse   # PHPStan
@@ -41,7 +45,7 @@ composer analyse   # PHPStan
 | `src/Rest/` | `socialrelaycvi/v1` routes and the Postiz webhook |
 | `src/Sync/` | Status sync with Postiz |
 | `src/Admin/` | Settings and log screens, editor panel loader, classic metabox, dashboard widget |
-| `assets/js/editor-panel.js` | Block editor panel (no build step: uses the `wp.*` packages loaded by the editor) |
+| `assets/src/editor-panel/` | Block editor panel in JSX (built into `build/` with @wordpress/scripts; @wordpress/* packages come from WordPress) |
 | `languages/` | `.pot` template and translations |
 
 ### Extending
@@ -65,7 +69,7 @@ All strings are written in English with the `social-relay-for-postiz` text domai
 composer i18n   # regenerate the .pot, update the .po files and compile the .mo files
 ```
 
-In JavaScript, write the text domain literally in every call (`__( 'Text', 'social-relay-for-postiz' )`) so the extractor finds it. When adding strings: use `_x()` when a word has more than one meaning (e.g. "Post"), `_n()` for counts, and a `translators:` comment for every placeholder.
+In JavaScript, write the text domain literally in every call (`__( 'Text', 'social-relay-for-postiz' )`) so the extractor finds it; run `npm run build` before `composer i18n`, because strings are extracted from `build/`. When adding strings: use `_x()` when a word has more than one meaning (e.g. "Post"), `_n()` for counts, and a `translators:` comment for every placeholder.
 
 ## License
 

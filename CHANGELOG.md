@@ -8,6 +8,17 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - Evergreen, bulk publishing and calendar (to be built as Pro modules).
 - Settings and log screens rebuilt with DataViews/DataForm.
 
+## [0.3.1] - 2026-11-10
+
+### Changed
+- Editor panel rewritten in JSX and split into components (`assets/src/editor-panel/`), built with `@wordpress/scripts` into `build/`. Script dependencies and version come from the generated `editor-panel.asset.php`.
+- JavaScript linting (WordPress ESLint rules) and build added to CI.
+- JavaScript translations now point to the built file.
+
+### Fixed
+- `{slug}` (and therefore `utm_campaign`) was empty for drafts: it now falls back to the title, as WordPress does on publish.
+- Long URLs no longer overflow the preview box.
+
 ## [0.3.0] - 2026-11-10
 
 ### Added
@@ -52,7 +63,8 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - Shares and log tables, settings and log screens, `socialrelaycvi/v1` status and channels routes.
 - Module registry (`socialrelaycvi_modules` filter) for the Pro add-on.
 
-[Unreleased]: https://github.com/dcarrero/social-relay-for-postiz/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/dcarrero/social-relay-for-postiz/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/dcarrero/social-relay-for-postiz/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/dcarrero/social-relay-for-postiz/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/dcarrero/social-relay-for-postiz/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/dcarrero/social-relay-for-postiz/releases/tag/v0.1.0

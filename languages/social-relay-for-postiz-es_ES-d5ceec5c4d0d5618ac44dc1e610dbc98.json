@@ -1,7 +1,7 @@
 {
-    "translation-revision-date": "2026-11-10T10:32:45+00:00",
+    "translation-revision-date": "2026-11-10T10:59:43+00:00",
     "generator": "WP-CLI\/2.12.0",
-    "source": "assets\/js\/editor-panel.js",
+    "source": "build\/editor-panel.js",
     "domain": "messages",
     "locale_data": {
         "messages": {
@@ -61,17 +61,24 @@
             "Immediately": [
                 "Al momento"
             ],
-            "Pending": [
-                "Pendiente"
+            "Social networks": [
+                "Redes sociales"
             ],
-            "No channels in Postiz yet.": [
-                "Todav\u00eda no hay canales en Postiz."
+            "Will be sent to Postiz for %d channel:": [
+                "Se enviar\u00e1 a Postiz para %d canal:",
+                "Se enviar\u00e1 a Postiz para %d canales:"
+            ],
+            "This post will not be shared.": [
+                "Esta entrada no se compartir\u00e1."
             ],
             "Use the profile channels": [
                 "Usar los canales del perfil"
             ],
             "Channels from the publishing profile.": [
                 "Canales del perfil de publicaci\u00f3n."
+            ],
+            "No channels in Postiz yet.": [
+                "Todav\u00eda no hay canales en Postiz."
             ],
             "Empty = profile template. Tags like {title} and {url} work here too.": [
                 "Vac\u00edo = plantilla del perfil. Aqu\u00ed tambi\u00e9n funcionan variables como {title} y {url}."
@@ -85,12 +92,12 @@
             "Empty = text for all networks": [
                 "Vac\u00edo = texto para todas las redes"
             ],
-            "This post does not match the profile conditions and will not be shared.": [
-                "Esta entrada no cumple las condiciones del perfil y no se compartir\u00e1."
-            ],
             "Thread of %d part.": [
                 "Hilo de %d parte.",
                 "Hilo de %d partes."
+            ],
+            "This post does not match the profile conditions and will not be shared.": [
+                "Esta entrada no cumple las condiciones del perfil y no se compartir\u00e1."
             ],
             "Based on the last saved version.": [
                 "Seg\u00fan la \u00faltima versi\u00f3n guardada."
@@ -98,36 +105,29 @@
             "Refresh": [
                 "Actualizar"
             ],
+            "Pending": [
+                "Pendiente"
+            ],
             "Nothing sent to Postiz yet.": [
                 "Todav\u00eda no se ha enviado nada a Postiz."
-            ],
-            "Postiz is not connected yet.": [
-                "Postiz todav\u00eda no est\u00e1 conectado."
-            ],
-            "Connect Postiz": [
-                "Conectar Postiz"
             ],
             "Sharing is off for this post type.": [
                 "Compartir est\u00e1 desactivado para este tipo de contenido."
             ],
+            "Postiz is not connected yet.": [
+                "Postiz todav\u00eda no est\u00e1 conectado."
+            ],
             "Set up a publishing profile": [
                 "Configurar un perfil de publicaci\u00f3n"
+            ],
+            "Connect Postiz": [
+                "Conectar Postiz"
             ],
             "Shared when published": [
                 "Se comparti\u00f3 al publicar"
             ],
             "Preview": [
                 "Vista previa"
-            ],
-            "Social networks": [
-                "Redes sociales"
-            ],
-            "This post will not be shared.": [
-                "Esta entrada no se compartir\u00e1."
-            ],
-            "Will be sent to Postiz for %d channel:": [
-                "Se enviar\u00e1 a Postiz para %d canal:",
-                "Se enviar\u00e1 a Postiz para %d canales:"
             ]
         }
     }

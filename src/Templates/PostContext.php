@@ -37,7 +37,8 @@ final class PostContext {
 			'excerpt'         => $plain( $excerpt ),
 			'content'         => $plain( strip_shortcodes( $post->post_content ) ),
 			'url'             => (string) get_permalink( $post ),
-			'slug'            => (string) $post->post_name,
+			// Drafts have no slug yet: fall back to the title, as WordPress will do on publish.
+			'slug'            => '' !== $post->post_name ? (string) $post->post_name : sanitize_title( get_the_title( $post ) ),
 			'shortlink'       => (string) wp_get_shortlink( $post->ID ),
 			'author'          => (string) get_the_author_meta( 'display_name', (int) $post->post_author ),
 			'date'            => (string) get_the_date( '', $post ),

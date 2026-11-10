@@ -4,7 +4,7 @@ Tags: postiz, social media, auto post, schedule, self-hosted
 Requires at least: 7.0
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 0.3.0
+Stable tag: 0.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,7 +68,15 @@ This plugin sends data to the Postiz instance whose URL you configure (your own 
 Postiz Cloud terms: https://postiz.com/terms
 Postiz Cloud privacy policy: https://postiz.com/privacy
 
+== Source code ==
+
+The editor panel JavaScript is built from the sources in `assets/src/` with @wordpress/scripts. Full source code and build instructions: https://github.com/dcarrero/social-relay-for-postiz
+
 == Changelog ==
+
+= 0.3.1 =
+* Editor panel rebuilt with JSX and @wordpress/scripts.
+* {slug} works for drafts; long URLs wrap in the preview.
 
 = 0.3.0 =
 * Block editor panel, pre-publish summary and classic editor metabox.
