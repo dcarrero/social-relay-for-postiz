@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T11:06:21+00:00",
+    "translation-revision-date": "2026-11-10T11:14:41+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/editor-panel.js",
     "domain": "messages",
@@ -34,14 +34,8 @@
             "Log": [
                 "Registro"
             ],
-            "Message": [
-                "Mensaje"
-            ],
             "Social Relay": [
                 "Social Relay"
-            ],
-            "Next free slot in Postiz": [
-                "Siguiente hueco libre en Postiz"
             ],
             "Published": [
                 "Publicada"
@@ -57,6 +51,9 @@
             ],
             "Scheduled %d minutes after publishing": [
                 "Programada %d minutos despu\u00e9s de publicar"
+            ],
+            "Next free slot in Postiz": [
+                "Siguiente hueco libre en Postiz"
             ],
             "Immediately": [
                 "Al momento"
@@ -125,6 +122,9 @@
             ],
             "Shared when published": [
                 "Se comparti\u00f3 al publicar"
+            ],
+            "Message": [
+                "Mensaje"
             ],
             "Preview": [
                 "Vista previa"

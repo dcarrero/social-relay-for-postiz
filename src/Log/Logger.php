@@ -76,6 +76,69 @@ final class Logger implements Module {
 	}
 
 	/**
+	 * Page of entries with optional filters.
+	 *
+	 * @param int    $page     Page number, from 1.
+	 * @param int    $per_page Rows per page.
+	 * @param string $level    '' for all, info or error.
+	 * @param string $search   Text to look for in the message.
+	 * @param int    $post_id  0 for all posts.
+	 * @return array{items: list<array<string, mixed>>, total: int}
+	 */
+	public function query( int $page = 1, int $per_page = 20, string $level = '', string $search = '', int $post_id = 0 ): array {
+		global $wpdb;
+
+		$table = Installer::tables()['log'];
+		// Always one placeholder, so both queries can go through prepare().
+		$where = array( '1 = %d' );
+		$args  = array( 1 );
+
+		if ( in_array( $level, array( 'info', 'error' ), true ) ) {
+			$where[] = 'level = %s';
+			$args[]  = $level;
+		}
+
+		if ( '' !== $search ) {
+			$where[] = 'message LIKE %s';
+			$args[]  = '%' . $wpdb->esc_like( $search ) . '%';
+		}
+
+		if ( $post_id > 0 ) {
+			$where[] = 'post_id = %d';
+			$args[]  = $post_id;
+		}
+
+		$where_sql = implode( ' AND ', $where );
+
+		$total = (int) $wpdb->get_var(
+			$wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE {$where_sql}", $args ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Table name and fixed clauses; every value is a placeholder.
+		);
+
+		$args[] = max( 1, $per_page );
+		$args[] = ( max( 1, $page ) - 1 ) * max( 1, $per_page );
+
+		$rows = $wpdb->get_results(
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE {$where_sql} ORDER BY id DESC LIMIT %d OFFSET %d", $args ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Table name and fixed clauses; every value is a placeholder.
+			ARRAY_A
+		);
+
+		return array(
+			'items' => is_array( $rows ) ? array_values( $rows ) : array(),
+			'total' => $total,
+		);
+	}
+
+	/**
+	 * Deletes every entry.
+	 */
+	public function clear(): void {
+		global $wpdb;
+
+		$table = Installer::tables()['log'];
+		$wpdb->query( "TRUNCATE TABLE {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.SchemaChange -- Our own table.
+	}
+
+	/**
 	 * Deletes entries older than the retention period.
 	 */
 	public function purge(): void {

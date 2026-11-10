@@ -5,8 +5,8 @@
 	"description": "Build tooling for the Social Relay for Postiz editor panel.",
 	"license": "GPL-2.0-or-later",
 	"scripts": {
-		"build": "wp-scripts build editor-panel=./assets/src/editor-panel/index.js --output-path=build",
-		"start": "wp-scripts start editor-panel=./assets/src/editor-panel/index.js --output-path=build",
+		"build": "wp-scripts build editor-panel=./assets/src/editor-panel/index.js settings=./assets/src/settings/index.js log=./assets/src/log/index.js --output-path=build",
+		"start": "wp-scripts start editor-panel=./assets/src/editor-panel/index.js settings=./assets/src/settings/index.js log=./assets/src/log/index.js --output-path=build",
 		"lint:js": "wp-scripts lint-js assets/src",
 		"format": "wp-scripts format assets/src"
 	},

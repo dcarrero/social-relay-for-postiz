@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings screen: connection and publishing profiles.
+ * Settings screen.
  *
  * @package SocialRelayCvi
  */
@@ -10,16 +10,11 @@ declare( strict_types=1 );
 namespace SocialRelayCvi\Admin;
 
 use SocialRelayCvi\Module;
-use SocialRelayCvi\Plugin;
-use SocialRelayCvi\Postiz\EndpointResolver;
-use SocialRelayCvi\Postiz\ProviderRules;
-use SocialRelayCvi\Profiles\ProfileRepository;
-use SocialRelayCvi\Rest\WebhookController;
-use SocialRelayCvi\Settings\Connection;
-use SocialRelayCvi\Settings\ConnectionTester;
 
 /**
- * Server-rendered settings page for 0.1. The React version (DataForm) comes in 0.3.
+ * Top-level menu and the React settings screen (assets/src/settings).
+ *
+ * Data is read and saved through the socialrelaycvi/v1/admin REST routes.
  */
 final class SettingsPage implements Module {
 
@@ -27,20 +22,17 @@ final class SettingsPage implements Module {
 	public const CAPABILITY = 'manage_options';
 
 	/**
-	 * Constructor.
+	 * Whether the script was enqueued for this request.
 	 *
-	 * @param Plugin $plugin Plugin instance.
+	 * @var bool
 	 */
-	public function __construct( private readonly Plugin $plugin ) {}
+	private bool $loaded = false;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
 		add_action( 'admin_menu', array( $this, 'add_menu' ) );
-		add_action( 'admin_post_socialrelaycvi_save_connection', array( $this, 'save_connection' ) );
-		add_action( 'admin_post_socialrelaycvi_save_profiles', array( $this, 'save_profiles' ) );
-		add_action( 'admin_post_socialrelaycvi_regenerate_webhook', array( $this, 'regenerate_webhook' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( SOCIALRELAYCVI_FILE ), array( $this, 'action_links' ) );
 	}
 
@@ -48,7 +40,7 @@ final class SettingsPage implements Module {
 	 * Adds the top-level menu.
 	 */
 	public function add_menu(): void {
-		add_menu_page(
+		$hook = add_menu_page(
 			__( 'Social Relay for Postiz', 'social-relay-for-postiz' ),
 			__( 'Social Relay', 'social-relay-for-postiz' ),
 			self::CAPABILITY,
@@ -59,6 +51,22 @@ final class SettingsPage implements Module {
 		);
 
 		add_submenu_page( self::SLUG, __( 'Settings', 'social-relay-for-postiz' ), __( 'Settings', 'social-relay-for-postiz' ), self::CAPABILITY, self::SLUG, array( $this, 'render' ) );
+
+		add_action( 'load-' . $hook, array( $this, 'enqueue' ) );
+	}
+
+	/**
+	 * Enqueues the app on this screen only.
+	 */
+	public function enqueue(): void {
+		$this->loaded = AdminApp::enqueue(
+			'settings',
+			array(
+				'namespace' => 'socialrelaycvi/v1',
+				'logUrl'    => admin_url( 'admin.php?page=' . LogPage::SLUG ),
+				'docsUrl'   => 'https://docs.postiz.com/public-api/introduction',
+			)
+		);
 	}
 
 	/**
@@ -74,477 +82,11 @@ final class SettingsPage implements Module {
 	}
 
 	/**
-	 * Saves URL and key, then tests the connection.
-	 */
-	public function save_connection(): void {
-		$this->guard( 'socialrelaycvi_save_connection' );
-
-		$url = isset( $_POST['instance_url'] ) ? EndpointResolver::normalize( sanitize_text_field( wp_unslash( $_POST['instance_url'] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Checked in guard().
-		update_option( Connection::OPTION_URL, esc_url_raw( $url ), false );
-
-		$connection = $this->plugin->connection;
-		$new_key    = isset( $_POST['api_key'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['api_key'] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Checked in guard().
-
-		if ( '' !== $new_key && $connection->key_is_editable() ) {
-			update_option( Connection::OPTION_API_KEY, $new_key, false );
-		}
-
-		$result = ( new ConnectionTester( $this->plugin ) )->run();
-
-		$this->redirect(
-			is_wp_error( $result )
-				? array(
-					'socialrelaycvi_notice' => 'error',
-					'socialrelaycvi_msg'    => rawurlencode( $result->get_error_message() ), // Decoded by PHP into $_GET.
-				)
-				: array(
-					'socialrelaycvi_notice' => 'connected',
-					'socialrelaycvi_count'  => $result['channels'],
-				)
-		);
-	}
-
-	/**
-	 * Creates a new webhook secret.
-	 */
-	public function regenerate_webhook(): void {
-		$this->guard( 'socialrelaycvi_regenerate_webhook' );
-		WebhookController::regenerate();
-		$this->redirect( array( 'socialrelaycvi_notice' => 'webhook_regenerated' ) );
-	}
-
-	/**
-	 * Saves the publishing profiles.
-	 */
-	public function save_profiles(): void {
-		$this->guard( 'socialrelaycvi_save_profiles' );
-
-		$raw      = isset( $_POST['profiles'] ) && is_array( $_POST['profiles'] ) ? wp_unslash( $_POST['profiles'] ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce checked in guard(); sanitized per field below.
-		$profiles = array();
-		$channels = $this->plugin->channels->all();
-		$ids      = is_wp_error( $channels ) ? array() : array_column( $channels, 'identifier', 'id' );
-
-		foreach ( $this->post_types() as $post_type => $label ) {
-			$profile = isset( $raw[ $post_type ] ) && is_array( $raw[ $post_type ] ) ? $raw[ $post_type ] : array();
-
-			// Tags are typed as comma-separated names; store their ids.
-			foreach ( array(
-				'include_tags' => 'include_terms',
-				'exclude_tags' => 'exclude_terms',
-			) as $field => $target ) {
-				$names   = isset( $profile[ $field ] ) ? array_filter( array_map( 'trim', explode( ',', sanitize_text_field( (string) $profile[ $field ] ) ) ) ) : array();
-				$tag_ids = array();
-				foreach ( $names as $name ) {
-					$term = get_term_by( 'name', $name, 'post_tag' );
-					if ( $term instanceof \WP_Term ) {
-						$tag_ids[] = $term->term_id;
-					}
-				}
-				$profile[ $target ] = array_merge( isset( $profile[ $target ] ) && is_array( $profile[ $target ] ) ? $profile[ $target ] : array(), $tag_ids );
-			}
-
-			$profiles[ $post_type ] = ProfileRepository::sanitize( $profile, $ids );
-		}
-
-		update_option( ProfileRepository::OPTION, $profiles, false );
-
-		$this->redirect( array( 'socialrelaycvi_notice' => 'profiles_saved' ) );
-	}
-
-	/**
-	 * Renders the page.
+	 * Renders the root element.
 	 */
 	public function render(): void {
-		if ( ! current_user_can( self::CAPABILITY ) ) {
-			return;
+		if ( current_user_can( self::CAPABILITY ) ) {
+			AdminApp::render_root( 'socialrelaycvi-settings', $this->loaded, __( 'Social Relay for Postiz', 'social-relay-for-postiz' ) );
 		}
-
-		$connection = $this->plugin->connection;
-		$channels   = $connection->is_configured() ? $this->plugin->channels->all() : array();
-		$profiles   = $this->plugin->profiles->all();
-		?>
-		<div class="wrap">
-			<h1><?php esc_html_e( 'Social Relay for Postiz', 'social-relay-for-postiz' ); ?></h1>
-			<?php $this->render_notice(); ?>
-
-			<h2><?php esc_html_e( 'Postiz connection', 'social-relay-for-postiz' ); ?></h2>
-			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-				<input type="hidden" name="action" value="socialrelaycvi_save_connection">
-				<?php wp_nonce_field( 'socialrelaycvi_save_connection' ); ?>
-				<table class="form-table" role="presentation">
-					<tr>
-						<th scope="row"><label for="socialrelaycvi-url"><?php esc_html_e( 'Postiz URL', 'social-relay-for-postiz' ); ?></label></th>
-						<td>
-							<input type="url" id="socialrelaycvi-url" name="instance_url" class="regular-text" value="<?php echo esc_attr( $connection->instance_url() ); ?>" placeholder="https://postiz.example.com" required>
-							<p class="description">
-								<?php esc_html_e( 'Your self-hosted Postiz address. For Postiz Cloud, use https://api.postiz.com.', 'social-relay-for-postiz' ); ?>
-								<?php if ( '' !== $connection->api_base() ) : ?>
-									<br><?php esc_html_e( 'Detected API:', 'social-relay-for-postiz' ); ?> <code><?php echo esc_html( $connection->api_base() ); ?></code>
-								<?php endif; ?>
-							</p>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row"><label for="socialrelaycvi-key"><?php esc_html_e( 'API key', 'social-relay-for-postiz' ); ?></label></th>
-						<td>
-							<?php if ( $connection->key_is_editable() ) : ?>
-								<input type="password" id="socialrelaycvi-key" name="api_key" class="regular-text" autocomplete="off" placeholder="<?php echo esc_attr( '' !== $connection->masked_key() ? $connection->masked_key() : __( 'Paste your API key', 'social-relay-for-postiz' ) ); ?>">
-								<p class="description"><?php esc_html_e( 'Postiz → Settings → Developers → Public API. Leave empty to keep the current key. For better security define SOCIALRELAYCVI_POSTIZ_API_KEY in wp-config.php or the POSTIZ_API_KEY environment variable.', 'social-relay-for-postiz' ); ?></p>
-							<?php else : ?>
-								<code><?php echo esc_html( $connection->masked_key() ); ?></code>
-								<p class="description">
-									<?php
-									echo esc_html(
-										'env' === $connection->key_source()
-											? __( 'Read from the POSTIZ_API_KEY environment variable.', 'social-relay-for-postiz' )
-											: __( 'Defined in wp-config.php (SOCIALRELAYCVI_POSTIZ_API_KEY).', 'social-relay-for-postiz' )
-									);
-									?>
-								</p>
-							<?php endif; ?>
-						</td>
-					</tr>
-				</table>
-				<?php submit_button( __( 'Save and test connection', 'social-relay-for-postiz' ) ); ?>
-			</form>
-
-			<?php if ( $connection->is_configured() ) : ?>
-				<?php $this->render_webhook(); ?>
-				<h2><?php esc_html_e( 'Publishing profiles', 'social-relay-for-postiz' ); ?></h2>
-				<?php if ( is_wp_error( $channels ) ) : ?>
-					<div class="notice notice-error inline"><p><?php echo esc_html( $channels->get_error_message() ); ?></p></div>
-				<?php else : ?>
-					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-						<input type="hidden" name="action" value="socialrelaycvi_save_profiles">
-						<?php wp_nonce_field( 'socialrelaycvi_save_profiles' ); ?>
-						<?php foreach ( $this->post_types() as $post_type => $label ) : ?>
-							<?php $this->render_profile( $post_type, $label, $profiles[ $post_type ] ?? ProfileRepository::defaults(), $channels ); ?>
-						<?php endforeach; ?>
-						<?php submit_button( __( 'Save profiles', 'social-relay-for-postiz' ) ); ?>
-					</form>
-				<?php endif; ?>
-			<?php endif; ?>
-		</div>
-		<?php
-	}
-
-	/**
-	 * Renders one profile block.
-	 *
-	 * @param string                           $post_type Post type.
-	 * @param string                           $label     Post type label.
-	 * @param array<string, mixed>             $profile   Profile.
-	 * @param list<array<string, string|bool>> $channels  Channels.
-	 */
-	private function render_profile( string $post_type, string $label, array $profile, array $channels ): void {
-		$name  = static fn ( string $field ): string => sprintf( 'profiles[%s][%s]', $post_type, $field );
-		$id    = static fn ( string $field ): string => sprintf( 'socialrelaycvi-%s-%s', $post_type, $field );
-		$modes = array(
-			'now'      => __( 'Publish immediately', 'social-relay-for-postiz' ),
-			'schedule' => __( 'Schedule with a delay', 'social-relay-for-postiz' ),
-			'slot'     => __( 'Next free slot in Postiz', 'social-relay-for-postiz' ),
-			'draft'    => __( 'Create as draft in Postiz', 'social-relay-for-postiz' ),
-		);
-		?>
-		<fieldset class="socialrelaycvi-profile" style="background:#fff;border:1px solid #dcdcde;padding:12px 20px;margin:0 0 16px;max-width:900px">
-			<legend style="font-weight:600;font-size:14px;padding:0 6px"><?php echo esc_html( $label ); ?></legend>
-			<p>
-				<label>
-					<input type="checkbox" name="<?php echo esc_attr( $name( 'enabled' ) ); ?>" value="1" <?php checked( ! empty( $profile['enabled'] ) ); ?>>
-					<?php
-					/* translators: %s: post type label, e.g. Posts. */
-					printf( esc_html__( 'Share %s when they are published', 'social-relay-for-postiz' ), esc_html( mb_strtolower( $label ) ) );
-					?>
-				</label>
-			</p>
-			<p><strong><?php esc_html_e( 'Channels', 'social-relay-for-postiz' ); ?></strong><br>
-				<?php if ( array() === $channels ) : ?>
-					<em><?php esc_html_e( 'No channels in Postiz yet. Add them in Postiz and reload this page.', 'social-relay-for-postiz' ); ?></em>
-				<?php endif; ?>
-				<?php foreach ( $channels as $channel ) : ?>
-					<label style="display:inline-block;margin:4px 16px 4px 0">
-						<input type="checkbox" name="<?php echo esc_attr( $name( 'channels' ) ); ?>[]" value="<?php echo esc_attr( (string) $channel['id'] ); ?>" <?php checked( in_array( $channel['id'], (array) $profile['channels'], true ) ); ?> <?php disabled( (bool) $channel['disabled'] ); ?>>
-						<?php echo esc_html( sprintf( '%s (%s)', (string) $channel['name'], (string) $channel['identifier'] ) ); ?>
-					</label>
-				<?php endforeach; ?>
-			</p>
-			<p>
-				<label for="<?php echo esc_attr( $id( 'template' ) ); ?>"><strong><?php esc_html_e( 'Message template', 'social-relay-for-postiz' ); ?></strong></label><br>
-				<textarea id="<?php echo esc_attr( $id( 'template' ) ); ?>" name="<?php echo esc_attr( $name( 'template' ) ); ?>" rows="5" class="large-text code"><?php echo esc_textarea( (string) $profile['template'] ); ?></textarea>
-				<span class="description"><?php esc_html_e( 'Tags: {title} {excerpt} {content} {url} {shortlink} {author} {date} {site_name} {categories} {tags} {hashtags:post_tag} {term:taxonomy} {meta:key} {seo_title} {seo_description}. Filters: |upper |lower |strip |hashtag |limit:100. A line with --- starts a new thread part.', 'social-relay-for-postiz' ); ?></span>
-			</p>
-			<p>
-				<label for="<?php echo esc_attr( $id( 'mode' ) ); ?>"><strong><?php esc_html_e( 'When', 'social-relay-for-postiz' ); ?></strong></label>
-				<select id="<?php echo esc_attr( $id( 'mode' ) ); ?>" name="<?php echo esc_attr( $name( 'mode' ) ); ?>">
-					<?php foreach ( $modes as $value => $text ) : ?>
-						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $profile['mode'], $value ); ?>><?php echo esc_html( $text ); ?></option>
-					<?php endforeach; ?>
-				</select>
-				<label for="<?php echo esc_attr( $id( 'delay' ) ); ?>"><?php esc_html_e( 'Delay (minutes, for “Schedule”)', 'social-relay-for-postiz' ); ?></label>
-				<input type="number" min="0" max="43200" id="<?php echo esc_attr( $id( 'delay' ) ); ?>" name="<?php echo esc_attr( $name( 'delay_minutes' ) ); ?>" value="<?php echo esc_attr( (string) $profile['delay_minutes'] ); ?>" class="small-text">
-			</p>
-			<p>
-				<input type="hidden" name="<?php echo esc_attr( $name( 'use_featured_image' ) ); ?>" value="0">
-				<label><input type="checkbox" name="<?php echo esc_attr( $name( 'use_featured_image' ) ); ?>" value="1" <?php checked( ! empty( $profile['use_featured_image'] ) ); ?>> <?php esc_html_e( 'Attach the featured image', 'social-relay-for-postiz' ); ?></label>
-				<br>
-				<label><input type="checkbox" name="<?php echo esc_attr( $name( 'share_on_update' ) ); ?>" value="1" <?php checked( ! empty( $profile['share_on_update'] ) ); ?>> <?php esc_html_e( 'Allow sharing again on update (when requested from the editor)', 'social-relay-for-postiz' ); ?></label>
-			</p>
-
-			<?php $this->render_channel_options( $name, $profile, $channels ); ?>
-			<?php $this->render_conditions( $post_type, $name, $profile ); ?>
-
-			<h4 style="margin-bottom:4px"><?php esc_html_e( 'Links and tags', 'social-relay-for-postiz' ); ?></h4>
-			<p style="margin-top:0">
-				<label><input type="checkbox" name="<?php echo esc_attr( $name( 'utm' ) ); ?>" value="1" <?php checked( ! empty( $profile['utm'] ) ); ?>> <?php esc_html_e( 'Add UTM parameters to {url} (utm_source = network, utm_medium = social)', 'social-relay-for-postiz' ); ?></label>
-				<br>
-				<label for="<?php echo esc_attr( $id( 'utm_campaign' ) ); ?>"><?php esc_html_e( 'utm_campaign', 'social-relay-for-postiz' ); ?></label>
-				<input type="text" id="<?php echo esc_attr( $id( 'utm_campaign' ) ); ?>" name="<?php echo esc_attr( $name( 'utm_campaign' ) ); ?>" value="<?php echo esc_attr( (string) $profile['utm_campaign'] ); ?>" class="regular-text code">
-				<span class="description"><?php esc_html_e( 'Accepts tags, e.g. {slug}.', 'social-relay-for-postiz' ); ?></span>
-				<br>
-				<label><input type="checkbox" name="<?php echo esc_attr( $name( 'short_link' ) ); ?>" value="1" <?php checked( ! empty( $profile['short_link'] ) ); ?>> <?php esc_html_e( 'Shorten links with Postiz', 'social-relay-for-postiz' ); ?></label>
-				<br>
-				<label><input type="checkbox" name="<?php echo esc_attr( $name( 'postiz_tags' ) ); ?>" value="1" <?php checked( ! empty( $profile['postiz_tags'] ) ); ?>> <?php esc_html_e( 'Tag the posts in Postiz with the post categories', 'social-relay-for-postiz' ); ?></label>
-			</p>
-		</fieldset>
-		<?php
-	}
-
-	/**
-	 * Per-network template and settings, one collapsible block per channel.
-	 *
-	 * @param callable(string): string         $name     Field name builder.
-	 * @param array<string, mixed>             $profile  Profile.
-	 * @param list<array<string, string|bool>> $channels Channels.
-	 */
-	private function render_channel_options( callable $name, array $profile, array $channels ): void {
-		if ( array() === $channels ) {
-			return;
-		}
-		?>
-		<h4 style="margin-bottom:4px"><?php esc_html_e( 'Per network', 'social-relay-for-postiz' ); ?></h4>
-		<p class="description" style="margin-top:0"><?php esc_html_e( 'Optional. A network without its own template uses the common one.', 'social-relay-for-postiz' ); ?></p>
-		<?php
-		foreach ( $channels as $channel ) {
-			if ( ! empty( $channel['disabled'] ) ) {
-				continue;
-			}
-
-			$channel_id = (string) $channel['id'];
-			$identifier = (string) $channel['identifier'];
-			$options    = $profile['channel_options'][ $channel_id ] ?? array(
-				'template' => '',
-				'settings' => array(),
-			);
-			$base       = $name( 'channel_options' ) . '[' . $channel_id . ']';
-			$fields     = ProviderRules::setting_fields( $identifier );
-			$limit      = ProviderRules::char_limit( $identifier );
-			$customized = '' !== trim( (string) $options['template'] ) || array() !== $options['settings'];
-			?>
-			<details style="border-top:1px solid #f0f0f1;padding:6px 0">
-				<summary style="cursor:pointer">
-					<?php echo esc_html( sprintf( '%s (%s)', (string) $channel['name'], $identifier ) ); ?>
-					<?php if ( $customized ) : ?>
-						<span style="color:#3858e9">· <?php esc_html_e( 'customized', 'social-relay-for-postiz' ); ?></span>
-					<?php endif; ?>
-				</summary>
-				<p>
-					<label>
-						<?php esc_html_e( 'Template for this network', 'social-relay-for-postiz' ); ?>
-						<?php if ( null !== $limit ) : ?>
-							<?php
-							/* translators: %d: character limit of the network. */
-							printf( esc_html__( '(limit: %d characters)', 'social-relay-for-postiz' ), (int) $limit );
-							?>
-						<?php endif; ?>
-						<br>
-						<textarea name="<?php echo esc_attr( $base . '[template]' ); ?>" rows="3" class="large-text code" placeholder="<?php esc_attr_e( 'Empty = common template', 'social-relay-for-postiz' ); ?>"><?php echo esc_textarea( (string) $options['template'] ); ?></textarea>
-					</label>
-				</p>
-				<?php foreach ( $fields as $key => $field ) : ?>
-					<?php
-					$field_name = $base . '[settings][' . $key . ']';
-					$value      = $options['settings'][ $key ] ?? '';
-					?>
-					<p>
-						<?php if ( 'bool' === $field['type'] ) : ?>
-							<input type="hidden" name="<?php echo esc_attr( $field_name ); ?>" value="0">
-							<label><input type="checkbox" name="<?php echo esc_attr( $field_name ); ?>" value="1" <?php checked( true === $value ); ?>> <?php echo esc_html( $field['label'] ); ?></label>
-						<?php elseif ( 'select' === $field['type'] ) : ?>
-							<label><?php echo esc_html( $field['label'] ); ?>
-								<select name="<?php echo esc_attr( $field_name ); ?>">
-									<?php foreach ( $field['options'] ?? array() as $option_value => $option_label ) : ?>
-										<option value="<?php echo esc_attr( (string) $option_value ); ?>" <?php selected( (string) $value, (string) $option_value ); ?>><?php echo esc_html( $option_label ); ?></option>
-									<?php endforeach; ?>
-								</select>
-							</label>
-						<?php else : ?>
-							<label><?php echo esc_html( $field['label'] ); ?><?php echo ! empty( $field['required'] ) ? ' *' : ''; ?>
-								<input type="text" name="<?php echo esc_attr( $field_name ); ?>" value="<?php echo esc_attr( (string) $value ); ?>" class="regular-text">
-							</label>
-						<?php endif; ?>
-					</p>
-				<?php endforeach; ?>
-			</details>
-			<?php
-		}
-	}
-
-	/**
-	 * Include/exclude rules on categories and tags.
-	 *
-	 * @param string                   $post_type Post type.
-	 * @param callable(string): string $name      Field name builder.
-	 * @param array<string, mixed>     $profile   Profile.
-	 */
-	private function render_conditions( string $post_type, callable $name, array $profile ): void {
-		if ( ! is_object_in_taxonomy( $post_type, 'category' ) && ! is_object_in_taxonomy( $post_type, 'post_tag' ) ) {
-			return;
-		}
-
-		$categories = get_terms(
-			array(
-				'taxonomy'   => 'category',
-				'hide_empty' => false,
-			)
-		);
-		$categories = is_array( $categories ) ? $categories : array();
-
-		$tag_names = static function ( array $ids ): string {
-			$names = array();
-			foreach ( $ids as $term_id ) {
-				$term = get_term( (int) $term_id, 'post_tag' );
-				if ( $term instanceof \WP_Term ) {
-					$names[] = $term->name;
-				}
-			}
-			return implode( ', ', $names );
-		};
-		?>
-		<h4 style="margin-bottom:4px"><?php esc_html_e( 'Conditions', 'social-relay-for-postiz' ); ?></h4>
-		<p class="description" style="margin-top:0"><?php esc_html_e( 'Share only posts in at least one of the “Only” terms, and never posts in a “Never” term. Leave everything empty to share all posts.', 'social-relay-for-postiz' ); ?></p>
-		<?php
-		foreach ( array(
-			'include_terms' => __( 'Only', 'social-relay-for-postiz' ),
-			'exclude_terms' => __( 'Never', 'social-relay-for-postiz' ),
-		) as $field => $title ) :
-			?>
-			<p>
-				<strong><?php echo esc_html( $title ); ?>:</strong>
-														<?php if ( is_object_in_taxonomy( $post_type, 'category' ) ) : ?>
-															<?php foreach ( $categories as $category ) : ?>
-																<?php if ( $category instanceof \WP_Term ) : ?>
-							<label style="display:inline-block;margin:2px 12px 2px 0"><input type="checkbox" name="<?php echo esc_attr( $name( $field ) ); ?>[]" value="<?php echo esc_attr( (string) $category->term_id ); ?>" <?php checked( in_array( $category->term_id, (array) $profile[ $field ], true ) ); ?>> <?php echo esc_html( $category->name ); ?></label>
-						<?php endif; ?>
-					<?php endforeach; ?>
-				<?php endif; ?>
-														<?php if ( is_object_in_taxonomy( $post_type, 'post_tag' ) ) : ?>
-					<br><label><?php esc_html_e( 'Tags (comma-separated):', 'social-relay-for-postiz' ); ?>
-						<input type="text" name="<?php echo esc_attr( $name( 'include_terms' === $field ? 'include_tags' : 'exclude_tags' ) ); ?>" value="<?php echo esc_attr( $tag_names( (array) $profile[ $field ] ) ); ?>" class="regular-text">
-					</label>
-				<?php endif; ?>
-			</p>
-		<?php endforeach; ?>
-		<?php
-	}
-
-	/**
-	 * Webhook block: URL to paste in Postiz and last call received.
-	 */
-	private function render_webhook(): void {
-		$last = (int) get_option( WebhookController::OPTION_LAST, 0 );
-		?>
-		<h2><?php esc_html_e( 'Postiz webhook (optional)', 'social-relay-for-postiz' ); ?></h2>
-		<p><?php esc_html_e( 'Paste this URL in Postiz → Settings → Webhooks to update the status of your posts as soon as they are published. Without it, the plugin checks Postiz every 15 minutes.', 'social-relay-for-postiz' ); ?></p>
-		<p><input type="text" readonly class="large-text code" value="<?php echo esc_attr( WebhookController::url() ); ?>" onfocus="this.select()"></p>
-		<p class="description">
-			<?php
-			if ( $last > 0 ) {
-				/* translators: %s: time since the last webhook call, e.g. "5 mins". */
-				printf( esc_html__( 'Last call received %s ago.', 'social-relay-for-postiz' ), esc_html( human_time_diff( $last ) ) );
-			} else {
-				esc_html_e( 'No call received yet. Use “Send Test” in Postiz to check it.', 'social-relay-for-postiz' );
-			}
-			?>
-		</p>
-		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-			<input type="hidden" name="action" value="socialrelaycvi_regenerate_webhook">
-			<?php wp_nonce_field( 'socialrelaycvi_regenerate_webhook' ); ?>
-			<?php submit_button( __( 'Create a new URL', 'social-relay-for-postiz' ), 'secondary small', 'submit', false ); ?>
-		</form>
-		<?php
-	}
-
-	/**
-	 * Shows the result of the last action.
-	 */
-	private function render_notice(): void {
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Display-only flags set by our own redirect.
-		$notice = isset( $_GET['socialrelaycvi_notice'] ) ? sanitize_key( wp_unslash( $_GET['socialrelaycvi_notice'] ) ) : '';
-
-		if ( 'connected' === $notice ) {
-			$count = isset( $_GET['socialrelaycvi_count'] ) ? absint( $_GET['socialrelaycvi_count'] ) : 0;
-			/* translators: %d: number of channels. */
-			$text = sprintf( _n( 'Connected to Postiz. %d channel available.', 'Connected to Postiz. %d channels available.', $count, 'social-relay-for-postiz' ), $count );
-			printf( '<div class="notice notice-success is-dismissible"><p>%s</p></div>', esc_html( $text ) );
-		} elseif ( 'webhook_regenerated' === $notice ) {
-			printf( '<div class="notice notice-warning is-dismissible"><p>%s</p></div>', esc_html__( 'New webhook URL created. Update it in Postiz: the old one no longer works.', 'social-relay-for-postiz' ) );
-		} elseif ( 'profiles_saved' === $notice ) {
-			printf( '<div class="notice notice-success is-dismissible"><p>%s</p></div>', esc_html__( 'Profiles saved.', 'social-relay-for-postiz' ) );
-		} elseif ( 'error' === $notice ) {
-			$message = isset( $_GET['socialrelaycvi_msg'] ) ? sanitize_text_field( wp_unslash( $_GET['socialrelaycvi_msg'] ) ) : '';
-			printf( '<div class="notice notice-error"><p>%s</p></div>', esc_html( $message ) );
-		}
-		// phpcs:enable
-	}
-
-	/**
-	 * Public post types with an admin UI.
-	 *
-	 * @return array<string, string> Name => label.
-	 */
-	private function post_types(): array {
-		$types = array();
-
-		foreach ( get_post_types(
-			array(
-				'public'  => true,
-				'show_ui' => true,
-			),
-			'objects'
-		) as $type ) {
-			if ( 'attachment' !== $type->name ) {
-				$types[ $type->name ] = (string) $type->labels->name;
-			}
-		}
-
-		/**
-		 * Filters the post types that get a publishing profile.
-		 *
-		 * @param array<string, string> $types Post type name => label.
-		 */
-		return (array) apply_filters( 'socialrelaycvi_post_types', $types );
-	}
-
-	/**
-	 * Capability and nonce check for admin-post handlers.
-	 *
-	 * @param string $action Nonce action.
-	 */
-	private function guard( string $action ): void {
-		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_die( esc_html__( 'You are not allowed to do this.', 'social-relay-for-postiz' ), 403 );
-		}
-
-		check_admin_referer( $action );
-	}
-
-	/**
-	 * Redirects back to the settings page.
-	 *
-	 * @param array<string, string|int> $args Query arguments.
-	 */
-	private function redirect( array $args ): never {
-		wp_safe_redirect( add_query_arg( $args, admin_url( 'admin.php?page=' . self::SLUG ) ) );
-		exit;
 	}
 }

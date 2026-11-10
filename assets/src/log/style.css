@@ -1,0 +1,68 @@
+.socialrelaycvi-log {
+	max-width: 1400px;
+	margin-top: 16px;
+}
+
+.socialrelaycvi-log__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 16px;
+}
+
+.socialrelaycvi-log__header h1 {
+	margin: 0;
+	font-size: 23px;
+	font-weight: 400;
+}
+
+.socialrelaycvi-log__actions,
+.socialrelaycvi-log__filters,
+.socialrelaycvi-log__pagination {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.socialrelaycvi-log__filters {
+	margin-bottom: 12px;
+}
+
+.socialrelaycvi-log__filters .components-search-control {
+	width: 320px;
+}
+
+.socialrelaycvi-log__pagination {
+	justify-content: flex-end;
+	margin-top: 12px;
+}
+
+.socialrelaycvi-log__table .column-date {
+	white-space: nowrap;
+}
+
+.socialrelaycvi-log__level {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 10px;
+	font-size: 11px;
+	font-weight: 600;
+	background: #f0f0f1;
+	color: #1e1e1e;
+}
+
+.socialrelaycvi-log__level.is-error {
+	background: #fcebeb;
+	color: #cc1818;
+}
+
+@media (max-width: 782px) {
+	.socialrelaycvi-log__filters {
+		flex-wrap: wrap;
+	}
+
+	.socialrelaycvi-log__filters .components-search-control {
+		width: 100%;
+	}
+}

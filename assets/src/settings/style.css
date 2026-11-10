@@ -1,0 +1,81 @@
+.socialrelaycvi-settings {
+	max-width: 960px;
+	margin-top: 16px;
+}
+
+.socialrelaycvi-settings h1 {
+	font-size: 23px;
+	font-weight: 400;
+	margin: 0 0 16px;
+}
+
+.socialrelaycvi-settings .components-tab-panel__tab-content {
+	padding-top: 16px;
+}
+
+.socialrelaycvi-settings .components-card {
+	margin-bottom: 16px;
+}
+
+.socialrelaycvi-settings .components-card__header h3 {
+	margin: 0;
+	font-size: 14px;
+}
+
+.socialrelaycvi-settings .components-toggle-control,
+.socialrelaycvi-settings .components-base-control {
+	margin-bottom: 12px;
+}
+
+.socialrelaycvi-settings__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: 8px 16px;
+}
+
+.socialrelaycvi-settings__columns {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 24px;
+}
+
+.socialrelaycvi-settings__columns h4 {
+	margin: 8px 0;
+}
+
+.socialrelaycvi-settings__code textarea {
+	font-family: Menlo, Consolas, monospace;
+	font-size: 13px;
+}
+
+.socialrelaycvi-settings__buttons,
+.socialrelaycvi-settings__save {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-top: 16px;
+}
+
+.socialrelaycvi-settings__save {
+	position: sticky;
+	bottom: 0;
+	padding: 12px 0;
+	background: #f0f0f1;
+}
+
+.socialrelaycvi-settings__copy {
+	display: flex;
+	align-items: flex-end;
+	gap: 8px;
+}
+
+.socialrelaycvi-settings__copy .components-base-control {
+	flex: 1;
+	margin-bottom: 0;
+}
+
+@media (max-width: 782px) {
+	.socialrelaycvi-settings__columns {
+		grid-template-columns: 1fr;
+	}
+}

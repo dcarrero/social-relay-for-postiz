@@ -1,0 +1,72 @@
+{
+    "translation-revision-date": "2026-11-10T11:14:41+00:00",
+    "generator": "WP-CLI\/2.12.0",
+    "source": "build\/log.js",
+    "domain": "messages",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "messages",
+                "lang": "es_ES",
+                "plural-forms": "nplurals=2; plural=(n != 1);"
+            },
+            "Next": [
+                "Pr\u00f3ximas"
+            ],
+            "Log": [
+                "Registro"
+            ],
+            "Error": [
+                "Error"
+            ],
+            "Refresh": [
+                "Actualizar"
+            ],
+            "Message": [
+                "Mensaje"
+            ],
+            "All levels": [
+                "Todos los niveles"
+            ],
+            "Info": [
+                "Info"
+            ],
+            "(no title)": [
+                "(sin t\u00edtulo)"
+            ],
+            "Date": [
+                "Fecha"
+            ],
+            "Level": [
+                "Nivel"
+            ],
+            "Action": [
+                "Acci\u00f3n"
+            ],
+            "Post": [
+                "Entrada"
+            ],
+            "Channel": [
+                "Canal"
+            ],
+            "Clear log": [
+                "Vaciar el registro"
+            ],
+            "Search messages": [
+                "Buscar en los mensajes"
+            ],
+            "Nothing logged yet.": [
+                "Todav\u00eda no hay nada en el registro."
+            ],
+            "Previous": [
+                "Anterior"
+            ],
+            "Page %1$d of %2$d (%3$d entries)": [
+                "P\u00e1gina %1$d de %2$d (%3$d entradas)"
+            ],
+            "Delete every log entry? This cannot be undone.": [
+                "\u00bfBorrar todas las entradas del registro? No se puede deshacer."
+            ]
+        }
+    }
+}

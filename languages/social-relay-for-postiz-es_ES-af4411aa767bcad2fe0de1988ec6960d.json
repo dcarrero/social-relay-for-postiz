@@ -1,0 +1,190 @@
+{
+    "translation-revision-date": "2026-11-10T11:14:41+00:00",
+    "generator": "WP-CLI\/2.12.0",
+    "source": "build\/settings.js",
+    "domain": "messages",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "messages",
+                "lang": "es_ES",
+                "plural-forms": "nplurals=2; plural=(n != 1);"
+            },
+            "Social Relay for Postiz": [
+                "Social Relay for Postiz"
+            ],
+            "Channels": [
+                "Canales"
+            ],
+            "Next free slot in Postiz": [
+                "Siguiente hueco libre en Postiz"
+            ],
+            "Message": [
+                "Mensaje"
+            ],
+            "Publish immediately": [
+                "Publicar al momento"
+            ],
+            "Schedule with a delay": [
+                "Programar con un retraso"
+            ],
+            "Create as draft in Postiz": [
+                "Crear como borrador en Postiz"
+            ],
+            "Read from the POSTIZ_API_KEY environment variable.": [
+                "Se lee de la variable de entorno POSTIZ_API_KEY."
+            ],
+            "Defined in wp-config.php (SOCIALRELAYCVI_POSTIZ_API_KEY).": [
+                "Definida en wp-config.php (SOCIALRELAYCVI_POSTIZ_API_KEY)."
+            ],
+            "Connected to Postiz. %d channel available.": [
+                "Conectado a Postiz. %d canal disponible.",
+                "Conectado a Postiz. %d canales disponibles."
+            ],
+            "Postiz URL": [
+                "URL de Postiz"
+            ],
+            "Detected API: %s": [
+                "API detectada: %s"
+            ],
+            "Your self-hosted Postiz address. For Postiz Cloud, use https:\/\/api.postiz.com.": [
+                "La direcci\u00f3n de tu Postiz autoalojado. Si usas Postiz Cloud, pon https:\/\/api.postiz.com."
+            ],
+            "API key": [
+                "Clave de API"
+            ],
+            "Paste your API key": [
+                "Pega tu clave de API"
+            ],
+            "Postiz \u2192 Settings \u2192 Developers \u2192 Public API. Leave empty to keep the current key. For better security define SOCIALRELAYCVI_POSTIZ_API_KEY in wp-config.php or the POSTIZ_API_KEY environment variable.": [
+                "Postiz \u2192 Settings \u2192 Developers \u2192 Public API. D\u00e9jalo vac\u00edo para mantener la clave actual. Para m\u00e1s seguridad, define SOCIALRELAYCVI_POSTIZ_API_KEY en wp-config.php o la variable de entorno POSTIZ_API_KEY."
+            ],
+            "Save and test connection": [
+                "Guardar y probar la conexi\u00f3n"
+            ],
+            "Postiz public API documentation": [
+                "Documentaci\u00f3n de la API p\u00fablica de Postiz"
+            ],
+            "Only": [
+                "Solo"
+            ],
+            "Never": [
+                "Nunca"
+            ],
+            "Share only posts in at least one of the \u201cOnly\u201d terms, and never posts in a \u201cNever\u201d term. Leave everything empty to share all posts.": [
+                "Comparte solo las entradas que tengan al menos uno de los t\u00e9rminos de \u00abSolo\u00bb y nunca las que tengan alguno de \u00abNunca\u00bb. D\u00e9jalo todo vac\u00edo para compartir todas las entradas."
+            ],
+            "Tags": [
+                "Etiquetas"
+            ],
+            "customized": [
+                "personalizada"
+            ],
+            "Template for this network (limit: %d characters)": [
+                "Plantilla para esta red (l\u00edmite: %d caracteres)"
+            ],
+            "Template for this network": [
+                "Plantilla para esta red"
+            ],
+            "Empty = common template": [
+                "Vac\u00edo = plantilla com\u00fan"
+            ],
+            "Default": [
+                "Por defecto"
+            ],
+            "Tags: {title} {excerpt} {content} {url} {shortlink} {author} {date} {site_name} {categories} {tags} {hashtags:post_tag} {term:taxonomy} {meta:key} {seo_title} {seo_description}. Filters: |upper |lower |strip |hashtag |limit:100. A line with --- starts a new thread part.": [
+                "Variables: {title} {excerpt} {content} {url} {shortlink} {author} {date} {site_name} {categories} {tags} {hashtags:post_tag} {term:taxonomy} {meta:key} {seo_title} {seo_description}. Filtros: |upper |lower |strip |hashtag |limit:100. Una l\u00ednea con --- empieza una nueva parte del hilo."
+            ],
+            "Share %s when they are published": [
+                "Compartir %s cuando se publiquen"
+            ],
+            "No channels in Postiz yet. Add them in Postiz and reload this page.": [
+                "Todav\u00eda no hay canales en Postiz. A\u00f1\u00e1delos en Postiz y recarga esta p\u00e1gina."
+            ],
+            "Message template": [
+                "Plantilla del mensaje"
+            ],
+            "Optional. A network without its own template uses the common one.": [
+                "Opcional. Las redes sin plantilla propia usan la com\u00fan."
+            ],
+            "When": [
+                "Cu\u00e1ndo"
+            ],
+            "Delay in minutes": [
+                "Retraso en minutos"
+            ],
+            "Attach the featured image": [
+                "Adjuntar la imagen destacada"
+            ],
+            "Allow sharing again on update (when requested from the editor)": [
+                "Permitir volver a compartir al actualizar (cuando se pida desde el editor)"
+            ],
+            "Conditions": [
+                "Condiciones"
+            ],
+            "Links and tags": [
+                "Enlaces y etiquetas"
+            ],
+            "Add UTM parameters to {url} (utm_source = network, utm_medium = social)": [
+                "A\u00f1adir par\u00e1metros UTM a {url} (utm_source = red, utm_medium = social)"
+            ],
+            "Accepts tags, e.g. {slug}.": [
+                "Admite variables, por ejemplo {slug}."
+            ],
+            "Shorten links with Postiz": [
+                "Acortar los enlaces con Postiz"
+            ],
+            "Tag the posts in Postiz with the post categories": [
+                "Etiquetar las publicaciones en Postiz con las categor\u00edas de la entrada"
+            ],
+            "Connect Postiz first (Connection tab).": [
+                "Primero conecta Postiz (pesta\u00f1a Conexi\u00f3n)."
+            ],
+            "Profiles saved.": [
+                "Perfiles guardados."
+            ],
+            "Save profiles": [
+                "Guardar perfiles"
+            ],
+            "Unsaved changes": [
+                "Cambios sin guardar"
+            ],
+            "Paste this URL in Postiz \u2192 Settings \u2192 Webhooks to update the status of your posts as soon as they are published. Without it, the plugin checks Postiz every 15 minutes.": [
+                "Pega esta URL en Postiz \u2192 Settings \u2192 Webhooks para actualizar el estado de tus publicaciones en cuanto salgan. Sin ella, el plugin consulta Postiz cada 15 minutos."
+            ],
+            "Webhook URL": [
+                "URL del webhook"
+            ],
+            "Copied": [
+                "Copiada"
+            ],
+            "Copy": [
+                "Copiar"
+            ],
+            "Last call received %s.": [
+                "\u00daltimo aviso recibido %s."
+            ],
+            "No call received yet. Use \u201cSend Test\u201d in Postiz to check it.": [
+                "Todav\u00eda no ha llegado ning\u00fan aviso. Usa \u00abSend Test\u00bb en Postiz para comprobarlo."
+            ],
+            "New webhook URL created. Update it in Postiz: the old one no longer works.": [
+                "Se ha creado una URL nueva para el webhook. C\u00e1mbiala en Postiz: la anterior ya no funciona."
+            ],
+            "Create a new URL": [
+                "Crear una URL nueva"
+            ],
+            "The current URL will stop working. Continue?": [
+                "La URL actual dejar\u00e1 de funcionar. \u00bfContinuar?"
+            ],
+            "Connection": [
+                "Conexi\u00f3n"
+            ],
+            "Publishing profiles": [
+                "Perfiles de publicaci\u00f3n"
+            ],
+            "Webhook": [
+                "Webhook"
+            ]
+        }
+    }
+}

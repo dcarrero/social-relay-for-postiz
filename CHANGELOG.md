@@ -8,8 +8,13 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - WP-CLI: `wp social-relay status|test|channels|preview|share|shares|cancel|sync|log`.
 - Abilities API (WordPress 6.9+): `socialrelaycvi/get-status`, `list-channels`, `preview-post`, `share-post`, `get-post-shares` and `cancel-post-shares`, in the `social-media` category, with input/output schemas, behaviour annotations and capability checks. Exposed in REST for AI agents (MCP Adapter) and other tools.
 
+- Admin REST routes (`socialrelaycvi/v1/admin/settings|connection|profiles|webhook/regenerate|log`), `manage_options` only; the API key is write-only.
+
+### Changed
+- Settings and log screens rebuilt in React with WordPress components: tabs for connection, publishing profiles (one tab per post type, per-network panels, tag suggestions) and webhook; log with search, level filter and pagination. The old server-rendered forms are gone.
+- DataViews was evaluated for the log and discarded: it adds about 1.5 MB to the bundle; the log screen is 5 KB with core components.
+
 ### Planned for 1.0
-- Settings and log screens rebuilt with React (DataViews).
 - wordpress.org release: Plugin Check, release zip and SVN deploy.
 
 ## [0.3.1] - 2026-11-10

@@ -44,12 +44,13 @@ composer analyse   # PHPStan
 | `src/Sharing/` | Payload builder, share job and preview, conditions, UTM, shares table |
 | `src/Lifecycle/` | Installer (tables) and post listener |
 | `src/Connector/` | Settings → Connectors registration (WordPress 7) |
-| `src/Rest/` | `socialrelaycvi/v1` routes and the Postiz webhook |
+| `src/Rest/` | `socialrelaycvi/v1` routes (editor, admin screens) and the Postiz webhook |
 | `src/Sync/` | Status sync with Postiz |
 | `src/Cli/` | WP-CLI commands |
 | `src/Abilities/` | Abilities API registration |
-| `src/Admin/` | Settings and log screens, editor panel loader, classic metabox, dashboard widget |
-| `assets/src/editor-panel/` | Block editor panel in JSX (built into `build/` with @wordpress/scripts; @wordpress/* packages come from WordPress) |
+| `src/Admin/` | Menu and loaders for the React screens, classic metabox, dashboard widget |
+| `assets/src/editor-panel/` | Block editor panel in JSX |
+| `assets/src/settings/`, `assets/src/log/` | Settings and log screens in JSX (all built into `build/` with @wordpress/scripts; @wordpress/* packages come from WordPress) |
 | `languages/` | `.pot` template and translations |
 
 ### Extending

@@ -24,6 +24,7 @@ use SocialRelayCvi\Postiz\Client;
 use SocialRelayCvi\Postiz\Gateway;
 use SocialRelayCvi\Profiles\ProfileRepository;
 use SocialRelayCvi\Queue\Queue;
+use SocialRelayCvi\Rest\AdminController;
 use SocialRelayCvi\Rest\ConnectionController;
 use SocialRelayCvi\Rest\WebhookController;
 use SocialRelayCvi\Settings\Connection;
@@ -200,8 +201,9 @@ final class Plugin {
 			'post_listener' => new PostListener( $this ),
 			'rest'          => new ConnectionController( $this ),
 			'webhook'       => new WebhookController( $this ),
+			'admin_rest'    => new AdminController( $this ),
 			'status_sync'   => $this->status_sync,
-			'settings_page' => new SettingsPage( $this ),
+			'settings_page' => new SettingsPage(),
 			'log_page'      => new LogPage( $this ),
 			'editor_panel'  => new EditorPanel( $this ),
 			'metabox'       => new ClassicMetabox( $this ),

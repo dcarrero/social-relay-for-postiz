@@ -9,15 +9,16 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-10T11:06:20+00:00\n"
+"POT-Creation-Date: 2026-11-10T11:14:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
 
 #. Plugin Name of the plugin
 #: social-relay-for-postiz.php:3
-#: src/Admin/SettingsPage.php:52
-#: src/Admin/SettingsPage.php:167
+#: src/Admin/SettingsPage.php:44
+#: src/Admin/SettingsPage.php:89
+#: build/settings.js:6
 msgid "Social Relay for Postiz"
 msgstr ""
 
@@ -122,6 +123,14 @@ msgstr ""
 msgid "Post not found."
 msgstr ""
 
+#: src/Admin/AdminApp.php:67
+msgid "The admin screens are missing. Run \"npm ci && npm run build\" or install a release build."
+msgstr ""
+
+#: src/Admin/AdminApp.php:70
+msgid "Loading…"
+msgstr ""
+
 #: src/Admin/ClassicMetabox.php:57
 #: src/Admin/DashboardWidget.php:42
 msgid "Social networks (Postiz)"
@@ -133,8 +142,8 @@ msgid "Share when publishing"
 msgstr ""
 
 #: src/Admin/ClassicMetabox.php:79
-#: src/Admin/SettingsPage.php:260
 #: build/editor-panel.js:4
+#: build/settings.js:5
 msgid "Channels"
 msgstr ""
 
@@ -181,6 +190,7 @@ msgid "Latest errors"
 msgstr ""
 
 #: src/Admin/DashboardWidget.php:83
+#: build/log.js:2
 msgid "Next"
 msgstr ""
 
@@ -189,16 +199,17 @@ msgid "Nothing scheduled."
 msgstr ""
 
 #: src/Admin/DashboardWidget.php:99
-#: src/Admin/LogPage.php:40
-#: src/Admin/LogPage.php:41
-#: src/Admin/LogPage.php:59
+#: src/Admin/LogPage.php:49
+#: src/Admin/LogPage.php:50
+#: src/Admin/LogPage.php:81
 #: build/editor-panel.js:4
+#: build/log.js:1
 msgid "Log"
 msgstr ""
 
 #: src/Admin/DashboardWidget.php:100
-#: src/Admin/SettingsPage.php:61
-#: src/Admin/SettingsPage.php:71
+#: src/Admin/SettingsPage.php:53
+#: src/Admin/SettingsPage.php:79
 msgid "Settings"
 msgstr ""
 
@@ -206,250 +217,9 @@ msgstr ""
 msgid "Open Postiz"
 msgstr ""
 
-#: src/Admin/LogPage.php:63
-msgid "Date (UTC)"
-msgstr ""
-
-#: src/Admin/LogPage.php:64
-msgid "Level"
-msgstr ""
-
-#: src/Admin/LogPage.php:65
-msgid "Action"
-msgstr ""
-
-#: src/Admin/LogPage.php:66
-msgctxt "WordPress post"
-msgid "Post"
-msgstr ""
-
-#: src/Admin/LogPage.php:67
-msgid "Channel"
-msgstr ""
-
-#: src/Admin/LogPage.php:68
-#: build/editor-panel.js:4
-msgid "Message"
-msgstr ""
-
-#: src/Admin/LogPage.php:73
-msgid "Nothing logged yet."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:53
+#: src/Admin/SettingsPage.php:45
 #: build/editor-panel.js:4
 msgid "Social Relay"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:170
-msgid "Postiz connection"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:176
-msgid "Postiz URL"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:180
-msgid "Your self-hosted Postiz address. For Postiz Cloud, use https://api.postiz.com."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:182
-msgid "Detected API:"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:188
-msgid "API key"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:191
-msgid "Paste your API key"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:192
-msgid "Postiz → Settings → Developers → Public API. Leave empty to keep the current key. For better security define SOCIALRELAYCVI_POSTIZ_API_KEY in wp-config.php or the POSTIZ_API_KEY environment variable."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:199
-msgid "Read from the POSTIZ_API_KEY environment variable."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:200
-msgid "Defined in wp-config.php (SOCIALRELAYCVI_POSTIZ_API_KEY)."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:208
-msgid "Save and test connection"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:213
-msgid "Publishing profiles"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:223
-msgid "Save profiles"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:243
-msgid "Publish immediately"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:244
-msgid "Schedule with a delay"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:245
-#: build/editor-panel.js:2
-msgid "Next free slot in Postiz"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:246
-msgid "Create as draft in Postiz"
-msgstr ""
-
-#. translators: %s: post type label, e.g. Posts.
-#: src/Admin/SettingsPage.php:256
-#, php-format
-msgid "Share %s when they are published"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:262
-msgid "No channels in Postiz yet. Add them in Postiz and reload this page."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:272
-msgid "Message template"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:274
-msgid "Tags: {title} {excerpt} {content} {url} {shortlink} {author} {date} {site_name} {categories} {tags} {hashtags:post_tag} {term:taxonomy} {meta:key} {seo_title} {seo_description}. Filters: |upper |lower |strip |hashtag |limit:100. A line with --- starts a new thread part."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:277
-msgid "When"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:283
-msgid "Delay (minutes, for “Schedule”)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:288
-msgid "Attach the featured image"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:290
-msgid "Allow sharing again on update (when requested from the editor)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:296
-msgid "Links and tags"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:298
-msgid "Add UTM parameters to {url} (utm_source = network, utm_medium = social)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:300
-msgid "utm_campaign"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:302
-msgid "Accepts tags, e.g. {slug}."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:304
-msgid "Shorten links with Postiz"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:306
-msgid "Tag the posts in Postiz with the post categories"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:324
-msgid "Per network"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:325
-msgid "Optional. A network without its own template uses the common one."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:347
-msgid "customized"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:352
-msgid "Template for this network"
-msgstr ""
-
-#. translators: %d: character limit of the network.
-#: src/Admin/SettingsPage.php:356
-#, php-format
-msgid "(limit: %d characters)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:360
-msgid "Empty = common template"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:423
-msgid "Conditions"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:424
-msgid "Share only posts in at least one of the “Only” terms, and never posts in a “Never” term. Leave everything empty to share all posts."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:427
-msgid "Only"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:428
-msgid "Never"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:441
-msgid "Tags (comma-separated):"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:456
-msgid "Postiz webhook (optional)"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:457
-msgid "Paste this URL in Postiz → Settings → Webhooks to update the status of your posts as soon as they are published. Without it, the plugin checks Postiz every 15 minutes."
-msgstr ""
-
-#. translators: %s: time since the last webhook call, e.g. "5 mins".
-#: src/Admin/SettingsPage.php:463
-#, php-format
-msgid "Last call received %s ago."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:465
-msgid "No call received yet. Use “Send Test” in Postiz to check it."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:472
-msgid "Create a new URL"
-msgstr ""
-
-#. translators: %d: number of channels.
-#: src/Admin/SettingsPage.php:487
-#, php-format
-msgid "Connected to Postiz. %d channel available."
-msgid_plural "Connected to Postiz. %d channels available."
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Admin/SettingsPage.php:490
-msgid "New webhook URL created. Update it in Postiz: the old one no longer works."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:492
-msgid "Profiles saved."
-msgstr ""
-
-#: src/Admin/SettingsPage.php:535
-msgid "You are not allowed to do this."
 msgstr ""
 
 #: src/Admin/StatusLabels.php:25
@@ -459,6 +229,7 @@ msgstr ""
 
 #: src/Admin/StatusLabels.php:26
 #: build/editor-panel.js:4
+#: build/log.js:1
 msgid "Error"
 msgstr ""
 
@@ -689,6 +460,11 @@ msgid "Scheduled %d minutes after publishing"
 msgstr ""
 
 #: build/editor-panel.js:2
+#: build/settings.js:1
+msgid "Next free slot in Postiz"
+msgstr ""
+
+#: build/editor-panel.js:2
 msgid "Immediately"
 msgstr ""
 
@@ -754,6 +530,7 @@ msgid "Based on the last saved version."
 msgstr ""
 
 #: build/editor-panel.js:4
+#: build/log.js:1
 msgid "Refresh"
 msgstr ""
 
@@ -786,5 +563,298 @@ msgid "Shared when published"
 msgstr ""
 
 #: build/editor-panel.js:4
+#: build/log.js:1
+#: build/settings.js:5
+msgid "Message"
+msgstr ""
+
+#: build/editor-panel.js:4
 msgid "Preview"
+msgstr ""
+
+#: build/log.js:1
+msgid "All levels"
+msgstr ""
+
+#: build/log.js:1
+msgid "Info"
+msgstr ""
+
+#: build/log.js:1
+msgid "(no title)"
+msgstr ""
+
+#: build/log.js:1
+msgid "Date"
+msgstr ""
+
+#: build/log.js:1
+msgid "Level"
+msgstr ""
+
+#: build/log.js:1
+msgid "Action"
+msgstr ""
+
+#: build/log.js:1
+msgid "Post"
+msgstr ""
+
+#: build/log.js:1
+msgid "Channel"
+msgstr ""
+
+#: build/log.js:1
+#: build/log.js:2
+msgid "Clear log"
+msgstr ""
+
+#: build/log.js:1
+msgid "Search messages"
+msgstr ""
+
+#: build/log.js:1
+msgid "Nothing logged yet."
+msgstr ""
+
+#: build/log.js:1
+msgid "Previous"
+msgstr ""
+
+#. translators: 1: current page, 2: total pages, 3: total entries.
+#: build/log.js:2
+#, js-format
+msgid "Page %1$d of %2$d (%3$d entries)"
+msgstr ""
+
+#: build/log.js:2
+msgid "Delete every log entry? This cannot be undone."
+msgstr ""
+
+#: build/settings.js:1
+msgid "Publish immediately"
+msgstr ""
+
+#: build/settings.js:1
+msgid "Schedule with a delay"
+msgstr ""
+
+#: build/settings.js:1
+msgid "Create as draft in Postiz"
+msgstr ""
+
+#: build/settings.js:1
+msgid "Read from the POSTIZ_API_KEY environment variable."
+msgstr ""
+
+#: build/settings.js:1
+msgid "Defined in wp-config.php (SOCIALRELAYCVI_POSTIZ_API_KEY)."
+msgstr ""
+
+#. translators: %d: number of channels.
+#: build/settings.js:2
+#, js-format
+msgid "Connected to Postiz. %d channel available."
+msgid_plural "Connected to Postiz. %d channels available."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/settings.js:2
+msgid "Postiz URL"
+msgstr ""
+
+#. translators: %s: detected API URL.
+#: build/settings.js:3
+#, js-format
+msgid "Detected API: %s"
+msgstr ""
+
+#: build/settings.js:3
+msgid "Your self-hosted Postiz address. For Postiz Cloud, use https://api.postiz.com."
+msgstr ""
+
+#: build/settings.js:3
+msgid "API key"
+msgstr ""
+
+#: build/settings.js:3
+msgid "Paste your API key"
+msgstr ""
+
+#: build/settings.js:3
+msgid "Postiz → Settings → Developers → Public API. Leave empty to keep the current key. For better security define SOCIALRELAYCVI_POSTIZ_API_KEY in wp-config.php or the POSTIZ_API_KEY environment variable."
+msgstr ""
+
+#: build/settings.js:3
+msgid "Save and test connection"
+msgstr ""
+
+#: build/settings.js:3
+msgid "Postiz public API documentation"
+msgstr ""
+
+#: build/settings.js:3
+msgid "Only"
+msgstr ""
+
+#: build/settings.js:3
+msgid "Never"
+msgstr ""
+
+#: build/settings.js:3
+msgid "Share only posts in at least one of the “Only” terms, and never posts in a “Never” term. Leave everything empty to share all posts."
+msgstr ""
+
+#: build/settings.js:3
+msgid "Tags"
+msgstr ""
+
+#: build/settings.js:3
+msgid "customized"
+msgstr ""
+
+#. translators: %d: character limit of the network.
+#: build/settings.js:4
+#, js-format
+msgid "Template for this network (limit: %d characters)"
+msgstr ""
+
+#: build/settings.js:4
+msgid "Template for this network"
+msgstr ""
+
+#: build/settings.js:4
+msgid "Empty = common template"
+msgstr ""
+
+#: build/settings.js:4
+msgid "Default"
+msgstr ""
+
+#: build/settings.js:4
+msgid "Tags: {title} {excerpt} {content} {url} {shortlink} {author} {date} {site_name} {categories} {tags} {hashtags:post_tag} {term:taxonomy} {meta:key} {seo_title} {seo_description}. Filters: |upper |lower |strip |hashtag |limit:100. A line with --- starts a new thread part."
+msgstr ""
+
+#. translators: %s: post type label, e.g. Posts.
+#: build/settings.js:5
+#, js-format
+msgid "Share %s when they are published"
+msgstr ""
+
+#: build/settings.js:5
+msgid "No channels in Postiz yet. Add them in Postiz and reload this page."
+msgstr ""
+
+#: build/settings.js:5
+msgid "Message template"
+msgstr ""
+
+#: build/settings.js:5
+msgid "Optional. A network without its own template uses the common one."
+msgstr ""
+
+#: build/settings.js:5
+msgid "When"
+msgstr ""
+
+#: build/settings.js:5
+msgid "Delay in minutes"
+msgstr ""
+
+#: build/settings.js:5
+msgid "Attach the featured image"
+msgstr ""
+
+#: build/settings.js:5
+msgid "Allow sharing again on update (when requested from the editor)"
+msgstr ""
+
+#: build/settings.js:5
+msgid "Conditions"
+msgstr ""
+
+#: build/settings.js:5
+msgid "Links and tags"
+msgstr ""
+
+#: build/settings.js:5
+msgid "Add UTM parameters to {url} (utm_source = network, utm_medium = social)"
+msgstr ""
+
+#: build/settings.js:5
+msgid "Accepts tags, e.g. {slug}."
+msgstr ""
+
+#: build/settings.js:5
+msgid "Shorten links with Postiz"
+msgstr ""
+
+#: build/settings.js:5
+msgid "Tag the posts in Postiz with the post categories"
+msgstr ""
+
+#: build/settings.js:5
+msgid "Connect Postiz first (Connection tab)."
+msgstr ""
+
+#: build/settings.js:5
+msgid "Profiles saved."
+msgstr ""
+
+#: build/settings.js:5
+msgid "Save profiles"
+msgstr ""
+
+#: build/settings.js:5
+msgid "Unsaved changes"
+msgstr ""
+
+#: build/settings.js:5
+msgid "Paste this URL in Postiz → Settings → Webhooks to update the status of your posts as soon as they are published. Without it, the plugin checks Postiz every 15 minutes."
+msgstr ""
+
+#: build/settings.js:5
+msgid "Webhook URL"
+msgstr ""
+
+#: build/settings.js:5
+msgid "Copied"
+msgstr ""
+
+#: build/settings.js:5
+msgid "Copy"
+msgstr ""
+
+#. translators: %s: time since the last webhook call, e.g. "5 minutes ago".
+#: build/settings.js:6
+#, js-format
+msgid "Last call received %s."
+msgstr ""
+
+#: build/settings.js:6
+msgid "No call received yet. Use “Send Test” in Postiz to check it."
+msgstr ""
+
+#: build/settings.js:6
+msgid "New webhook URL created. Update it in Postiz: the old one no longer works."
+msgstr ""
+
+#: build/settings.js:6
+msgid "Create a new URL"
+msgstr ""
+
+#: build/settings.js:6
+msgid "The current URL will stop working. Continue?"
+msgstr ""
+
+#: build/settings.js:6
+msgid "Connection"
+msgstr ""
+
+#: build/settings.js:6
+msgid "Publishing profiles"
+msgstr ""
+
+#: build/settings.js:6
+msgid "Webhook"
 msgstr ""
