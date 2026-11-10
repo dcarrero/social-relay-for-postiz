@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T11:42:20+00:00",
+    "translation-revision-date": "2026-11-10T12:37:37+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/editor-panel.js",
     "domain": "messages",
@@ -77,21 +77,24 @@
             "No channels in Postiz yet.": [
                 "Todav\u00eda no hay canales en Postiz."
             ],
+            "All": [
+                "Todas"
+            ],
             "Empty = profile template. Tags like {title} and {url} work here too.": [
                 "Vac\u00edo = plantilla del perfil. Aqu\u00ed tambi\u00e9n funcionan variables como {title} y {url}."
             ],
-            "Text per network": [
-                "Texto por red"
+            "Empty = text for all networks. Limit: %d characters; check the count in Preview.": [
+                "Vac\u00edo = texto para todas las redes. L\u00edmite: %d caracteres; comprueba la cuenta en la vista previa."
             ],
-            "custom": [
-                "personalizado"
-            ],
-            "Empty = text for all networks": [
-                "Vac\u00edo = texto para todas las redes"
+            "Empty = text for all networks.": [
+                "Vac\u00edo = texto para todas las redes."
             ],
             "Thread of %d part.": [
                 "Hilo de %d parte.",
                 "Hilo de %d partes."
+            ],
+            "Longer than the network allows: it will be shortened.": [
+                "M\u00e1s largo de lo que admite la red: se recortar\u00e1."
             ],
             "This post does not match the profile conditions and will not be shared.": [
                 "Esta entrada no cumple las condiciones del perfil y no se compartir\u00e1."

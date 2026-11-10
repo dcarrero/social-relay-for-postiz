@@ -5,6 +5,7 @@ import { __ } from '@wordpress/i18n';
 
 import { config } from '../config';
 import ProfileEditor from './ProfileEditor';
+import TestProfile from './TestProfile';
 
 /**
  * One tab per post type, all saved together.
@@ -84,18 +85,28 @@ export default function ProfilesTab( { settings, setSettings } ) {
 				tabs={ tabs }
 			>
 				{ ( tab ) => (
-					<ProfileEditor
-						postType={ tab.name }
-						profile={ profiles[ tab.name ] }
-						settings={ settings }
-						onChange={ ( profile ) => {
-							setProfiles( {
-								...profiles,
-								[ tab.name ]: profile,
-							} );
-							setDirty( true );
-						} }
-					/>
+					<div className="socialrelaycvi-settings__profile">
+						<div className="socialrelaycvi-settings__profile-main">
+							<ProfileEditor
+								postType={ tab.name }
+								profile={ profiles[ tab.name ] }
+								settings={ settings }
+								onChange={ ( profile ) => {
+									setProfiles( {
+										...profiles,
+										[ tab.name ]: profile,
+									} );
+									setDirty( true );
+								} }
+							/>
+						</div>
+						<aside className="socialrelaycvi-settings__profile-aside">
+							<TestProfile
+								postType={ settings.postTypes[ tab.name ] }
+								dirty={ dirty }
+							/>
+						</aside>
+					</div>
 				) }
 			</TabPanel>
 

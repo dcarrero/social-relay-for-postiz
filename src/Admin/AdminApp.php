@@ -38,11 +38,7 @@ final class AdminApp {
 			true
 		);
 
-		// @wordpress/scripts writes CSS imported by the entry as style-{name}.css (+ -rtl.css).
-		if ( is_readable( SOCIALRELAYCVI_DIR . 'build/style-' . $name . '.css' ) ) {
-			wp_enqueue_style( $handle, SOCIALRELAYCVI_URL . 'build/style-' . $name . '.css', array( 'wp-components' ), (string) ( $asset['version'] ?? SOCIALRELAYCVI_VERSION ) );
-			wp_style_add_data( $handle, 'rtl', 'replace' );
-		}
+		self::enqueue_styles( $name, $handle, (string) ( $asset['version'] ?? SOCIALRELAYCVI_VERSION ) );
 
 		wp_set_script_translations( $handle, 'social-relay-for-postiz', SOCIALRELAYCVI_DIR . 'languages' );
 		wp_add_inline_script( $handle, 'window.socialRelayCviAdmin = ' . wp_json_encode( $data ) . ';', 'before' );
@@ -71,5 +67,27 @@ final class AdminApp {
 		}
 
 		echo '</div>';
+	}
+
+	/**
+	 * Enqueues the CSS of a build entry.
+	 *
+	 * @wordpress/scripts writes files named style.css as build/style-{name}.css and any
+	 * other imported CSS as build/{name}.css, each with an -rtl.css twin.
+	 *
+	 * @param string $name    Build entry name.
+	 * @param string $handle  Script handle, reused as style handle prefix.
+	 * @param string $version Asset version.
+	 */
+	public static function enqueue_styles( string $name, string $handle, string $version ): void {
+		foreach ( array( $name, 'style-' . $name ) as $file ) {
+			if ( ! is_readable( SOCIALRELAYCVI_DIR . 'build/' . $file . '.css' ) ) {
+				continue;
+			}
+
+			$style = $handle . ( $file === $name ? '' : '-style' );
+			wp_enqueue_style( $style, SOCIALRELAYCVI_URL . 'build/' . $file . '.css', array( 'wp-components' ), $version );
+			wp_style_add_data( $style, 'rtl', 'replace' );
+		}
 	}
 }

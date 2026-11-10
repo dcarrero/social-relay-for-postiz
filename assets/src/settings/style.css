@@ -1,5 +1,5 @@
 .socialrelaycvi-settings {
-	max-width: 960px;
+	max-width: 1320px;
 	margin-top: 16px;
 }
 
@@ -74,7 +74,31 @@
 	margin-bottom: 0;
 }
 
+.socialrelaycvi-settings__profile {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 340px;
+	gap: 16px;
+	align-items: start;
+}
+
+.socialrelaycvi-settings__profile-aside {
+	position: sticky;
+	top: 48px;
+}
+
+@media (max-width: 1100px) {
+
+	.socialrelaycvi-settings__profile {
+		grid-template-columns: 1fr;
+	}
+
+	.socialrelaycvi-settings__profile-aside {
+		position: static;
+	}
+}
+
 @media (max-width: 782px) {
+
 	.socialrelaycvi-settings__columns {
 		grid-template-columns: 1fr;
 	}

@@ -101,6 +101,16 @@ final class AdminController implements Module {
 
 		register_rest_route(
 			$ns,
+			'/admin/stats',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'get_stats' ),
+				'permission_callback' => $admin,
+			)
+		);
+
+		register_rest_route(
+			$ns,
 			'/admin/advanced',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -232,6 +242,22 @@ final class AdminController implements Module {
 		update_option( ProfileRepository::OPTION, $profiles, false );
 
 		return new WP_REST_Response( $this->settings_payload() );
+	}
+
+	/**
+	 * GET /admin/stats — figures for the log screen.
+	 */
+	public function get_stats(): WP_REST_Response {
+		$counts = $this->plugin->shares->counts( 30 );
+
+		return new WP_REST_Response(
+			array(
+				'published' => (int) ( $counts['published'] ?? 0 ),
+				'queued'    => (int) ( $counts['queued'] ?? 0 ),
+				'errors'    => (int) ( $counts['error'] ?? 0 ),
+				'lastHour'  => $this->plugin->shares->batches_since( HOUR_IN_SECONDS ),
+			)
+		);
 	}
 
 	/**
@@ -384,7 +410,7 @@ final class AdminController implements Module {
 	/**
 	 * Public post types with an admin UI, and which term taxonomies they use.
 	 *
-	 * @return array<string, array{label: string, categories: bool, tags: bool}>
+	 * @return array<string, array{label: string, rest_base: string, categories: bool, tags: bool}>
 	 */
 	private function post_types(): array {
 		$types = array();
@@ -402,6 +428,7 @@ final class AdminController implements Module {
 
 			$types[ $type->name ] = array(
 				'label'      => (string) $type->labels->name,
+				'rest_base'  => $type->show_in_rest ? (string) ( $type->rest_base ? $type->rest_base : $type->name ) : '',
 				'categories' => is_object_in_taxonomy( $type->name, 'category' ),
 				'tags'       => is_object_in_taxonomy( $type->name, 'post_tag' ),
 			);

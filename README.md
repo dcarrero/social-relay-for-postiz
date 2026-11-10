@@ -11,10 +11,11 @@ WordPress plugin that auto-publishes and schedules your content on social networ
 - Publishing profile per post type: channels, common and per-network templates, network settings, timing (now, delay, next free slot, draft).
 - Templates with tags (`{title}`, `{excerpt}`, `{url}`, `{hashtags:post_tag}`, `{meta:key}`…), filters (`|limit:200`, `|upper`…) and thread parts (`---`).
 - Conditions on categories and tags, UTM parameters per network, Postiz shortener and tags.
-- Background sending (Action Scheduler) with retries, duplicate protection and an activity log.
+- Background sending (Action Scheduler) with retries, duplicate protection and an activity log with summary cards (published, queued, errors, requests in the last hour against the Postiz limit).
 - Pending posts are cancelled in Postiz when a post is unpublished.
 - Status sync with Postiz (published URL, platform errors), triggered by the Postiz webhook or every 15 minutes.
-- Block editor panel (channels, text per network, preview, status), classic editor metabox and dashboard widget.
+- Block editor panel (channels, one tab per network for its own text, preview drawn like each network, status), classic editor metabox and dashboard widget.
+- "Test this profile" panel in the settings: pick a post and see what the saved profile would send.
 - REST routes for status, channels, a post's shares and a dry-run preview.
 - WP-CLI: `wp social-relay status|test|channels|preview|share|shares|cancel|sync|log` (`wp help social-relay` for details).
 - Abilities API: `socialrelaycvi/get-status`, `list-channels`, `preview-post`, `share-post`, `get-post-shares`, `cancel-post-shares`, available to AI agents through the MCP Adapter.
@@ -50,6 +51,7 @@ composer analyse   # PHPStan
 | `src/Abilities/` | Abilities API registration |
 | `src/Admin/` | Menu and loaders for the React screens, classic metabox, dashboard widget |
 | `assets/src/editor-panel/` | Block editor panel in JSX |
+| `assets/src/common/` | Pieces shared by the screens: network colours and the preview card |
 | `assets/src/settings/`, `assets/src/log/` | Settings and log screens in JSX (all built into `build/` with @wordpress/scripts; @wordpress/* packages come from WordPress) |
 | `languages/` | `.pot` template and translations |
 

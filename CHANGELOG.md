@@ -7,27 +7,28 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 ### Added
 - WP-CLI: `wp social-relay status|test|channels|preview|share|shares|cancel|sync|log`.
 - Abilities API (WordPress 6.9+): `socialrelaycvi/get-status`, `list-channels`, `preview-post`, `share-post`, `get-post-shares` and `cancel-post-shares`, in the `social-media` category, with input/output schemas, behaviour annotations and capability checks. Exposed in REST for AI agents (MCP Adapter) and other tools.
-
-- Admin REST routes (`socialrelaycvi/v1/admin/settings|connection|profiles|webhook/regenerate|log`), `manage_options` only; the API key is write-only.
+- Admin REST routes (`socialrelaycvi/v1/admin/settings|connection|profiles|stats|advanced|webhook/regenerate|log`), `manage_options` only; the API key is write-only.
+- Editor panel: one tab per selected channel for its own text, next to the "All" tab; a dot marks channels with custom text.
+- Editor preview drawn like each network: avatar in the network colour, character count against the limit, thread replies and the link card.
+- "Test this profile" panel in the publishing profiles tab: pick a post and see the messages the saved profile would send, without sending anything.
+- Log: cards with published and failed shares (30 days), queued shares and requests to Postiz in the last hour against the 90/hour limit.
+- "Advanced" settings tab: delete all plugin data when the plugin is deleted (also forced by `SOCIALRELAYCVI_DELETE_DATA`).
+- Suggested privacy policy text (Settings → Privacy → Policy Guide).
+- wordpress.org assets in `.wordpress-org/`: icon, banner and five screenshots, plus a Live Preview blueprint.
+- `bin/build-release.sh`: builds the installable zip (production Composer dependencies, compiled JavaScript, `.distignore` applied).
+- Release workflow: on a `v*` tag, builds the zip, attaches it to a GitHub release and deploys to wordpress.org SVN once the `SVN_USERNAME`/`SVN_PASSWORD` secrets exist.
 
 ### Changed
 - Settings and log screens rebuilt in React with WordPress components: tabs for connection, publishing profiles (one tab per post type, per-network panels, tag suggestions) and webhook; log with search, level filter and pagination. The old server-rendered forms are gone.
 - DataViews was evaluated for the log and discarded: it adds about 1.5 MB to the bundle; the log screen is 5 KB with core components.
-
-- `bin/build-release.sh`: builds the installable zip (production Composer dependencies, compiled JavaScript, `.distignore` applied).
-- Release workflow: on a `v*` tag, builds the zip, attaches it to a GitHub release and deploys to wordpress.org SVN once the `SVN_USERNAME`/`SVN_PASSWORD` secrets exist.
+- Channel names show their network ("Acme Agency · x") in the pre-publish summary, the editor preview, the per-network list and the log, so channels with the same name on different networks can be told apart.
+- readme.txt rewritten for wordpress.org: features, FAQ, screenshots, external services, privacy.
+- CSS linting (`npm run lint:css`, WordPress stylelint rules) added to CI.
 
 ### Fixed
 - Plugin Check: every query uses `%i` for table names and static SQL (no interpolated clauses); `load_plugin_textdomain()` removed, translations come from translate.wordpress.org language packs.
 - Uninstall also removes the webhook options, the per-post channel and text meta, and the cached channel lists.
-
-- "Advanced" settings tab: delete all plugin data when the plugin is deleted (also forced by `SOCIALRELAYCVI_DELETE_DATA`).
-- Suggested privacy policy text (Settings → Privacy → Policy Guide).
-- wordpress.org assets in `.wordpress-org/`: icon, banner and five screenshots, plus a Live Preview blueprint.
-- readme.txt rewritten for wordpress.org: features, FAQ, screenshots, external services, privacy.
-
-### Changed
-- Channel names show their network ("Acme Agency · x") in the pre-publish summary, the editor preview, the per-network list and the log, so channels with the same name on different networks can be told apart.
+- Styles imported from shared components are enqueued too (`build/{entry}.css` as well as `build/style-{entry}.css`).
 
 ## [0.3.1] - 2026-11-10
 

@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T11:42:20+00:00",
+    "translation-revision-date": "2026-11-10T12:37:37+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/settings.js",
     "domain": "messages",
@@ -19,8 +19,21 @@
             "Next free slot in Postiz": [
                 "Siguiente hueco libre en Postiz"
             ],
+            "Thread of %d part.": [
+                "Hilo de %d parte.",
+                "Hilo de %d partes."
+            ],
+            "Longer than the network allows: it will be shortened.": [
+                "M\u00e1s largo de lo que admite la red: se recortar\u00e1."
+            ],
+            "This post does not match the profile conditions and will not be shared.": [
+                "Esta entrada no cumple las condiciones del perfil y no se compartir\u00e1."
+            ],
             "Message": [
                 "Mensaje"
+            ],
+            "(no title)": [
+                "(sin t\u00edtulo)"
             ],
             "Publish immediately": [
                 "Publicar al momento"
@@ -145,6 +158,18 @@
             ],
             "Tag the posts in Postiz with the post categories": [
                 "Etiquetar las publicaciones en Postiz con las categor\u00edas de la entrada"
+            ],
+            "Test this profile": [
+                "Probar este perfil"
+            ],
+            "Pick a post to see the messages the saved profile would send. Nothing is sent.": [
+                "Elige una entrada para ver los mensajes que enviar\u00eda el perfil guardado. No se env\u00eda nada."
+            ],
+            "Save the profile to test your latest changes.": [
+                "Guarda el perfil para probar tus \u00faltimos cambios."
+            ],
+            "No channels selected.": [
+                "No hay canales seleccionados."
             ],
             "Connect Postiz first (Connection tab).": [
                 "Primero conecta Postiz (pesta\u00f1a Conexi\u00f3n)."

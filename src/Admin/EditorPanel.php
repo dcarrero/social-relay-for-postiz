@@ -63,6 +63,8 @@ final class EditorPanel implements Module {
 			true
 		);
 
+		AdminApp::enqueue_styles( 'editor-panel', self::HANDLE, (string) ( $asset['version'] ?? SOCIALRELAYCVI_VERSION ) );
+
 		wp_set_script_translations( self::HANDLE, 'social-relay-for-postiz', SOCIALRELAYCVI_DIR . 'languages' );
 
 		wp_add_inline_script(

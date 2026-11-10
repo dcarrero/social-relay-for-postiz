@@ -80,6 +80,7 @@ function LogApp() {
 	const [ loading, setLoading ] = useState( true );
 	const [ error, setError ] = useState( '' );
 	const [ confirming, setConfirming ] = useState( false );
+	const [ stats, setStats ] = useState( null );
 
 	const applySearch = useDebounce( ( value ) => {
 		setQuery( value );
@@ -106,6 +107,19 @@ function LogApp() {
 
 	useEffect( load, [ load ] );
 
+	const loadStats = useCallback( () => {
+		apiFetch( { path: `/${ config.namespace }/admin/stats` } )
+			.then( setStats )
+			.catch( () => setStats( null ) );
+	}, [] );
+
+	useEffect( loadStats, [ loadStats ] );
+
+	const refresh = () => {
+		load();
+		loadStats();
+	};
+
 	const clear = () => {
 		setConfirming( false );
 		apiFetch( {
@@ -128,7 +142,7 @@ function LogApp() {
 			<div className="socialrelaycvi-log__header">
 				<h1>{ __( 'Log', 'social-relay-for-postiz' ) }</h1>
 				<div className="socialrelaycvi-log__actions">
-					<Button variant="secondary" onClick={ load }>
+					<Button variant="secondary" onClick={ refresh }>
 						{ __( 'Refresh', 'social-relay-for-postiz' ) }
 					</Button>
 					<Button
@@ -141,6 +155,47 @@ function LogApp() {
 					</Button>
 				</div>
 			</div>
+
+			{ stats && (
+				<div className="socialrelaycvi-log__stats">
+					{ [
+						[
+							stats.published,
+							__(
+								'Published (30 days)',
+								'social-relay-for-postiz'
+							),
+							'is-success',
+						],
+						[
+							stats.queued,
+							__( 'Queued', 'social-relay-for-postiz' ),
+							'is-info',
+						],
+						[
+							stats.errors,
+							__( 'Errors (30 days)', 'social-relay-for-postiz' ),
+							'is-error',
+						],
+						[
+							`${ stats.lastHour } / 90`,
+							__(
+								'Requests to Postiz in the last hour',
+								'social-relay-for-postiz'
+							),
+							'',
+						],
+					].map( ( [ value, label, tone ] ) => (
+						<div
+							key={ label }
+							className={ `socialrelaycvi-log__stat ${ tone }` }
+						>
+							<strong>{ value }</strong>
+							<span>{ label }</span>
+						</div>
+					) ) }
+				</div>
+			) }
 
 			<div className="socialrelaycvi-log__filters">
 				<SearchControl

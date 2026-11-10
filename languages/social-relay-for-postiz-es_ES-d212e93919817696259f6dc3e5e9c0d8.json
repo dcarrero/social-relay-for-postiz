@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T11:42:20+00:00",
+    "translation-revision-date": "2026-11-10T12:37:37+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/log.js",
     "domain": "messages",
@@ -10,6 +10,9 @@
                 "lang": "es_ES",
                 "plural-forms": "nplurals=2; plural=(n != 1);"
             },
+            "Queued": [
+                "En cola"
+            ],
             "Next": [
                 "Pr\u00f3ximas"
             ],
@@ -51,6 +54,15 @@
             ],
             "Clear log": [
                 "Vaciar el registro"
+            ],
+            "Published (30 days)": [
+                "Publicadas (30 d\u00edas)"
+            ],
+            "Errors (30 days)": [
+                "Errores (30 d\u00edas)"
+            ],
+            "Requests to Postiz in the last hour": [
+                "Peticiones a Postiz en la \u00faltima hora"
             ],
             "Search messages": [
                 "Buscar en los mensajes"

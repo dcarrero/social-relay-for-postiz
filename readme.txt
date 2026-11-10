@@ -29,7 +29,7 @@ Works with self-hosted Postiz and with Postiz Cloud.
 
 = In the editor =
 
-* A **"Social networks" panel** in the block editor: turn sharing on or off, pick channels for this post, write a text for all networks or one per network, and preview every message with its character count.
+* A **"Social networks" panel** in the block editor: turn sharing on or off, pick channels for this post, write a text for all networks or one per network (one tab each), and preview every message as it will look on each network, with its character count.
 * A **pre-publish summary** of the channels and timing that will be used.
 * After publishing, the **status of each network**: queued, published (with a link to the post) or the error reported by the platform.
 * A metabox for the **classic editor**.
@@ -40,7 +40,8 @@ Works with self-hosted Postiz and with Postiz Cloud.
 * **Background sending** with Action Scheduler, automatic retries and duplicate protection.
 * **Status sync** with Postiz, triggered by the Postiz webhook or every 15 minutes.
 * Pending posts are **cancelled in Postiz** when a post is unpublished or trashed.
-* An **activity log** with search and filters, and a dashboard widget.
+* A **"Test this profile"** panel: pick a post and see what the profile would send, without sending anything.
+* An **activity log** with search, filters and summary cards (published, queued, errors, requests to Postiz in the last hour), and a dashboard widget.
 
 = For developers and AI agents =
 

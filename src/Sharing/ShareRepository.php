@@ -236,6 +236,23 @@ final class ShareRepository {
 	}
 
 	/**
+	 * Requests sent to Postiz since a moment (one batch is one POST /posts).
+	 *
+	 * @param int $seconds Window in seconds.
+	 */
+	public function batches_since( int $seconds ): int {
+		global $wpdb;
+
+		return (int) $wpdb->get_var(
+			$wpdb->prepare(
+				'SELECT COUNT(DISTINCT batch) FROM %i WHERE created_at >= %s',
+				Installer::tables()['shares'],
+				gmdate( 'Y-m-d H:i:s', time() - $seconds )
+			)
+		);
+	}
+
+	/**
 	 * Latest rows of any post, for the dashboard.
 	 *
 	 * @param string $status Optional status filter.
