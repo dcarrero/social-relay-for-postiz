@@ -9,9 +9,11 @@
 		"start": "wp-scripts start editor-panel=./assets/src/editor-panel/index.js settings=./assets/src/settings/index.js log=./assets/src/log/index.js --output-path=build",
 		"lint:js": "wp-scripts lint-js assets/src",
 		"lint:css": "wp-scripts lint-style 'assets/src/**/*.css'",
-		"format": "wp-scripts format assets/src"
+		"format": "wp-scripts format assets/src",
+		"env": "wp-env"
 	},
 	"devDependencies": {
+		"@wordpress/env": "^10.39.0",
 		"@wordpress/scripts": "^30.0.0",
 		"typescript": "^5.9.3"
 	}

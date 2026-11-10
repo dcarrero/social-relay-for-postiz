@@ -23,11 +23,13 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - DataViews was evaluated for the log and discarded: it adds about 1.5 MB to the bundle; the log screen is 5 KB with core components.
 - Channel names show their network ("Acme Agency · x") in the pre-publish summary, the editor preview, the per-network list and the log, so channels with the same name on different networks can be told apart.
 - readme.txt rewritten for wordpress.org: features, FAQ, screenshots, external services, privacy.
+- Local Docker environment with `@wordpress/env` (`npm run env start`, site on port 8890).
 - CSS linting (`npm run lint:css`, WordPress stylelint rules) added to CI.
 
 ### Fixed
 - Plugin Check: every query uses `%i` for table names and static SQL (no interpolated clauses); `load_plugin_textdomain()` removed, translations come from translate.wordpress.org language packs.
 - Uninstall also removes the webhook options, the per-post channel and text meta, and the cached channel lists.
+- WP-CLI says what happened instead of failing silently: `share` stops with the reason when Postiz is not configured, the profile is off or the post has sharing turned off; `share --now` reports when nothing was sent and why; `cancel` reports how many pending groups it cancelled or that nothing was pending; `log` and `shares` say when there is nothing to show.
 - Styles imported from shared components are enqueued too (`build/{entry}.css` as well as `build/style-{entry}.css`).
 
 ## [0.3.1] - 2026-11-10

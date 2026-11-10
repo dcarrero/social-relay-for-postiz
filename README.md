@@ -29,10 +29,15 @@ npm ci
 npm run build      # editor panel: assets/src → build/ (required, build/ is not in git)
 npm run start      # same, rebuilding on every change
 npm run lint:js    # WordPress ESLint rules
+npm run lint:css   # WordPress stylelint rules
+npm run env start  # WordPress in Docker (@wordpress/env) at http://localhost:8890, admin/password
+npm run env run cli wp social-relay status   # WP-CLI inside that site
 composer test      # PHPUnit (unit tests, no WordPress needed)
 composer lint      # PHPCS with WordPress Coding Standards + PHPCompatibility
 composer analyse   # PHPStan
 ```
+
+To try it against a Postiz on your machine or LAN, add `define( 'SOCIALRELAYCVI_ALLOW_LOCAL_INSTANCE', true );` (in wp-env: `npm run env run cli wp config set SOCIALRELAYCVI_ALLOW_LOCAL_INSTANCE true --raw`) and use `http://host.docker.internal:<port>` as the URL.
 
 ### Layout
 

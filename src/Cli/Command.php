@@ -236,18 +236,52 @@ final class Command {
 			WP_CLI::error( 'The post does not exist or is not published.' );
 		}
 
+		$reason = $this->why_not_shared( $post );
+		if ( null !== $reason ) {
+			WP_CLI::error( $reason );
+		}
+
 		if ( Utils\get_flag_value( $assoc_args, 'force', false ) ) {
 			update_post_meta( $post_id, PostMeta::RESHARE, true );
 		}
 
 		if ( ! Utils\get_flag_value( $assoc_args, 'now', false ) ) {
 			$this->plugin->queue->enqueue_share( $post_id, 0 );
-			WP_CLI::success( 'Share queued.' );
+			WP_CLI::success( 'Share queued. Follow it with: wp social-relay shares ' . $post_id );
 			return;
 		}
 
+		$before = count( $this->plugin->shares->for_post( $post_id ) );
 		$this->plugin->share_service->handle( $post_id );
+
+		if ( count( $this->plugin->shares->for_post( $post_id ) ) === $before ) {
+			$last = $this->plugin->logger->latest( 1 )[0] ?? null;
+			WP_CLI::error( 'Nothing was sent.' . ( $last && (int) $last['post_id'] === $post_id ? ' ' . $last['message'] : ' See: wp social-relay log' ) );
+		}
+
 		$this->shares( array( (string) $post_id ), array() );
+	}
+
+	/**
+	 * Why a post would not be shared before even building the messages, or null.
+	 *
+	 * @param \WP_Post $post Post.
+	 * @return string|null Reason.
+	 */
+	private function why_not_shared( \WP_Post $post ): ?string {
+		if ( ! $this->plugin->connection->is_configured() ) {
+			return 'Postiz is not configured yet.';
+		}
+
+		if ( ! $this->plugin->profiles->for_post_type( $post->post_type )['enabled'] ) {
+			return sprintf( 'Sharing is turned off in the publishing profile for "%s".', $post->post_type );
+		}
+
+		if ( ! get_post_meta( $post->ID, PostMeta::ENABLED, true ) ) {
+			return 'Sharing is turned off for this post (editor panel or metabox).';
+		}
+
+		return null;
 	}
 
 	/**
@@ -273,9 +307,15 @@ final class Command {
 	 * @param array<string, string> $assoc_args Options.
 	 */
 	public function shares( array $args, array $assoc_args ): void {
-		$rows = $this->plugin->shares->for_post( (int) $args[0] );
+		$rows   = $this->plugin->shares->for_post( (int) $args[0] );
+		$format = $assoc_args['format'] ?? 'table';
 
-		Utils\format_items( $assoc_args['format'] ?? 'table', $rows, array( 'integration_id', 'identifier', 'type', 'status', 'publish_at', 'release_url', 'error' ) );
+		if ( array() === $rows && 'table' === $format ) {
+			WP_CLI::line( 'Nothing was sent to Postiz for this post yet.' );
+			return;
+		}
+
+		Utils\format_items( $format, $rows, array( 'integration_id', 'identifier', 'type', 'status', 'publish_at', 'release_url', 'error' ) );
 	}
 
 	/**
@@ -290,8 +330,26 @@ final class Command {
 	 * @param array<string, string> $assoc_args Options.
 	 */
 	public function cancel( array $args, array $assoc_args ): void {
-		$this->plugin->share_service->cancel( (int) $args[0] );
-		WP_CLI::success( 'Done. See the log for details.' );
+		$post_id = (int) $args[0];
+		$pending = count( $this->plugin->shares->cancellable_batches( $post_id ) );
+
+		if ( 0 === $pending ) {
+			WP_CLI::success( 'Nothing pending in Postiz for this post.' );
+			return;
+		}
+
+		if ( ! $this->plugin->connection->is_configured() ) {
+			WP_CLI::error( 'Postiz is not configured yet.' );
+		}
+
+		$this->plugin->share_service->cancel( $post_id );
+		$left = count( $this->plugin->shares->cancellable_batches( $post_id ) );
+
+		if ( $left > 0 ) {
+			WP_CLI::error( sprintf( '%d of %d pending group(s) could not be cancelled. See: wp social-relay log', $left, $pending ) );
+		}
+
+		WP_CLI::success( sprintf( 'Cancelled %d pending group(s) in Postiz.', $pending ) );
 	}
 
 	/**
@@ -331,8 +389,14 @@ final class Command {
 	 * @param array<string, string> $assoc_args Options.
 	 */
 	public function log( array $args, array $assoc_args ): void {
-		$rows = $this->plugin->logger->latest( max( 1, (int) ( $assoc_args['limit'] ?? 20 ) ) );
+		$rows   = $this->plugin->logger->latest( max( 1, (int) ( $assoc_args['limit'] ?? 20 ) ) );
+		$format = $assoc_args['format'] ?? 'table';
 
-		Utils\format_items( $assoc_args['format'] ?? 'table', $rows, array( 'created_at', 'level', 'action', 'post_id', 'integration_id', 'message' ) );
+		if ( array() === $rows && 'table' === $format ) {
+			WP_CLI::line( 'The log is empty.' );
+			return;
+		}
+
+		Utils\format_items( $format, $rows, array( 'created_at', 'level', 'action', 'post_id', 'integration_id', 'message' ) );
 	}
 }
