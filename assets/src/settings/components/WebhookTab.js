@@ -21,8 +21,10 @@ import { config } from '../config';
 // Without a call for this long the webhook is probably not set up any more.
 const STALE_DAYS = 3;
 
-// The history is read again this often while the tab is open, so a "Send test" shows up.
+// The history is read again this often while the tab is open, so a "Send test" shows up,
+// only while the window is visible and for the first minutes.
 const POLL = 10000;
+const POLL_FOR = 15 * 60 * 1000;
 
 /**
  * State of the webhook from its last call.
@@ -212,7 +214,15 @@ export default function WebhookTab( { settings, setSettings } ) {
 
 	// Read the history again while the tab is open, so a "Send test" from Postiz shows up.
 	useEffect( () => {
+		const until = Date.now() + POLL_FOR;
 		const timer = setInterval( () => {
+			if ( Date.now() > until ) {
+				clearInterval( timer );
+				return;
+			}
+			if ( document.hidden ) {
+				return;
+			}
 			apiFetch( { path: `/${ config.namespace }/admin/webhook` } )
 				.then( ( response ) =>
 					setSettings( ( current ) => ( {

@@ -12,14 +12,13 @@ namespace SocialRelayCvi\Sync;
 use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
 use SocialRelayCvi\Queue\Queue;
-use SocialRelayCvi\Rest\WebhookController;
 
 /**
  * Reads GET /posts for the pending shares and records published, error and draft states.
  *
  * Runs every 15 minutes while something is pending, a couple of minutes after each
- * send, and right away when the Postiz webhook calls in. The webhook is only a
- * trigger: the data always comes from the API, so its payload format does not matter.
+ * send, and right away for the posts a Postiz webhook call names. The webhook only
+ * says what to check: the data always comes from the API.
  */
 final class StatusSync implements Module {
 
@@ -35,6 +34,7 @@ final class StatusSync implements Module {
 	 */
 	public function register(): void {
 		add_action( Queue::HOOK_SYNC, array( $this, 'run' ), 10, 0 );
+		add_action( Queue::HOOK_SYNC_NAMED, array( $this, 'run_named' ), 10, 1 );
 		add_action( 'socialrelaycvi_shared', array( $this, 'after_share' ) );
 	}
 
@@ -54,17 +54,39 @@ final class StatusSync implements Module {
 			return;
 		}
 
-		// After a webhook call, only the posts it named: a narrower request to Postiz.
-		$hint = get_transient( WebhookController::SYNC_HINT );
-		if ( is_array( $hint ) && array() !== $hint ) {
-			delete_transient( WebhookController::SYNC_HINT );
-			$named = array_values( array_filter( $rows, static fn ( array $row ): bool => in_array( (string) $row['postiz_post_id'], $hint, true ) ) );
-			$rows  = array() !== $named ? $named : $rows;
-		}
+		$this->sync_rows( $rows );
+	}
 
+	/**
+	 * Sync job for the Postiz posts a webhook call named: a narrower request to Postiz.
+	 *
+	 * Falls back to a full sync when the request cannot be made.
+	 *
+	 * @param mixed $postiz_ids Postiz post ids.
+	 */
+	public function run_named( mixed $postiz_ids ): void {
+		$rows = array_values(
+			array_filter(
+				$this->plugin->shares->by_postiz_ids( array_map( 'strval', (array) $postiz_ids ) ),
+				static fn ( array $row ): bool => in_array( (string) $row['status'], array( 'queued', 'draft' ), true )
+			)
+		);
+
+		if ( array() !== $rows && ! $this->sync_rows( $rows ) ) {
+			$this->plugin->queue->enqueue_sync( MINUTE_IN_SECONDS );
+		}
+	}
+
+	/**
+	 * Asks Postiz about these shares and records what changed.
+	 *
+	 * @param list<array<string, mixed>> $rows Share rows.
+	 * @return bool False when Postiz could not be asked.
+	 */
+	private function sync_rows( array $rows ): bool {
 		$gateway = $this->plugin->gateway();
 		if ( null === $gateway ) {
-			return;
+			return false;
 		}
 
 		$times           = array_map( static fn ( array $row ): int => (int) strtotime( (string) $row['publish_at'] . ' UTC' ), $rows );
@@ -73,7 +95,7 @@ final class StatusSync implements Module {
 		$response = $gateway->posts( $start, $end );
 		if ( is_wp_error( $response ) ) {
 			$this->plugin->logger->error( 'sync', $response->get_error_message() );
-			return;
+			return false;
 		}
 
 		$by_id = array();
@@ -105,6 +127,8 @@ final class StatusSync implements Module {
 			 */
 			do_action( 'socialrelaycvi_status_changed', $row, $changes );
 		}
+
+		return true;
 	}
 
 	/**

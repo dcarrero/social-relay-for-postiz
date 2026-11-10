@@ -56,7 +56,7 @@ final class WebhookPayload {
 
 		return array(
 			'posts' => $posts,
-			'ids'   => array_values( array_unique( array_slice( $ids, 0, 50 ) ) ),
+			'ids'   => array_slice( array_values( array_unique( $ids ) ), 0, 50 ),
 		);
 	}
 
@@ -80,9 +80,32 @@ final class WebhookPayload {
 		}
 
 		if ( false !== filter_var( $host, FILTER_VALIDATE_IP ) ) {
-			return false === filter_var( $host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE );
+			return false === filter_var( $host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) || self::in_local_range( $host );
 		}
 
 		return false;
+	}
+
+	/**
+	 * Ranges PHP's filters may let through: CGNAT (100.64.0.0/10, e.g. Tailscale),
+	 * IPv6 loopback, unique local (fc00::/7) and link-local (fe80::/10).
+	 *
+	 * @param string $ip IP address.
+	 */
+	private static function in_local_range( string $ip ): bool {
+		$packed = inet_pton( $ip );
+		if ( false === $packed ) {
+			return false;
+		}
+
+		if ( 4 === strlen( $packed ) ) {
+			return 100 === ord( $packed[0] ) && 64 === ( ord( $packed[1] ) & 0xC0 );
+		}
+
+		$first = ord( $packed[0] );
+
+		return '::1' === inet_ntop( $packed )
+			|| 0xFC === ( $first & 0xFE )
+			|| ( 0xFE === $first && 0x80 === ( ord( $packed[1] ) & 0xC0 ) );
 	}
 }

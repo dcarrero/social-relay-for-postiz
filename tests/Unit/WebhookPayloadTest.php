@@ -56,12 +56,19 @@ final class WebhookPayloadTest extends TestCase {
 	}
 
 	public function test_local_addresses(): void {
-		foreach ( array( 'http://localhost:8890', 'http://mysite.test', 'https://shop.local', 'http://192.168.1.20', 'http://10.0.0.5', 'http://127.0.0.1', 'http://intranet' ) as $url ) {
+		foreach ( array( 'http://localhost:8890', 'http://mysite.test', 'https://shop.local', 'http://192.168.1.20', 'http://10.0.0.5', 'http://127.0.0.1', 'http://intranet', 'http://100.101.102.103', 'http://[::1]', 'http://[fe80::1]', 'http://[fd12::1]' ) as $url ) {
 			$this->assertTrue( WebhookPayload::is_local_url( $url ), $url );
 		}
 
-		foreach ( array( 'https://example.org', 'https://news.example.co.uk/blog', 'http://8.8.8.8' ) as $url ) {
+		foreach ( array( 'https://example.org', 'https://news.example.co.uk/blog', 'http://8.8.8.8', 'http://[2606:4700::1111]', 'http://100.128.0.1' ) as $url ) {
 			$this->assertFalse( WebhookPayload::is_local_url( $url ), $url );
 		}
+	}
+
+	public function test_duplicates_do_not_push_out_other_ids(): void {
+		$body   = array_fill( 0, 60, array( 'id' => 'samesame1' ) );
+		$body[] = array( 'id' => 'other0002' );
+
+		$this->assertSame( array( 'samesame1', 'other0002' ), WebhookPayload::parse( $body )['ids'] );
 	}
 }

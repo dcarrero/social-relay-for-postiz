@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-11-10T10:13:03+00:00\n"
-"PO-Revision-Date: 2026-11-10T20:50:14+00:00\n"
+"PO-Revision-Date: 2026-11-10T21:16:29+00:00\n"
 "Language: es_ES\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -611,35 +611,47 @@ msgstr "Faltan ajustes de la red (%s); se omite."
 msgid "Pending posts cancelled in Postiz."
 msgstr "Publicaciones pendientes canceladas en Postiz."
 
-#. translators: 1: number of channels, 2: Postiz post type (now, schedule, draft).
+#. translators: 1: number of channels, 2: how Postiz handles it, e.g. "to publish now".
 #: src/Sharing/ShareService.php:458
 #, php-format
-msgid "Sent to Postiz: %1$d channel, type %2$s."
-msgid_plural "Sent to Postiz: %1$d channels, type %2$s."
-msgstr[0] "Enviado a Postiz: %1$d canal, tipo %2$s."
-msgstr[1] "Enviado a Postiz: %1$d canales, tipo %2$s."
+msgid "Sent to Postiz: %1$d channel, %2$s."
+msgid_plural "Sent to Postiz: %1$d channels, %2$s."
+msgstr[0] "Enviado a Postiz: %1$d canal, %2$s."
+msgstr[1] "Enviado a Postiz: %1$d canales, %2$s."
+
+#: src/Sharing/ShareService.php:461
+msgid "scheduled"
+msgstr "programado"
+
+#: src/Sharing/ShareService.php:462
+msgid "as a draft"
+msgstr "como borrador"
+
+#: src/Sharing/ShareService.php:463
+msgid "to publish now"
+msgstr "para publicar ya"
 
 #. translators: 1: error message, 2: attempt number, 3: max attempts.
-#: src/Sharing/ShareService.php:509
+#: src/Sharing/ShareService.php:513
 #, php-format
 msgid "%1$s Retrying (%2$d of %3$d)."
 msgstr "%1$s Reintentando (%2$d de %3$d)."
 
-#: src/Sharing/ShareService.php:736
+#: src/Sharing/ShareService.php:740
 msgid "Unexpected upload response."
 msgstr "Respuesta inesperada al subir el archivo."
 
 #. translators: %s: error message.
-#: src/Sharing/ShareService.php:740
+#: src/Sharing/ShareService.php:744
 #, php-format
 msgid "Postiz could not fetch an image (%s). Sent without it."
 msgstr "Postiz no pudo descargar una imagen (%s). Se ha enviado sin ella."
 
-#: src/Sync/StatusSync.php:122
+#: src/Sync/StatusSync.php:146
 msgid "Published on the network."
 msgstr "Publicado en la red."
 
-#: src/Sync/StatusSync.php:124
+#: src/Sync/StatusSync.php:148
 msgid "Postiz reports an error for this post."
 msgstr "Postiz indica un error en esta publicación."
 

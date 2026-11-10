@@ -25,6 +25,11 @@ final class Queue implements Module {
 	public const HOOK_SYNC    = 'socialrelaycvi_sync_status';
 
 	/**
+	 * Status sync of the Postiz posts a webhook call named (one job per call).
+	 */
+	public const HOOK_SYNC_NAMED = 'socialrelaycvi_sync_named';
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
@@ -114,6 +119,26 @@ final class Queue implements Module {
 	}
 
 	/**
+	 * Queues, right away, a status sync of the Postiz posts a webhook call named.
+	 *
+	 * One job per call with its own ids: calls that arrive together do not overwrite
+	 * each other, and a sync already waiting (e.g. two minutes after a share) does not
+	 * delay this one.
+	 *
+	 * @param list<string> $postiz_ids Postiz post ids.
+	 */
+	public function enqueue_named_sync( array $postiz_ids ): void {
+		$args = array( array_values( $postiz_ids ) );
+
+		if ( function_exists( 'as_enqueue_async_action' ) ) {
+			as_enqueue_async_action( self::HOOK_SYNC_NAMED, $args, self::GROUP );
+			return;
+		}
+
+		wp_schedule_single_event( time(), self::HOOK_SYNC_NAMED, $args );
+	}
+
+	/**
 	 * Removes every scheduled job of the plugin.
 	 */
 	public static function unschedule_all(): void {
@@ -125,5 +150,6 @@ final class Queue implements Module {
 		wp_unschedule_hook( self::HOOK_SHARE );
 		wp_unschedule_hook( self::HOOK_CANCEL );
 		wp_unschedule_hook( self::HOOK_SYNC );
+		wp_unschedule_hook( self::HOOK_SYNC_NAMED );
 	}
 }

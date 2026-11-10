@@ -34,11 +34,6 @@ final class WebhookController implements Module {
 	public const OPTION_HISTORY = 'socialrelaycvi_webhook_history';
 
 	/**
-	 * Postiz post ids named by the last calls, for a narrower status sync.
-	 */
-	public const SYNC_HINT = 'socialrelaycvi_sync_hint';
-
-	/**
 	 * One-time token of "Check URL" calls, so they are not counted as Postiz calls.
 	 */
 	public const CHECK_TOKEN = 'socialrelaycvi_webhook_check';
@@ -88,11 +83,13 @@ final class WebhookController implements Module {
 			return new WP_REST_Response( array( 'code' => 'rest_no_route' ), 404 );
 		}
 
-		// "Check URL" from the settings: answers, but is not a call from Postiz.
-		$token = (string) get_transient( self::CHECK_TOKEN );
-		if ( '' !== $token && hash_equals( $token, (string) $request->get_header( self::CHECK_HEADER ) ) ) {
-			delete_transient( self::CHECK_TOKEN );
-			return new WP_REST_Response( array( 'check' => true ), 200 );
+		// "Check URL" from the settings: Postiz never sends this header, so such a call is
+		// never counted as one from Postiz, even when its token does not match.
+		$check = (string) $request->get_header( self::CHECK_HEADER );
+		if ( '' !== $check ) {
+			$token = (string) get_transient( self::CHECK_TOKEN );
+			$valid = '' !== $token && hash_equals( $token, $check );
+			return new WP_REST_Response( array( 'check' => $valid ), $valid ? 200 : 409 );
 		}
 
 		$payload = WebhookPayload::parse( json_decode( (string) $request->get_body(), true ) );
@@ -101,13 +98,12 @@ final class WebhookController implements Module {
 		update_option( self::OPTION_LAST, time(), false );
 		$this->remember( $payload['posts'], array_map( static fn ( array $row ): int => (int) $row['id'], $rows ) );
 
-		// Only a hint of what to check: the status still comes from the Postiz API.
+		// Ask Postiz about the shares this call named; the status itself comes from the API.
 		if ( array() !== $rows ) {
-			$hint = get_transient( self::SYNC_HINT );
-			$hint = is_array( $hint ) ? $hint : array();
-			set_transient( self::SYNC_HINT, array_values( array_unique( array_merge( $hint, array_column( $rows, 'postiz_post_id' ) ) ) ), 10 * MINUTE_IN_SECONDS );
+			$this->plugin->queue->enqueue_named_sync( array_values( array_unique( array_map( 'strval', array_column( $rows, 'postiz_post_id' ) ) ) ) );
+		} else {
+			$this->plugin->queue->enqueue_sync( 0 );
 		}
-		$this->plugin->queue->enqueue_sync( 0 );
 
 		return new WP_REST_Response( array( 'queued' => true ), 202 );
 	}

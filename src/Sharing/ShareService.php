@@ -454,10 +454,14 @@ final class ShareService implements Module {
 		$log->info(
 			'share',
 			sprintf(
-				/* translators: 1: number of channels, 2: Postiz post type (now, schedule, draft). */
-				_n( 'Sent to Postiz: %1$d channel, type %2$s.', 'Sent to Postiz: %1$d channels, type %2$s.', count( $items ), 'social-relay-for-postiz' ),
+				/* translators: 1: number of channels, 2: how Postiz handles it, e.g. "to publish now". */
+				_n( 'Sent to Postiz: %1$d channel, %2$s.', 'Sent to Postiz: %1$d channels, %2$s.', count( $items ), 'social-relay-for-postiz' ),
 				count( $items ),
-				$type
+				match ( $type ) {
+					PayloadBuilder::TYPE_SCHEDULE => __( 'scheduled', 'social-relay-for-postiz' ),
+					PayloadBuilder::TYPE_DRAFT    => __( 'as a draft', 'social-relay-for-postiz' ),
+					default                       => __( 'to publish now', 'social-relay-for-postiz' ),
+				}
 			),
 			$post->ID,
 			isset( $items[1] ) ? '' : (string) $items[0]['integration_id'], // One channel per request in slot mode: name it.
