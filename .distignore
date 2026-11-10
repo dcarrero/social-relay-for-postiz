@@ -10,3 +10,4 @@
 /composer.lock
 /README.md
 /.phpunit.cache
+/CHANGELOG.md

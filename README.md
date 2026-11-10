@@ -3,7 +3,18 @@
 WordPress plugin that auto-publishes and schedules your content on social networks through **your own Postiz instance** (self-hosted or Postiz Cloud). WordPress talks directly to the Postiz public API: no middleman service.
 
 - Requires WordPress 7.0+ and PHP 8.2+.
-- Status: early development (0.1).
+- Status: early development, version 0.2 (see [CHANGELOG.md](CHANGELOG.md)).
+
+## Features
+
+- Direct connection to your Postiz instance (self-hosted or Postiz Cloud), with automatic API path detection and a card in Settings → Connectors.
+- Publishing profile per post type: channels, common and per-network templates, network settings, timing (now, delay, next free slot, draft).
+- Templates with tags (`{title}`, `{excerpt}`, `{url}`, `{hashtags:post_tag}`, `{meta:key}`…), filters (`|limit:200`, `|upper`…) and thread parts (`---`).
+- Conditions on categories and tags, UTM parameters per network, Postiz shortener and tags.
+- Background sending (Action Scheduler) with retries, duplicate protection and an activity log.
+- Pending posts are cancelled in Postiz when a post is unpublished.
+- REST routes for status, channels, a post's shares and a dry-run preview.
+- English base, Spanish (es_ES) translation included.
 
 ## Development
 
@@ -22,11 +33,12 @@ composer analyse   # PHPStan
 | `src/Plugin.php` | Service container and module registry (`socialrelaycvi_modules` filter) |
 | `src/Postiz/` | API client, endpoint detection, channel cache, per-network rules |
 | `src/Templates/` | Template engine (`{tags}`, `\|filters`, `---` threads) and post context |
-| `src/Sharing/` | Payload builder, share job, shares table |
+| `src/Sharing/` | Payload builder, share job and preview, conditions, UTM, shares table |
 | `src/Lifecycle/` | Installer (tables) and post listener |
 | `src/Connector/` | Settings → Connectors registration (WordPress 7) |
 | `src/Rest/` | `socialrelaycvi/v1` routes |
 | `src/Admin/` | Settings and log screens |
+| `languages/` | `.pot` template and translations |
 
 ### Extending
 
