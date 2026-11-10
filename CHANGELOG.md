@@ -29,6 +29,7 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - Release workflow: on a `v*` tag, builds the zip, attaches it to a GitHub release and deploys to wordpress.org SVN once the `SVN_USERNAME`/`SVN_PASSWORD` secrets exist.
 
 ### Changed
+- Design pass: the failure notice groups errors by post ("Post — LinkedIn, X: error") and counts the rest; the log shows each channel with its avatar and network, readable actions (Share, Cancel, Status sync…) and "Channel not in Postiz" for removed channels; the dashboard widget names the network instead of an internal id; the Conditions card is hidden for post types without categories or tags; clearer help under the editor message.
 - The profile switch "Attach the featured image" became the "Images" setting; profiles saved with it off keep sending no images. Images are part of the duplicate check, so changing them allows sharing again.
 - Settings and log screens rebuilt in React with WordPress components: tabs for connection, publishing profiles (one tab per post type, per-network panels, tag suggestions) and webhook; log with search, level filter and pagination. The old server-rendered forms are gone.
 - DataViews was evaluated for the log and discarded: it adds about 1.5 MB to the bundle; the log screen is 5 KB with core components.

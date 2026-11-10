@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T19:47:43+00:00",
+    "translation-revision-date": "2026-11-10T19:50:37+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/editor-panel.js",
     "domain": "messages",
@@ -228,8 +228,8 @@
             "AI uses the saved post and your provider in Settings \u2192 Connectors. Review the text before publishing.": [
                 "La IA usa la entrada guardada y tu proveedor de Ajustes \u2192 Conectores. Revisa el texto antes de publicar."
             ],
-            "Empty = profile template, shown in grey. \u2022 marks a custom text.": [
-                "Vac\u00edo = plantilla del perfil, en gris. \u2022 indica un texto propio."
+            "Leave it empty to use the profile template (in grey). A dot on a network tab means it has its own text.": [
+                "D\u00e9jalo vac\u00edo para usar la plantilla del perfil (en gris). Un punto en la pesta\u00f1a de una red indica que tiene su propio texto."
             ],
             "Empty = text for all networks. Limit: %d characters; check the count in Preview.": [
                 "Vac\u00edo = texto para todas las redes. L\u00edmite: %d caracteres; comprueba la cuenta en la vista previa."

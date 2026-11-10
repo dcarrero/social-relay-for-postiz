@@ -70,7 +70,15 @@ final class LogPage implements Module {
 				'namespace' => 'socialrelaycvi/v1',
 				'channels'  => is_wp_error( $channels ) ? array() : array_combine(
 					array_column( $channels, 'id' ),
-					array_map( static fn ( array $channel ): string => $channel['name'] . ' · ' . $channel['identifier'], $channels )
+					array_map(
+						static fn ( array $channel ): array => array(
+							'id'         => $channel['id'],
+							'name'       => $channel['name'],
+							'identifier' => $channel['identifier'],
+							'picture'    => $channel['picture'],
+						),
+						$channels
+					)
 				),
 			)
 		);

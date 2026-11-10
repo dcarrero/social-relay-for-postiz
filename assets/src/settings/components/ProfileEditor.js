@@ -249,19 +249,24 @@ export default function ProfileEditor( {
 				</CardBody>
 			</Card>
 
-			<Card>
-				<CardHeader>
-					<h3>{ __( 'Conditions', 'social-relay-for-postiz' ) }</h3>
-				</CardHeader>
-				<CardBody>
-					<Conditions
-						profile={ profile }
-						postType={ info }
-						categories={ settings.categories }
-						update={ update }
-					/>
-				</CardBody>
-			</Card>
+			{ /* Post types without categories or tags (pages) have no conditions. */ }
+			{ ( info.categories || info.tags ) && (
+				<Card>
+					<CardHeader>
+						<h3>
+							{ __( 'Conditions', 'social-relay-for-postiz' ) }
+						</h3>
+					</CardHeader>
+					<CardBody>
+						<Conditions
+							profile={ profile }
+							postType={ info }
+							categories={ settings.categories }
+							update={ update }
+						/>
+					</CardBody>
+				</Card>
+			) }
 
 			<Card>
 				<CardHeader>

@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-11-10T10:13:03+00:00\n"
-"PO-Revision-Date: 2026-11-10T19:47:43+00:00\n"
+"PO-Revision-Date: 2026-11-10T19:50:37+00:00\n"
 "Language: es_ES\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -134,7 +134,7 @@ msgid "Loading…"
 msgstr "Cargando…"
 
 #: src/Admin/ClassicMetabox.php:57
-#: src/Admin/DashboardWidget.php:42
+#: src/Admin/DashboardWidget.php:43
 msgid "Social networks (Postiz)"
 msgstr "Redes sociales (Postiz)"
 
@@ -232,106 +232,112 @@ msgstr "Estado"
 msgid "View post"
 msgstr "Ver publicación"
 
-#: src/Admin/DashboardWidget.php:56
+#: src/Admin/DashboardWidget.php:59
 msgid "Published (7 days)"
 msgstr "Publicadas (7 días)"
 
-#: src/Admin/DashboardWidget.php:57
+#: src/Admin/DashboardWidget.php:60
 #: src/Admin/StatusLabels.php:24
 #: build/editor-panel.js:3
 #: build/log.js:1
 msgid "Queued"
 msgstr "En cola"
 
-#: src/Admin/DashboardWidget.php:58
+#: src/Admin/DashboardWidget.php:61
 msgid "Errors"
 msgstr "Errores"
 
-#: src/Admin/DashboardWidget.php:71
+#: src/Admin/DashboardWidget.php:74
 msgid "Latest errors"
 msgstr "Últimos errores"
 
-#: src/Admin/DashboardWidget.php:83
+#: src/Admin/DashboardWidget.php:86
 #: build/log.js:2
 msgid "Next"
 msgstr "Próximas"
 
-#: src/Admin/DashboardWidget.php:85
+#: src/Admin/DashboardWidget.php:88
 msgid "Nothing scheduled."
 msgstr "No hay nada programado."
 
-#: src/Admin/DashboardWidget.php:99
-#: src/Admin/ErrorAlerts.php:92
+#: src/Admin/DashboardWidget.php:102
+#: src/Admin/ErrorAlerts.php:103
 #: src/Admin/LogPage.php:49
 #: src/Admin/LogPage.php:50
-#: src/Admin/LogPage.php:84
+#: src/Admin/LogPage.php:92
 #: build/editor-panel.js:10
 #: build/log.js:1
 msgid "Log"
 msgstr "Registro"
 
-#: src/Admin/DashboardWidget.php:100
+#: src/Admin/DashboardWidget.php:103
 #: src/Admin/SettingsPage.php:53
 #: src/Admin/SettingsPage.php:79
 msgid "Settings"
 msgstr "Ajustes"
 
-#: src/Admin/DashboardWidget.php:102
+#: src/Admin/DashboardWidget.php:105
 msgid "Open Postiz"
 msgstr "Abrir Postiz"
 
-#: src/Admin/ErrorAlerts.php:80
+#: src/Admin/ErrorAlerts.php:86
 msgid "Social Relay: some shares failed in Postiz."
 msgstr "Social Relay: algunos envíos a Postiz han fallado."
 
-#: src/Admin/ErrorAlerts.php:87
-msgid "And more."
-msgstr "Y más."
+#. translators: %d: number of posts.
+#: src/Admin/ErrorAlerts.php:96
+#, php-format
+msgid "And %d more post."
+msgid_plural "And %d more posts."
+msgstr[0] "Y %d entrada más."
+msgstr[1] "Y %d entradas más."
 
-#: src/Admin/ErrorAlerts.php:91
+#: src/Admin/ErrorAlerts.php:102
 msgid "Posts with errors"
 msgstr "Entradas con errores"
 
-#: src/Admin/ErrorAlerts.php:93
+#: src/Admin/ErrorAlerts.php:104
 msgid "Hide until new errors"
 msgstr "Ocultar hasta nuevos errores"
 
-#: src/Admin/ErrorAlerts.php:106
+#: src/Admin/ErrorAlerts.php:117
 msgid "Sorry, you are not allowed to do that."
 msgstr "Lo siento, no tienes permiso para hacer eso."
 
 #. translators: %s: site name.
-#: src/Admin/ErrorAlerts.php:147
+#: src/Admin/ErrorAlerts.php:158
 #, php-format
 msgid "[%s] Some social media shares failed"
 msgstr "[%s] Algunos envíos a redes sociales han fallado"
 
-#: src/Admin/ErrorAlerts.php:151
+#: src/Admin/ErrorAlerts.php:162
 msgid "These shares to Postiz failed and were not retried with success:"
 msgstr "Estos envíos a Postiz han fallado y no se han reintentado con éxito:"
 
 #. translators: %s: URL of the posts list filtered by errors.
-#: src/Admin/ErrorAlerts.php:154
+#: src/Admin/ErrorAlerts.php:165
 #, php-format
 msgid "Posts with errors: %s"
 msgstr "Entradas con errores: %s"
 
-#: src/Admin/ErrorAlerts.php:155
+#: src/Admin/ErrorAlerts.php:166
 msgid "You get this email because failure emails are on in Social Relay → Settings → Advanced."
 msgstr "Recibes este correo porque los avisos de fallos están activados en Social Relay → Ajustes → Avanzado."
 
-#: src/Admin/ErrorAlerts.php:178
-#: build/log.js:1
-#: build/settings.js:14
-msgid "(no title)"
-msgstr "(sin título)"
-
-#: src/Admin/ErrorAlerts.php:179
+#: src/Admin/ErrorAlerts.php:187
+#: src/Admin/ErrorAlerts.php:226
 #: src/Admin/StatusLabels.php:26
 #: build/editor-panel.js:3
 #: build/log.js:1
 msgid "Error"
 msgstr "Error"
+
+#: src/Admin/ErrorAlerts.php:191
+#: src/Admin/ErrorAlerts.php:225
+#: build/log.js:1
+#: build/settings.js:14
+msgid "(no title)"
+msgstr "(sin título)"
 
 #: src/Admin/PostsColumn.php:81
 #: build/editor-panel.js:3
@@ -896,8 +902,8 @@ msgid "AI uses the saved post and your provider in Settings → Connectors. Revi
 msgstr "La IA usa la entrada guardada y tu proveedor de Ajustes → Conectores. Revisa el texto antes de publicar."
 
 #: build/editor-panel.js:7
-msgid "Empty = profile template, shown in grey. • marks a custom text."
-msgstr "Vacío = plantilla del perfil, en gris. • indica un texto propio."
+msgid "Leave it empty to use the profile template (in grey). A dot on a network tab means it has its own text."
+msgstr "Déjalo vacío para usar la plantilla del perfil (en gris). Un punto en la pestaña de una red indica que tiene su propio texto."
 
 #. translators: %d: character limit of the network.
 #: build/editor-panel.js:8
@@ -947,6 +953,7 @@ msgid "Refresh"
 msgstr "Actualizar"
 
 #: build/editor-panel.js:10
+#: build/log.js:1
 #: build/settings.js:6
 msgid "Cancel"
 msgstr "Cancelar"
@@ -1115,6 +1122,31 @@ msgstr "Todos los niveles"
 #: build/log.js:1
 msgid "Info"
 msgstr "Info"
+
+#: build/log.js:1
+msgid "Share"
+msgstr "Compartir"
+
+#: build/log.js:1
+msgid "Status sync"
+msgstr "Sincronización de estado"
+
+#: build/log.js:1
+msgid "Connection test"
+msgstr "Prueba de conexión"
+
+#: build/log.js:1
+msgid "Image upload"
+msgstr "Subida de imagen"
+
+#: build/log.js:1
+#: build/settings.js:15
+msgid "Webhook"
+msgstr "Webhook"
+
+#: build/log.js:1
+msgid "Channel not in Postiz"
+msgstr "Canal que ya no está en Postiz"
 
 #: build/log.js:1
 msgid "Level"
@@ -1497,10 +1529,6 @@ msgstr "La URL actual dejará de funcionar. ¿Continuar?"
 #: build/settings.js:15
 msgid "Connection"
 msgstr "Conexión"
-
-#: build/settings.js:15
-msgid "Webhook"
-msgstr "Webhook"
 
 #: build/settings.js:15
 msgid "Advanced"

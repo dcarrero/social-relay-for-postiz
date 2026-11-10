@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-10T19:47:43+00:00\n"
+"POT-Creation-Date: 2026-11-10T19:50:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -134,7 +134,7 @@ msgid "Loading…"
 msgstr ""
 
 #: src/Admin/ClassicMetabox.php:57
-#: src/Admin/DashboardWidget.php:42
+#: src/Admin/DashboardWidget.php:43
 msgid "Social networks (Postiz)"
 msgstr ""
 
@@ -232,105 +232,111 @@ msgstr ""
 msgid "View post"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:56
+#: src/Admin/DashboardWidget.php:59
 msgid "Published (7 days)"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:57
+#: src/Admin/DashboardWidget.php:60
 #: src/Admin/StatusLabels.php:24
 #: build/editor-panel.js:3
 #: build/log.js:1
 msgid "Queued"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:58
+#: src/Admin/DashboardWidget.php:61
 msgid "Errors"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:71
+#: src/Admin/DashboardWidget.php:74
 msgid "Latest errors"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:83
+#: src/Admin/DashboardWidget.php:86
 #: build/log.js:2
 msgid "Next"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:85
+#: src/Admin/DashboardWidget.php:88
 msgid "Nothing scheduled."
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:99
-#: src/Admin/ErrorAlerts.php:92
+#: src/Admin/DashboardWidget.php:102
+#: src/Admin/ErrorAlerts.php:103
 #: src/Admin/LogPage.php:49
 #: src/Admin/LogPage.php:50
-#: src/Admin/LogPage.php:84
+#: src/Admin/LogPage.php:92
 #: build/editor-panel.js:10
 #: build/log.js:1
 msgid "Log"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:100
+#: src/Admin/DashboardWidget.php:103
 #: src/Admin/SettingsPage.php:53
 #: src/Admin/SettingsPage.php:79
 msgid "Settings"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:102
+#: src/Admin/DashboardWidget.php:105
 msgid "Open Postiz"
 msgstr ""
 
-#: src/Admin/ErrorAlerts.php:80
+#: src/Admin/ErrorAlerts.php:86
 msgid "Social Relay: some shares failed in Postiz."
 msgstr ""
 
-#: src/Admin/ErrorAlerts.php:87
-msgid "And more."
-msgstr ""
+#. translators: %d: number of posts.
+#: src/Admin/ErrorAlerts.php:96
+#, php-format
+msgid "And %d more post."
+msgid_plural "And %d more posts."
+msgstr[0] ""
+msgstr[1] ""
 
-#: src/Admin/ErrorAlerts.php:91
+#: src/Admin/ErrorAlerts.php:102
 msgid "Posts with errors"
 msgstr ""
 
-#: src/Admin/ErrorAlerts.php:93
+#: src/Admin/ErrorAlerts.php:104
 msgid "Hide until new errors"
 msgstr ""
 
-#: src/Admin/ErrorAlerts.php:106
+#: src/Admin/ErrorAlerts.php:117
 msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
 #. translators: %s: site name.
-#: src/Admin/ErrorAlerts.php:147
+#: src/Admin/ErrorAlerts.php:158
 #, php-format
 msgid "[%s] Some social media shares failed"
 msgstr ""
 
-#: src/Admin/ErrorAlerts.php:151
+#: src/Admin/ErrorAlerts.php:162
 msgid "These shares to Postiz failed and were not retried with success:"
 msgstr ""
 
 #. translators: %s: URL of the posts list filtered by errors.
-#: src/Admin/ErrorAlerts.php:154
+#: src/Admin/ErrorAlerts.php:165
 #, php-format
 msgid "Posts with errors: %s"
 msgstr ""
 
-#: src/Admin/ErrorAlerts.php:155
+#: src/Admin/ErrorAlerts.php:166
 msgid "You get this email because failure emails are on in Social Relay → Settings → Advanced."
 msgstr ""
 
-#: src/Admin/ErrorAlerts.php:178
-#: build/log.js:1
-#: build/settings.js:14
-msgid "(no title)"
-msgstr ""
-
-#: src/Admin/ErrorAlerts.php:179
+#: src/Admin/ErrorAlerts.php:187
+#: src/Admin/ErrorAlerts.php:226
 #: src/Admin/StatusLabels.php:26
 #: build/editor-panel.js:3
 #: build/log.js:1
 msgid "Error"
+msgstr ""
+
+#: src/Admin/ErrorAlerts.php:191
+#: src/Admin/ErrorAlerts.php:225
+#: build/log.js:1
+#: build/settings.js:14
+msgid "(no title)"
 msgstr ""
 
 #: src/Admin/PostsColumn.php:81
@@ -896,7 +902,7 @@ msgid "AI uses the saved post and your provider in Settings → Connectors. Revi
 msgstr ""
 
 #: build/editor-panel.js:7
-msgid "Empty = profile template, shown in grey. • marks a custom text."
+msgid "Leave it empty to use the profile template (in grey). A dot on a network tab means it has its own text."
 msgstr ""
 
 #. translators: %d: character limit of the network.
@@ -947,6 +953,7 @@ msgid "Refresh"
 msgstr ""
 
 #: build/editor-panel.js:10
+#: build/log.js:1
 #: build/settings.js:6
 msgid "Cancel"
 msgstr ""
@@ -1114,6 +1121,31 @@ msgstr ""
 
 #: build/log.js:1
 msgid "Info"
+msgstr ""
+
+#: build/log.js:1
+msgid "Share"
+msgstr ""
+
+#: build/log.js:1
+msgid "Status sync"
+msgstr ""
+
+#: build/log.js:1
+msgid "Connection test"
+msgstr ""
+
+#: build/log.js:1
+msgid "Image upload"
+msgstr ""
+
+#: build/log.js:1
+#: build/settings.js:15
+msgid "Webhook"
+msgstr ""
+
+#: build/log.js:1
+msgid "Channel not in Postiz"
 msgstr ""
 
 #: build/log.js:1
@@ -1496,10 +1528,6 @@ msgstr ""
 
 #: build/settings.js:15
 msgid "Connection"
-msgstr ""
-
-#: build/settings.js:15
-msgid "Webhook"
 msgstr ""
 
 #: build/settings.js:15

@@ -11,6 +11,7 @@ namespace SocialRelayCvi\Admin;
 
 use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
+use SocialRelayCvi\Postiz\ProviderRules;
 
 /**
  * Counters for the last 7 days, latest errors and the next scheduled posts.
@@ -51,6 +52,8 @@ final class DashboardWidget implements Module {
 		$upcoming = $this->plugin->shares->latest( 'queued', 5, 'upcoming' );
 		$channels = $this->plugin->channels->all();
 		$names    = is_wp_error( $channels ) ? array() : array_column( $channels, 'name', 'id' );
+		// Channels Postiz no longer has show their network instead of an id.
+		$name = static fn ( array $row ): string => (string) ( $names[ $row['integration_id'] ] ?? ProviderRules::network( (string) $row['identifier'] )['label'] );
 
 		$boxes = array(
 			array( (int) ( $counts['published'] ?? 0 ), __( 'Published (7 days)', 'social-relay-for-postiz' ), '#007a1f' ),
@@ -72,7 +75,7 @@ final class DashboardWidget implements Module {
 			<ul>
 				<?php foreach ( $errors as $row ) : ?>
 					<li style="color:#cc1818">
-						<?php echo esc_html( (string) ( $names[ $row['integration_id'] ] ?? $row['integration_id'] ) ); ?>:
+						<?php echo esc_html( $name( $row ) ); ?>:
 						<?php echo esc_html( wp_trim_words( (string) $row['error'], 18 ) ); ?>
 						— <a href="<?php echo esc_url( (string) get_edit_post_link( (int) $row['post_id'] ) ); ?>"><?php echo esc_html( get_the_title( (int) $row['post_id'] ) ); ?></a>
 					</li>
@@ -88,7 +91,7 @@ final class DashboardWidget implements Module {
 				<?php foreach ( $upcoming as $row ) : ?>
 					<li>
 						<?php echo esc_html( get_date_from_gmt( (string) $row['publish_at'], get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) ); ?>
-						· <?php echo esc_html( (string) ( $names[ $row['integration_id'] ] ?? $row['integration_id'] ) ); ?>
+						· <?php echo esc_html( $name( $row ) ); ?>
 						· <a href="<?php echo esc_url( (string) get_edit_post_link( (int) $row['post_id'] ) ); ?>"><?php echo esc_html( get_the_title( (int) $row['post_id'] ) ); ?></a>
 					</li>
 				<?php endforeach; ?>

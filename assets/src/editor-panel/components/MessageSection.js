@@ -196,7 +196,7 @@ export default function MessageSection( { meta, setMeta } ) {
 								'social-relay-for-postiz'
 							) }
 							help={ __(
-								'Empty = profile template, shown in grey. • marks a custom text.',
+								'Leave it empty to use the profile template (in grey). A dot on a network tab means it has its own text.',
 								'social-relay-for-postiz'
 							) }
 							value={ message }

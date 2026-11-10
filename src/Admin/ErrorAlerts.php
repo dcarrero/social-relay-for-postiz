@@ -67,10 +67,16 @@ final class ErrorAlerts implements Module {
 
 		$user_id = get_current_user_id();
 		$since   = max( time() - self::WINDOW, (int) get_user_meta( $user_id, self::USER_SEEN, true ) );
-		$errors  = $this->plugin->shares->open_errors( gmdate( 'Y-m-d H:i:s', $since ), 4 );
+		$errors  = $this->plugin->shares->open_errors( gmdate( 'Y-m-d H:i:s', $since ), 30 );
 
 		if ( array() === $errors ) {
 			return;
+		}
+
+		// One line per post: its failed channels and their errors.
+		$posts = array();
+		foreach ( $errors as $row ) {
+			$posts[ (int) $row['post_id'] ][] = $row;
 		}
 
 		$hide_url = wp_nonce_url( admin_url( 'admin-post.php?action=' . self::ACTION_HIDE ), self::ACTION_HIDE );
@@ -80,11 +86,16 @@ final class ErrorAlerts implements Module {
 				<strong><?php esc_html_e( 'Social Relay: some shares failed in Postiz.', 'social-relay-for-postiz' ); ?></strong>
 			</p>
 			<ul style="margin:0 0 8px 1.2em;list-style:disc">
-				<?php foreach ( array_slice( $errors, 0, 3 ) as $row ) : ?>
-					<li><?php echo wp_kses_post( $this->describe( $row, true ) ); ?></li>
+				<?php foreach ( array_slice( $posts, 0, 3, true ) as $post_id => $rows ) : ?>
+					<li><?php echo wp_kses_post( $this->describe_post( $post_id, $rows ) ); ?></li>
 				<?php endforeach; ?>
-				<?php if ( count( $errors ) > 3 ) : ?>
-					<li><?php esc_html_e( 'And more.', 'social-relay-for-postiz' ); ?></li>
+				<?php if ( count( $posts ) > 3 ) : ?>
+					<li>
+						<?php
+						/* translators: %d: number of posts. */
+						echo esc_html( sprintf( _n( 'And %d more post.', 'And %d more posts.', count( $posts ) - 3, 'social-relay-for-postiz' ), count( $posts ) - 3 ) );
+						?>
+					</li>
 				<?php endif; ?>
 			</ul>
 			<p>
@@ -163,20 +174,56 @@ final class ErrorAlerts implements Module {
 	}
 
 	/**
+	 * "Post title — Channel (network), Channel (network): error; error", linked to the editor.
+	 *
+	 * @param int                        $post_id Post id.
+	 * @param list<array<string, mixed>> $rows    Open errors of the post.
+	 */
+	private function describe_post( int $post_id, array $rows ): string {
+		$where  = array();
+		$errors = array();
+		foreach ( $rows as $row ) {
+			$where[]  = $this->channel_name( $row );
+			$errors[] = '' !== (string) $row['error'] ? (string) $row['error'] : __( 'Error', 'social-relay-for-postiz' );
+		}
+
+		$title = get_the_title( $post_id );
+		$title = '' !== $title ? $title : __( '(no title)', 'social-relay-for-postiz' );
+		$link  = get_edit_post_link( $post_id );
+
+		return sprintf(
+			'%1$s — %2$s: %3$s',
+			$link ? '<a href="' . esc_url( $link ) . '">' . esc_html( $title ) . '</a>' : esc_html( $title ),
+			esc_html( implode( ', ', array_unique( $where ) ) ),
+			esc_html( implode( '; ', array_unique( $errors ) ) )
+		);
+	}
+
+	/**
+	 * "Channel (network)", or the network alone when Postiz no longer has the channel.
+	 *
+	 * @param array<string, mixed> $row Share row.
+	 */
+	private function channel_name( array $row ): string {
+		$channels = $this->plugin->channels->by_id();
+		$channel  = is_wp_error( $channels ) ? null : ( $channels[ (string) $row['integration_id'] ] ?? null );
+		$network  = ProviderRules::network( (string) $row['identifier'] )['label'];
+
+		return null === $channel ? $network : $channel['name'] . ' (' . $network . ')';
+	}
+
+	/**
 	 * "Post title — Channel (network): error".
 	 *
 	 * @param array<string, mixed> $row  Share row.
 	 * @param bool                 $html Link the title to the editor (escaped HTML) or plain text.
 	 */
 	private function describe( array $row, bool $html ): string {
-		$post_id  = (int) $row['post_id'];
-		$channels = $this->plugin->channels->by_id();
-		$channel  = is_wp_error( $channels ) ? null : ( $channels[ (string) $row['integration_id'] ] ?? null );
-		$network  = ProviderRules::network( (string) $row['identifier'] )['label'];
-		$where    = null === $channel ? $network : $channel['name'] . ' (' . $network . ')';
-		$title    = get_the_title( $post_id );
-		$title    = '' !== $title ? $title : __( '(no title)', 'social-relay-for-postiz' );
-		$error    = '' !== (string) $row['error'] ? (string) $row['error'] : __( 'Error', 'social-relay-for-postiz' );
+		$post_id = (int) $row['post_id'];
+		$where   = $this->channel_name( $row );
+		$title   = get_the_title( $post_id );
+		$title   = '' !== $title ? $title : __( '(no title)', 'social-relay-for-postiz' );
+		$error   = '' !== (string) $row['error'] ? (string) $row['error'] : __( 'Error', 'social-relay-for-postiz' );
 
 		if ( ! $html ) {
 			return sprintf( '%1$s — %2$s: %3$s', wp_strip_all_tags( $title ), $where, $error );

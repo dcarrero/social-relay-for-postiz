@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T19:47:43+00:00",
+    "translation-revision-date": "2026-11-10T19:50:37+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/log.js",
     "domain": "messages",
@@ -19,11 +19,11 @@
             "Log": [
                 "Registro"
             ],
-            "(no title)": [
-                "(sin t\u00edtulo)"
-            ],
             "Error": [
                 "Error"
+            ],
+            "(no title)": [
+                "(sin t\u00edtulo)"
             ],
             "Post": [
                 "Entrada"
@@ -34,6 +34,9 @@
             "Refresh": [
                 "Actualizar"
             ],
+            "Cancel": [
+                "Cancelar"
+            ],
             "Message": [
                 "Mensaje"
             ],
@@ -42,6 +45,24 @@
             ],
             "Info": [
                 "Info"
+            ],
+            "Share": [
+                "Compartir"
+            ],
+            "Status sync": [
+                "Sincronizaci\u00f3n de estado"
+            ],
+            "Connection test": [
+                "Prueba de conexi\u00f3n"
+            ],
+            "Image upload": [
+                "Subida de imagen"
+            ],
+            "Webhook": [
+                "Webhook"
+            ],
+            "Channel not in Postiz": [
+                "Canal que ya no est\u00e1 en Postiz"
             ],
             "Level": [
                 "Nivel"

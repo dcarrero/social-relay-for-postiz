@@ -24,6 +24,7 @@ import {
 import { __, sprintf } from '@wordpress/i18n';
 import { addQueryArgs, getQueryArg } from '@wordpress/url';
 
+import { ChannelLabel } from '../common/ChannelAvatar';
 import './style.css';
 
 const config = window.socialRelayCviAdmin || {};
@@ -35,6 +36,24 @@ const LEVELS = [
 	{ value: 'info', label: __( 'Info', 'social-relay-for-postiz' ) },
 	{ value: 'error', label: __( 'Error', 'social-relay-for-postiz' ) },
 ];
+
+/**
+ * Readable name of a log action.
+ *
+ * @param {string} action Action key.
+ * @return {string} Label.
+ */
+function actionLabel( action ) {
+	const labels = {
+		share: __( 'Share', 'social-relay-for-postiz' ),
+		cancel: __( 'Cancel', 'social-relay-for-postiz' ),
+		sync: __( 'Status sync', 'social-relay-for-postiz' ),
+		test: __( 'Connection test', 'social-relay-for-postiz' ),
+		upload: __( 'Image upload', 'social-relay-for-postiz' ),
+		webhook: __( 'Webhook', 'social-relay-for-postiz' ),
+	};
+	return labels[ action ] || action;
+}
 
 function levelLabel( level ) {
 	return LEVELS.find( ( item ) => item.value === level )?.label ?? level;
@@ -56,7 +75,7 @@ function Row( { item } ) {
 					{ levelLabel( item.level ) }
 				</span>
 			</td>
-			<td>{ item.action }</td>
+			<td>{ actionLabel( item.action ) }</td>
 			<td>
 				{ item.edit_link && (
 					<a href={ item.edit_link }>
@@ -65,7 +84,22 @@ function Row( { item } ) {
 					</a>
 				) }
 			</td>
-			<td>{ channels[ item.integration_id ] || item.integration_id }</td>
+			<td>
+				{ channels[ item.integration_id ] && (
+					<ChannelLabel channel={ channels[ item.integration_id ] } />
+				) }
+				{ item.integration_id && ! channels[ item.integration_id ] && (
+					<span
+						className="socialrelaycvi-log__gone"
+						title={ item.integration_id }
+					>
+						{ __(
+							'Channel not in Postiz',
+							'social-relay-for-postiz'
+						) }
+					</span>
+				) }
+			</td>
 			<td className="socialrelaycvi-log__message">{ item.message }</td>
 		</tr>
 	);
