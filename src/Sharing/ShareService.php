@@ -74,7 +74,13 @@ final class ShareService implements Module {
 			return;
 		}
 
-		$log    = $this->plugin->logger;
+		$log = $this->plugin->logger;
+
+		if ( ! $this->passes_conditions( $post, $profile['include_terms'], $profile['exclude_terms'] ) ) {
+			$log->info( 'share', __( 'The post does not match the profile conditions; not shared.', 'social-relay-for-postiz' ), $post_id );
+			return;
+		}
+
 		$client = $this->plugin->gateway();
 		if ( null === $client ) {
 			$log->error( 'share', __( 'Postiz is not configured; nothing was sent.', 'social-relay-for-postiz' ), $post_id );
@@ -87,30 +93,11 @@ final class ShareService implements Module {
 			return;
 		}
 
-		$template = (string) get_post_meta( $post_id, PostMeta::MESSAGE, true );
-		$template = '' !== trim( $template ) ? $template : $profile['template'];
-		$message  = $this->engine->render( $template, PostContext::for_post( $post ) );
-
-		$items = array();
-		foreach ( $profile['channels'] as $channel_id ) {
-			$channel = $channels[ $channel_id ] ?? null;
-
-			if ( null === $channel ) {
-				$log->error( 'share', __( 'Channel no longer exists in Postiz; skipped.', 'social-relay-for-postiz' ), $post_id, $channel_id );
-				continue;
-			}
-
-			if ( $channel['disabled'] ) {
-				$log->error( 'share', __( 'Channel is disabled in Postiz; skipped.', 'social-relay-for-postiz' ), $post_id, $channel_id );
-				continue;
-			}
-
-			$items[] = array(
-				'integration_id' => $channel_id,
-				'identifier'     => $channel['identifier'],
-				'parts'          => $this->parts_for( $message, $channel['identifier'] ),
-			);
+		$prepared = $this->prepare( $post, $profile, $channels );
+		foreach ( $prepared['skipped'] as $skip ) {
+			$log->error( 'share', $skip['reason'], $post_id, $skip['integration_id'] );
 		}
+		$items = $prepared['items'];
 
 		if ( array() === $items ) {
 			return;
@@ -141,11 +128,15 @@ final class ShareService implements Module {
 			return;
 		}
 
-		$batch = sprintf( 'wp-%s-%d-%d', substr( md5( home_url() ), 0, 8 ), $post_id, $this->plugin->shares->batch_count( $post_id ) + 1 );
+		$batch   = sprintf( 'wp-%s-%d-%d', substr( md5( home_url() ), 0, 8 ), $post_id, $this->plugin->shares->batch_count( $post_id ) + 1 );
+		$request = array(
+			'short_link' => $profile['short_link'],
+			'tags'       => $profile['postiz_tags'] ? $this->category_names( $post ) : array(),
+		);
 
 		if ( 'slot' === $profile['mode'] ) {
 			foreach ( $items as $item ) {
-				$this->send( $client, $post, array( $item ), $this->slot_time( $client, $item['integration_id'] ), 'schedule', $batch, $hash, $attempt, false );
+				$this->send( $client, $post, array( $item ), $this->slot_time( $client, $item['integration_id'] ), 'schedule', $batch, $hash, $attempt, false, $request );
 			}
 		} else {
 			$type = match ( $profile['mode'] ) {
@@ -155,12 +146,117 @@ final class ShareService implements Module {
 			};
 			$when = 'schedule' === $profile['mode'] ? time() + $profile['delay_minutes'] * MINUTE_IN_SECONDS : time();
 
-			$this->send( $client, $post, $items, $when, $type, $batch, $hash, $attempt, true );
+			$this->send( $client, $post, $items, $when, $type, $batch, $hash, $attempt, true, $request );
 		}
 
 		if ( $reshare ) {
 			update_post_meta( $post_id, PostMeta::RESHARE, false );
 		}
+	}
+
+	/**
+	 * Builds the message of every channel of the profile, without calling Postiz.
+	 *
+	 * @param WP_Post                             $post     Post.
+	 * @param array<string, mixed>                $profile  Profile (see ProfileRepository).
+	 * @param array<string, array<string, mixed>> $channels Channels by id.
+	 * @return array{items: list<array{integration_id: string, identifier: string, parts: list<string>, settings: array<string, mixed>}>, skipped: list<array{integration_id: string, reason: string}>}
+	 */
+	public function prepare( WP_Post $post, array $profile, array $channels ): array {
+		$context   = PostContext::for_post( $post );
+		$post_text = (string) get_post_meta( $post->ID, PostMeta::MESSAGE, true );
+		$overrides = get_post_meta( $post->ID, PostMeta::OVERRIDES, true );
+		$overrides = is_array( $overrides ) ? $overrides : array();
+
+		$items   = array();
+		$skipped = array();
+
+		foreach ( (array) $profile['channels'] as $channel_id ) {
+			$channel_id = (string) $channel_id;
+			$channel    = $channels[ $channel_id ] ?? null;
+
+			if ( null === $channel ) {
+				$skipped[] = array(
+					'integration_id' => $channel_id,
+					'reason'         => __( 'Channel no longer exists in Postiz; skipped.', 'social-relay-for-postiz' ),
+				);
+				continue;
+			}
+
+			if ( ! empty( $channel['disabled'] ) ) {
+				$skipped[] = array(
+					'integration_id' => $channel_id,
+					'reason'         => __( 'Channel is disabled in Postiz; skipped.', 'social-relay-for-postiz' ),
+				);
+				continue;
+			}
+
+			$identifier = (string) $channel['identifier'];
+			$options    = $profile['channel_options'][ $channel_id ] ?? array(
+				'template' => '',
+				'settings' => array(),
+			);
+			$settings   = (array) $options['settings'];
+			$missing    = ProviderRules::missing_required( $identifier, $settings );
+
+			if ( array() !== $missing ) {
+				$skipped[] = array(
+					'integration_id' => $channel_id,
+					/* translators: %s: list of missing settings. */
+					'reason'         => sprintf( __( 'Missing network settings (%s); skipped.', 'social-relay-for-postiz' ), implode( ', ', $missing ) ),
+				);
+				continue;
+			}
+
+			// Most specific wins: post text for this network, post text, profile text for this network, profile text.
+			$template = self::first_filled( (string) ( $overrides[ $channel_id ] ?? '' ), $post_text, (string) $options['template'], (string) $profile['template'] );
+			$message  = $this->engine->render( $template, $this->channel_context( $context, $profile, $identifier ) );
+
+			$items[] = array(
+				'integration_id' => $channel_id,
+				'identifier'     => $identifier,
+				'parts'          => $this->parts_for( $message, $identifier ),
+				'settings'       => $settings,
+			);
+		}
+
+		return array(
+			'items'   => $items,
+			'skipped' => $skipped,
+		);
+	}
+
+	/**
+	 * Dry run for a post: what would be sent, without calling Postiz except to read channels.
+	 *
+	 * @param WP_Post $post Post.
+	 * @return array<string, mixed>|WP_Error
+	 */
+	public function preview( WP_Post $post ): array|WP_Error {
+		$profile  = $this->plugin->profiles->for_post_type( $post->post_type );
+		$channels = $this->plugin->channels->by_id();
+
+		if ( is_wp_error( $channels ) ) {
+			return $channels;
+		}
+
+		$prepared = $this->prepare( $post, $profile, $channels );
+
+		return array(
+			'enabled'           => $profile['enabled'] && (bool) get_post_meta( $post->ID, PostMeta::ENABLED, true ),
+			'passes_conditions' => $this->passes_conditions( $post, $profile['include_terms'], $profile['exclude_terms'] ),
+			'mode'              => $profile['mode'],
+			'short_link'        => $profile['short_link'],
+			'tags'              => $profile['postiz_tags'] ? $this->category_names( $post ) : array(),
+			'items'             => array_map(
+				static fn ( array $item ): array => $item + array(
+					'name'  => (string) ( $channels[ $item['integration_id'] ]['name'] ?? '' ),
+					'limit' => ProviderRules::char_limit( $item['identifier'] ),
+				),
+				$prepared['items']
+			),
+			'skipped'           => $prepared['skipped'],
+		);
 	}
 
 	/**
@@ -195,21 +291,22 @@ final class ShareService implements Module {
 	/**
 	 * Creates the posts in Postiz and records the result.
 	 *
-	 * @param Gateway                   $client  Gateway to Postiz.
-	 * @param WP_Post                   $post    Post.
-	 * @param list<array<string,mixed>> $items   Channel items.
-	 * @param int                       $when    Publish time.
-	 * @param string                    $type    now, schedule or draft.
-	 * @param string                    $batch   Group id.
-	 * @param string                    $hash    Content hash.
-	 * @param int                       $attempt Attempt number.
-	 * @param bool                      $retry   Whether a retryable error re-queues the whole job.
+	 * @param Gateway                                     $client  Gateway to Postiz.
+	 * @param WP_Post                                     $post    Post.
+	 * @param list<array<string,mixed>>                   $items   Channel items.
+	 * @param int                                         $when    Publish time.
+	 * @param string                                      $type    now, schedule or draft.
+	 * @param string                                      $batch   Group id.
+	 * @param string                                      $hash    Content hash.
+	 * @param int                                         $attempt Attempt number.
+	 * @param bool                                        $retry   Whether a retryable error re-queues the whole job.
+	 * @param array{short_link: bool, tags: list<string>} $request Request-level options.
 	 */
-	private function send( Gateway $client, WP_Post $post, array $items, int $when, string $type, string $batch, string $hash, int $attempt, bool $retry ): void {
+	private function send( Gateway $client, WP_Post $post, array $items, int $when, string $type, string $batch, string $hash, int $attempt, bool $retry, array $request ): void {
 		$log = $this->plugin->logger;
 
 		try {
-			$payload = PayloadBuilder::build( $items, $type, $when, $batch );
+			$payload = PayloadBuilder::build( $items, $type, $when, $batch, $request['short_link'], $request['tags'] );
 		} catch ( \InvalidArgumentException $e ) {
 			$log->error( 'share', $e->getMessage(), $post->ID );
 			return;
@@ -258,8 +355,12 @@ final class ShareService implements Module {
 
 		$log->info(
 			'share',
-			/* translators: 1: number of channels, 2: Postiz post type (now, schedule, draft). */
-			sprintf( __( 'Sent to Postiz: %1$d channel(s), type %2$s.', 'social-relay-for-postiz' ), count( $items ), $type ),
+			sprintf(
+				/* translators: 1: number of channels, 2: Postiz post type (now, schedule, draft). */
+				_n( 'Sent to Postiz: %1$d channel, type %2$s.', 'Sent to Postiz: %1$d channels, type %2$s.', count( $items ), 'social-relay-for-postiz' ),
+				count( $items ),
+				$type
+			),
 			$post->ID,
 			'',
 			array(
@@ -351,6 +452,76 @@ final class ShareService implements Module {
 
 			$this->plugin->logger->error( 'share', $error->get_error_message(), $post_id, (string) $item['integration_id'] );
 		}
+	}
+
+	/**
+	 * Context for one channel: adds UTM parameters to {url} when the profile asks for it.
+	 *
+	 * @param array<string, string|callable(string): string> $context    Post context.
+	 * @param array<string, mixed>                           $profile    Profile.
+	 * @param string                                         $identifier Provider identifier.
+	 * @return array<string, string|callable(string): string>
+	 */
+	private function channel_context( array $context, array $profile, string $identifier ): array {
+		if ( empty( $profile['utm'] ) || ! is_string( $context['url'] ?? null ) ) {
+			return $context;
+		}
+
+		$context['url'] = Utm::add(
+			$context['url'],
+			array(
+				'utm_source'   => ProviderRules::utm_source( $identifier ),
+				'utm_medium'   => 'social',
+				'utm_campaign' => $this->engine->render( (string) $profile['utm_campaign'], $context ),
+			)
+		);
+
+		return $context;
+	}
+
+	/**
+	 * Whether the post passes the include/exclude term rules.
+	 *
+	 * @param WP_Post   $post    Post.
+	 * @param list<int> $required  Required term ids (any).
+	 * @param list<int> $forbidden Forbidden term ids.
+	 */
+	private function passes_conditions( WP_Post $post, array $required, array $forbidden ): bool {
+		if ( array() === $required && array() === $forbidden ) {
+			return true;
+		}
+
+		$terms = wp_get_post_terms( $post->ID, array( 'category', 'post_tag' ), array( 'fields' => 'ids' ) );
+		$terms = is_array( $terms ) ? array_values( array_map( 'intval', $terms ) ) : array();
+
+		return Conditions::passes( $terms, $required, $forbidden );
+	}
+
+	/**
+	 * Category names of the post, used as Postiz tags.
+	 *
+	 * @param WP_Post $post Post.
+	 * @return list<string>
+	 */
+	private function category_names( WP_Post $post ): array {
+		$names = wp_get_post_terms( $post->ID, 'category', array( 'fields' => 'names' ) );
+
+		return is_array( $names ) ? array_values( array_map( 'strval', $names ) ) : array();
+	}
+
+	/**
+	 * First non-blank string.
+	 *
+	 * @param string ...$candidates Candidates in priority order.
+	 */
+	private static function first_filled( string ...$candidates ): string {
+		foreach ( $candidates as $candidate ) {
+			if ( '' !== trim( $candidate ) ) {
+				return $candidate;
+			}
+		}
+
+		return '';
 	}
 
 	/**

@@ -12,6 +12,7 @@ namespace SocialRelayCvi\Admin;
 use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
 use SocialRelayCvi\Postiz\EndpointResolver;
+use SocialRelayCvi\Postiz\ProviderRules;
 use SocialRelayCvi\Profiles\ProfileRepository;
 use SocialRelayCvi\Settings\Connection;
 use SocialRelayCvi\Settings\ConnectionTester;
@@ -109,9 +110,29 @@ final class SettingsPage implements Module {
 
 		$raw      = isset( $_POST['profiles'] ) && is_array( $_POST['profiles'] ) ? wp_unslash( $_POST['profiles'] ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce checked in guard(); sanitized per field below.
 		$profiles = array();
+		$channels = $this->plugin->channels->all();
+		$ids      = is_wp_error( $channels ) ? array() : array_column( $channels, 'identifier', 'id' );
 
 		foreach ( $this->post_types() as $post_type => $label ) {
-			$profiles[ $post_type ] = ProfileRepository::sanitize( isset( $raw[ $post_type ] ) && is_array( $raw[ $post_type ] ) ? $raw[ $post_type ] : array() );
+			$profile = isset( $raw[ $post_type ] ) && is_array( $raw[ $post_type ] ) ? $raw[ $post_type ] : array();
+
+			// Tags are typed as comma-separated names; store their ids.
+			foreach ( array(
+				'include_tags' => 'include_terms',
+				'exclude_tags' => 'exclude_terms',
+			) as $field => $target ) {
+				$names   = isset( $profile[ $field ] ) ? array_filter( array_map( 'trim', explode( ',', sanitize_text_field( (string) $profile[ $field ] ) ) ) ) : array();
+				$tag_ids = array();
+				foreach ( $names as $name ) {
+					$term = get_term_by( 'name', $name, 'post_tag' );
+					if ( $term instanceof \WP_Term ) {
+						$tag_ids[] = $term->term_id;
+					}
+				}
+				$profile[ $target ] = array_merge( isset( $profile[ $target ] ) && is_array( $profile[ $target ] ) ? $profile[ $target ] : array(), $tag_ids );
+			}
+
+			$profiles[ $post_type ] = ProfileRepository::sanitize( $profile, $ids );
 		}
 
 		update_option( ProfileRepository::OPTION, $profiles, false );
@@ -220,7 +241,7 @@ final class SettingsPage implements Module {
 					<input type="checkbox" name="<?php echo esc_attr( $name( 'enabled' ) ); ?>" value="1" <?php checked( ! empty( $profile['enabled'] ) ); ?>>
 					<?php
 					/* translators: %s: post type label, e.g. Posts. */
-					printf( esc_html__( 'Share %s when they are published', 'social-relay-for-postiz' ), esc_html( strtolower( $label ) ) );
+					printf( esc_html__( 'Share %s when they are published', 'social-relay-for-postiz' ), esc_html( mb_strtolower( $label ) ) );
 					?>
 				</label>
 			</p>
@@ -256,7 +277,161 @@ final class SettingsPage implements Module {
 				<br>
 				<label><input type="checkbox" name="<?php echo esc_attr( $name( 'share_on_update' ) ); ?>" value="1" <?php checked( ! empty( $profile['share_on_update'] ) ); ?>> <?php esc_html_e( 'Allow sharing again on update (when requested from the editor)', 'social-relay-for-postiz' ); ?></label>
 			</p>
+
+			<?php $this->render_channel_options( $name, $profile, $channels ); ?>
+			<?php $this->render_conditions( $post_type, $name, $profile ); ?>
+
+			<h4 style="margin-bottom:4px"><?php esc_html_e( 'Links and tags', 'social-relay-for-postiz' ); ?></h4>
+			<p style="margin-top:0">
+				<label><input type="checkbox" name="<?php echo esc_attr( $name( 'utm' ) ); ?>" value="1" <?php checked( ! empty( $profile['utm'] ) ); ?>> <?php esc_html_e( 'Add UTM parameters to {url} (utm_source = network, utm_medium = social)', 'social-relay-for-postiz' ); ?></label>
+				<br>
+				<label for="<?php echo esc_attr( $id( 'utm_campaign' ) ); ?>"><?php esc_html_e( 'utm_campaign', 'social-relay-for-postiz' ); ?></label>
+				<input type="text" id="<?php echo esc_attr( $id( 'utm_campaign' ) ); ?>" name="<?php echo esc_attr( $name( 'utm_campaign' ) ); ?>" value="<?php echo esc_attr( (string) $profile['utm_campaign'] ); ?>" class="regular-text code">
+				<span class="description"><?php esc_html_e( 'Accepts tags, e.g. {slug}.', 'social-relay-for-postiz' ); ?></span>
+				<br>
+				<label><input type="checkbox" name="<?php echo esc_attr( $name( 'short_link' ) ); ?>" value="1" <?php checked( ! empty( $profile['short_link'] ) ); ?>> <?php esc_html_e( 'Shorten links with Postiz', 'social-relay-for-postiz' ); ?></label>
+				<br>
+				<label><input type="checkbox" name="<?php echo esc_attr( $name( 'postiz_tags' ) ); ?>" value="1" <?php checked( ! empty( $profile['postiz_tags'] ) ); ?>> <?php esc_html_e( 'Tag the posts in Postiz with the post categories', 'social-relay-for-postiz' ); ?></label>
+			</p>
 		</fieldset>
+		<?php
+	}
+
+	/**
+	 * Per-network template and settings, one collapsible block per channel.
+	 *
+	 * @param callable(string): string         $name     Field name builder.
+	 * @param array<string, mixed>             $profile  Profile.
+	 * @param list<array<string, string|bool>> $channels Channels.
+	 */
+	private function render_channel_options( callable $name, array $profile, array $channels ): void {
+		if ( array() === $channels ) {
+			return;
+		}
+		?>
+		<h4 style="margin-bottom:4px"><?php esc_html_e( 'Per network', 'social-relay-for-postiz' ); ?></h4>
+		<p class="description" style="margin-top:0"><?php esc_html_e( 'Optional. A network without its own template uses the common one.', 'social-relay-for-postiz' ); ?></p>
+		<?php
+		foreach ( $channels as $channel ) {
+			if ( ! empty( $channel['disabled'] ) ) {
+				continue;
+			}
+
+			$channel_id = (string) $channel['id'];
+			$identifier = (string) $channel['identifier'];
+			$options    = $profile['channel_options'][ $channel_id ] ?? array(
+				'template' => '',
+				'settings' => array(),
+			);
+			$base       = $name( 'channel_options' ) . '[' . $channel_id . ']';
+			$fields     = ProviderRules::setting_fields( $identifier );
+			$limit      = ProviderRules::char_limit( $identifier );
+			$customized = '' !== trim( (string) $options['template'] ) || array() !== $options['settings'];
+			?>
+			<details style="border-top:1px solid #f0f0f1;padding:6px 0">
+				<summary style="cursor:pointer">
+					<?php echo esc_html( sprintf( '%s (%s)', (string) $channel['name'], $identifier ) ); ?>
+					<?php if ( $customized ) : ?>
+						<span style="color:#3858e9">· <?php esc_html_e( 'customized', 'social-relay-for-postiz' ); ?></span>
+					<?php endif; ?>
+				</summary>
+				<p>
+					<label>
+						<?php esc_html_e( 'Template for this network', 'social-relay-for-postiz' ); ?>
+						<?php if ( null !== $limit ) : ?>
+							<?php
+							/* translators: %d: character limit of the network. */
+							printf( esc_html__( '(limit: %d characters)', 'social-relay-for-postiz' ), (int) $limit );
+							?>
+						<?php endif; ?>
+						<br>
+						<textarea name="<?php echo esc_attr( $base . '[template]' ); ?>" rows="3" class="large-text code" placeholder="<?php esc_attr_e( 'Empty = common template', 'social-relay-for-postiz' ); ?>"><?php echo esc_textarea( (string) $options['template'] ); ?></textarea>
+					</label>
+				</p>
+				<?php foreach ( $fields as $key => $field ) : ?>
+					<?php
+					$field_name = $base . '[settings][' . $key . ']';
+					$value      = $options['settings'][ $key ] ?? '';
+					?>
+					<p>
+						<?php if ( 'bool' === $field['type'] ) : ?>
+							<input type="hidden" name="<?php echo esc_attr( $field_name ); ?>" value="0">
+							<label><input type="checkbox" name="<?php echo esc_attr( $field_name ); ?>" value="1" <?php checked( true === $value ); ?>> <?php echo esc_html( $field['label'] ); ?></label>
+						<?php elseif ( 'select' === $field['type'] ) : ?>
+							<label><?php echo esc_html( $field['label'] ); ?>
+								<select name="<?php echo esc_attr( $field_name ); ?>">
+									<?php foreach ( $field['options'] ?? array() as $option_value => $option_label ) : ?>
+										<option value="<?php echo esc_attr( (string) $option_value ); ?>" <?php selected( (string) $value, (string) $option_value ); ?>><?php echo esc_html( $option_label ); ?></option>
+									<?php endforeach; ?>
+								</select>
+							</label>
+						<?php else : ?>
+							<label><?php echo esc_html( $field['label'] ); ?><?php echo ! empty( $field['required'] ) ? ' *' : ''; ?>
+								<input type="text" name="<?php echo esc_attr( $field_name ); ?>" value="<?php echo esc_attr( (string) $value ); ?>" class="regular-text">
+							</label>
+						<?php endif; ?>
+					</p>
+				<?php endforeach; ?>
+			</details>
+			<?php
+		}
+	}
+
+	/**
+	 * Include/exclude rules on categories and tags.
+	 *
+	 * @param string                   $post_type Post type.
+	 * @param callable(string): string $name      Field name builder.
+	 * @param array<string, mixed>     $profile   Profile.
+	 */
+	private function render_conditions( string $post_type, callable $name, array $profile ): void {
+		if ( ! is_object_in_taxonomy( $post_type, 'category' ) && ! is_object_in_taxonomy( $post_type, 'post_tag' ) ) {
+			return;
+		}
+
+		$categories = get_terms(
+			array(
+				'taxonomy'   => 'category',
+				'hide_empty' => false,
+			)
+		);
+		$categories = is_array( $categories ) ? $categories : array();
+
+		$tag_names = static function ( array $ids ): string {
+			$names = array();
+			foreach ( $ids as $term_id ) {
+				$term = get_term( (int) $term_id, 'post_tag' );
+				if ( $term instanceof \WP_Term ) {
+					$names[] = $term->name;
+				}
+			}
+			return implode( ', ', $names );
+		};
+		?>
+		<h4 style="margin-bottom:4px"><?php esc_html_e( 'Conditions', 'social-relay-for-postiz' ); ?></h4>
+		<p class="description" style="margin-top:0"><?php esc_html_e( 'Share only posts in at least one of the “Only” terms, and never posts in a “Never” term. Leave everything empty to share all posts.', 'social-relay-for-postiz' ); ?></p>
+		<?php
+		foreach ( array(
+			'include_terms' => __( 'Only', 'social-relay-for-postiz' ),
+			'exclude_terms' => __( 'Never', 'social-relay-for-postiz' ),
+		) as $field => $title ) :
+			?>
+			<p>
+				<strong><?php echo esc_html( $title ); ?>:</strong>
+														<?php if ( is_object_in_taxonomy( $post_type, 'category' ) ) : ?>
+															<?php foreach ( $categories as $category ) : ?>
+																<?php if ( $category instanceof \WP_Term ) : ?>
+							<label style="display:inline-block;margin:2px 12px 2px 0"><input type="checkbox" name="<?php echo esc_attr( $name( $field ) ); ?>[]" value="<?php echo esc_attr( (string) $category->term_id ); ?>" <?php checked( in_array( $category->term_id, (array) $profile[ $field ], true ) ); ?>> <?php echo esc_html( $category->name ); ?></label>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				<?php endif; ?>
+														<?php if ( is_object_in_taxonomy( $post_type, 'post_tag' ) ) : ?>
+					<br><label><?php esc_html_e( 'Tags (comma-separated):', 'social-relay-for-postiz' ); ?>
+						<input type="text" name="<?php echo esc_attr( $name( 'include_terms' === $field ? 'include_tags' : 'exclude_tags' ) ); ?>" value="<?php echo esc_attr( $tag_names( (array) $profile[ $field ] ) ); ?>" class="regular-text">
+					</label>
+				<?php endif; ?>
+			</p>
+		<?php endforeach; ?>
 		<?php
 	}
 

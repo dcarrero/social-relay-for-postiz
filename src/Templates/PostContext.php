@@ -37,6 +37,7 @@ final class PostContext {
 			'excerpt'         => $plain( $excerpt ),
 			'content'         => $plain( strip_shortcodes( $post->post_content ) ),
 			'url'             => (string) get_permalink( $post ),
+			'slug'            => (string) $post->post_name,
 			'shortlink'       => (string) wp_get_shortlink( $post->ID ),
 			'author'          => (string) get_the_author_meta( 'display_name', (int) $post->post_author ),
 			'date'            => (string) get_the_date( '', $post ),

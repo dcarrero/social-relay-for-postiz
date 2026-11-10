@@ -1,0 +1,487 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Social Relay for Postiz 0.1.0-dev\n"
+"Report-Msgid-Bugs-To: https://github.com/dcarrero/social-relay-for-postiz/issues\n"
+"Last-Translator: Color Vivo\n"
+"Language-Team: Spanish (Spain)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-10T10:13:03+00:00\n"
+"PO-Revision-Date: 2026-11-10T10:15:27+00:00\n"
+"Language: es_ES\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: social-relay-for-postiz\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Plugin Name of the plugin
+#: social-relay-for-postiz.php:3
+#: src/Admin/SettingsPage.php:50
+#: src/Admin/SettingsPage.php:156
+msgid "Social Relay for Postiz"
+msgstr "Social Relay for Postiz"
+
+#. Plugin URI of the plugin
+#: social-relay-for-postiz.php:4
+msgid "https://github.com/dcarrero/social-relay-for-postiz"
+msgstr "https://github.com/dcarrero/social-relay-for-postiz"
+
+#. Description of the plugin
+#: social-relay-for-postiz.php:5
+msgid "Auto-publish and schedule your WordPress content on social networks through your own Postiz instance (self-hosted or Postiz Cloud)."
+msgstr "Publica y programa automáticamente tu contenido de WordPress en redes sociales a través de tu propia instancia de Postiz (autoalojada o Postiz Cloud)."
+
+#. Author of the plugin
+#: social-relay-for-postiz.php:9
+msgid "Color Vivo"
+msgstr "Color Vivo"
+
+#. Author URI of the plugin
+#: social-relay-for-postiz.php:10
+msgid "https://colorvivo.com"
+msgstr "https://colorvivo.com"
+
+#: social-relay-for-postiz.php:31
+msgid "Social Relay for Postiz requires PHP 8.2 or higher."
+msgstr "Social Relay for Postiz necesita PHP 8.2 o superior."
+
+#: social-relay-for-postiz.php:43
+msgid "Social Relay for Postiz is missing its dependencies. Run \"composer install\" or install a release build."
+msgstr "A Social Relay for Postiz le faltan dependencias. Ejecuta \"composer install\" o instala una versión publicada."
+
+#: src/Admin/LogPage.php:40
+#: src/Admin/LogPage.php:41
+#: src/Admin/LogPage.php:59
+msgid "Log"
+msgstr "Registro"
+
+#: src/Admin/LogPage.php:63
+msgid "Date (UTC)"
+msgstr "Fecha (UTC)"
+
+#: src/Admin/LogPage.php:64
+msgid "Level"
+msgstr "Nivel"
+
+#: src/Admin/LogPage.php:65
+msgid "Action"
+msgstr "Acción"
+
+#: src/Admin/LogPage.php:66
+msgctxt "WordPress post"
+msgid "Post"
+msgstr "Entrada"
+
+#: src/Admin/LogPage.php:67
+msgid "Channel"
+msgstr "Canal"
+
+#: src/Admin/LogPage.php:68
+msgid "Message"
+msgstr "Mensaje"
+
+#: src/Admin/LogPage.php:73
+msgid "Nothing logged yet."
+msgstr "Todavía no hay nada en el registro."
+
+#: src/Admin/SettingsPage.php:51
+msgid "Social Relay"
+msgstr "Social Relay"
+
+#: src/Admin/SettingsPage.php:59
+#: src/Admin/SettingsPage.php:69
+msgid "Settings"
+msgstr "Ajustes"
+
+#: src/Admin/SettingsPage.php:159
+msgid "Postiz connection"
+msgstr "Conexión con Postiz"
+
+#: src/Admin/SettingsPage.php:165
+msgid "Postiz URL"
+msgstr "URL de Postiz"
+
+#: src/Admin/SettingsPage.php:169
+msgid "Your self-hosted Postiz address. For Postiz Cloud, use https://api.postiz.com."
+msgstr "La dirección de tu Postiz autoalojado. Si usas Postiz Cloud, pon https://api.postiz.com."
+
+#: src/Admin/SettingsPage.php:171
+msgid "Detected API:"
+msgstr "API detectada:"
+
+#: src/Admin/SettingsPage.php:177
+msgid "API key"
+msgstr "Clave de API"
+
+#: src/Admin/SettingsPage.php:180
+msgid "Paste your API key"
+msgstr "Pega tu clave de API"
+
+#: src/Admin/SettingsPage.php:181
+msgid "Postiz → Settings → Developers → Public API. Leave empty to keep the current key. For better security define SOCIALRELAYCVI_POSTIZ_API_KEY in wp-config.php or the POSTIZ_API_KEY environment variable."
+msgstr "Postiz → Settings → Developers → Public API. Déjalo vacío para mantener la clave actual. Para más seguridad, define SOCIALRELAYCVI_POSTIZ_API_KEY en wp-config.php o la variable de entorno POSTIZ_API_KEY."
+
+#: src/Admin/SettingsPage.php:188
+msgid "Read from the POSTIZ_API_KEY environment variable."
+msgstr "Se lee de la variable de entorno POSTIZ_API_KEY."
+
+#: src/Admin/SettingsPage.php:189
+msgid "Defined in wp-config.php (SOCIALRELAYCVI_POSTIZ_API_KEY)."
+msgstr "Definida en wp-config.php (SOCIALRELAYCVI_POSTIZ_API_KEY)."
+
+#: src/Admin/SettingsPage.php:197
+msgid "Save and test connection"
+msgstr "Guardar y probar la conexión"
+
+#: src/Admin/SettingsPage.php:201
+msgid "Publishing profiles"
+msgstr "Perfiles de publicación"
+
+#: src/Admin/SettingsPage.php:211
+msgid "Save profiles"
+msgstr "Guardar perfiles"
+
+#: src/Admin/SettingsPage.php:231
+msgid "Publish immediately"
+msgstr "Publicar al momento"
+
+#: src/Admin/SettingsPage.php:232
+msgid "Schedule with a delay"
+msgstr "Programar con un retraso"
+
+#: src/Admin/SettingsPage.php:233
+msgid "Next free slot in Postiz"
+msgstr "Siguiente hueco libre en Postiz"
+
+#: src/Admin/SettingsPage.php:234
+msgid "Create as draft in Postiz"
+msgstr "Crear como borrador en Postiz"
+
+#. translators: %s: post type label, e.g. Posts.
+#: src/Admin/SettingsPage.php:244
+#, php-format
+msgid "Share %s when they are published"
+msgstr "Compartir %s cuando se publiquen"
+
+#: src/Admin/SettingsPage.php:248
+msgid "Channels"
+msgstr "Canales"
+
+#: src/Admin/SettingsPage.php:250
+msgid "No channels in Postiz yet. Add them in Postiz and reload this page."
+msgstr "Todavía no hay canales en Postiz. Añádelos en Postiz y recarga esta página."
+
+#: src/Admin/SettingsPage.php:260
+msgid "Message template"
+msgstr "Plantilla del mensaje"
+
+#: src/Admin/SettingsPage.php:262
+msgid "Tags: {title} {excerpt} {content} {url} {shortlink} {author} {date} {site_name} {categories} {tags} {hashtags:post_tag} {term:taxonomy} {meta:key} {seo_title} {seo_description}. Filters: |upper |lower |strip |hashtag |limit:100. A line with --- starts a new thread part."
+msgstr "Variables: {title} {excerpt} {content} {url} {shortlink} {author} {date} {site_name} {categories} {tags} {hashtags:post_tag} {term:taxonomy} {meta:key} {seo_title} {seo_description}. Filtros: |upper |lower |strip |hashtag |limit:100. Una línea con --- empieza una nueva parte del hilo."
+
+#: src/Admin/SettingsPage.php:265
+msgid "When"
+msgstr "Cuándo"
+
+#: src/Admin/SettingsPage.php:271
+msgid "Delay (minutes, for “Schedule”)"
+msgstr "Retraso (minutos, para «Programar»)"
+
+#: src/Admin/SettingsPage.php:276
+msgid "Attach the featured image"
+msgstr "Adjuntar la imagen destacada"
+
+#: src/Admin/SettingsPage.php:278
+msgid "Allow sharing again on update (when requested from the editor)"
+msgstr "Permitir volver a compartir al actualizar (cuando se pida desde el editor)"
+
+#: src/Admin/SettingsPage.php:284
+msgid "Links and tags"
+msgstr "Enlaces y etiquetas"
+
+#: src/Admin/SettingsPage.php:286
+msgid "Add UTM parameters to {url} (utm_source = network, utm_medium = social)"
+msgstr "Añadir parámetros UTM a {url} (utm_source = red, utm_medium = social)"
+
+#: src/Admin/SettingsPage.php:288
+msgid "utm_campaign"
+msgstr "utm_campaign"
+
+#: src/Admin/SettingsPage.php:290
+msgid "Accepts tags, e.g. {slug}."
+msgstr "Admite variables, por ejemplo {slug}."
+
+#: src/Admin/SettingsPage.php:292
+msgid "Shorten links with Postiz"
+msgstr "Acortar los enlaces con Postiz"
+
+#: src/Admin/SettingsPage.php:294
+msgid "Tag the posts in Postiz with the post categories"
+msgstr "Etiquetar las publicaciones en Postiz con las categorías de la entrada"
+
+#: src/Admin/SettingsPage.php:312
+msgid "Per network"
+msgstr "Por red"
+
+#: src/Admin/SettingsPage.php:313
+msgid "Optional. A network without its own template uses the common one."
+msgstr "Opcional. Las redes sin plantilla propia usan la común."
+
+#: src/Admin/SettingsPage.php:335
+msgid "customized"
+msgstr "personalizada"
+
+#: src/Admin/SettingsPage.php:340
+msgid "Template for this network"
+msgstr "Plantilla para esta red"
+
+#. translators: %d: character limit of the network.
+#: src/Admin/SettingsPage.php:344
+#, php-format
+msgid "(limit: %d characters)"
+msgstr "(límite: %d caracteres)"
+
+#: src/Admin/SettingsPage.php:348
+msgid "Empty = common template"
+msgstr "Vacío = plantilla común"
+
+#: src/Admin/SettingsPage.php:411
+msgid "Conditions"
+msgstr "Condiciones"
+
+#: src/Admin/SettingsPage.php:412
+msgid "Share only posts in at least one of the “Only” terms, and never posts in a “Never” term. Leave everything empty to share all posts."
+msgstr "Comparte solo las entradas que tengan al menos uno de los términos de «Solo» y nunca las que tengan alguno de «Nunca». Déjalo todo vacío para compartir todas las entradas."
+
+#: src/Admin/SettingsPage.php:415
+msgid "Only"
+msgstr "Solo"
+
+#: src/Admin/SettingsPage.php:416
+msgid "Never"
+msgstr "Nunca"
+
+#: src/Admin/SettingsPage.php:429
+msgid "Tags (comma-separated):"
+msgstr "Etiquetas (separadas por comas):"
+
+#. translators: %d: number of channels.
+#: src/Admin/SettingsPage.php:448
+#, php-format
+msgid "Connected to Postiz. %d channel available."
+msgid_plural "Connected to Postiz. %d channels available."
+msgstr[0] "Conectado a Postiz. %d canal disponible."
+msgstr[1] "Conectado a Postiz. %d canales disponibles."
+
+#: src/Admin/SettingsPage.php:451
+msgid "Profiles saved."
+msgstr "Perfiles guardados."
+
+#: src/Admin/SettingsPage.php:494
+msgid "You are not allowed to do this."
+msgstr "No tienes permiso para hacer esto."
+
+#: src/Connector/ConnectorRegistration.php:57
+msgid "Publish to social networks through your Postiz instance (self-hosted or Postiz Cloud). Set the instance URL in Social Relay → Settings."
+msgstr "Publica en redes sociales a través de tu instancia de Postiz (autoalojada o Postiz Cloud). La URL de la instancia se configura en Social Relay → Ajustes."
+
+#: src/Postiz/ChannelRepository.php:52
+msgid "Postiz is not configured yet."
+msgstr "Postiz todavía no está configurado."
+
+#: src/Postiz/Client.php:220
+msgid "401 · The API key is not valid for this Postiz instance."
+msgstr "401 · La clave de API no es válida para esta instancia de Postiz."
+
+#: src/Postiz/Client.php:221
+msgid "403 · The API key cannot access this resource."
+msgstr "403 · La clave de API no tiene acceso a este recurso."
+
+#: src/Postiz/Client.php:222
+msgid "404 · Endpoint not found. Check the Postiz URL."
+msgstr "404 · No se encuentra la ruta. Revisa la URL de Postiz."
+
+#: src/Postiz/Client.php:223
+msgid "413 · Request too large."
+msgstr "413 · La petición es demasiado grande."
+
+#: src/Postiz/Client.php:224
+msgid "429 · Postiz API rate limit reached."
+msgstr "429 · Se ha alcanzado el límite de peticiones de la API de Postiz."
+
+#. translators: %d: HTTP status code.
+#: src/Postiz/Client.php:226
+#, php-format
+msgid "%d · Unexpected response from Postiz."
+msgstr "%d · Respuesta inesperada de Postiz."
+
+#: src/Postiz/ProviderRules.php:84
+msgid "Who can reply"
+msgstr "Quién puede responder"
+
+#: src/Postiz/ProviderRules.php:86
+msgid "Everyone"
+msgstr "Todo el mundo"
+
+#: src/Postiz/ProviderRules.php:87
+msgid "Accounts you follow"
+msgstr "Cuentas que sigues"
+
+#: src/Postiz/ProviderRules.php:88
+msgid "Mentioned accounts"
+msgstr "Cuentas mencionadas"
+
+#: src/Postiz/ProviderRules.php:89
+msgid "Subscribers"
+msgstr "Suscriptores"
+
+#: src/Postiz/ProviderRules.php:90
+msgid "Verified accounts"
+msgstr "Cuentas verificadas"
+
+#: src/Postiz/ProviderRules.php:95
+msgid "Community URL (optional)"
+msgstr "URL de la comunidad (opcional)"
+
+#: src/Postiz/ProviderRules.php:101
+msgid "Show several images as a carousel"
+msgstr "Mostrar varias imágenes como carrusel"
+
+#: src/Postiz/ProviderRules.php:107
+msgid "Publish as"
+msgstr "Publicar como"
+
+#: src/Postiz/ProviderRules.php:109
+msgctxt "Instagram publication type"
+msgid "Post"
+msgstr "Publicación"
+
+#: src/Postiz/ProviderRules.php:110
+msgctxt "Instagram publication type"
+msgid "Story"
+msgstr "Historia"
+
+#: src/Postiz/ProviderRules.php:117
+msgid "Board ID"
+msgstr "ID del tablero"
+
+#: src/Postiz/ProviderRules.php:124
+msgid "Post type"
+msgstr "Tipo de publicación"
+
+#: src/Postiz/ProviderRules.php:125
+msgctxt "Google Business publication type"
+msgid "Update"
+msgstr "Novedad"
+
+#: src/Postiz/ProviderRules.php:129
+msgid "Button"
+msgstr "Botón"
+
+#: src/Postiz/ProviderRules.php:131
+msgid "None"
+msgstr "Ninguno"
+
+#: src/Postiz/ProviderRules.php:132
+msgid "Learn more"
+msgstr "Más información"
+
+#: src/Postiz/ProviderRules.php:133
+msgid "Book"
+msgstr "Reservar"
+
+#: src/Postiz/ProviderRules.php:134
+msgid "Order"
+msgstr "Pedir"
+
+#: src/Postiz/ProviderRules.php:135
+msgid "Shop"
+msgstr "Comprar"
+
+#: src/Postiz/ProviderRules.php:136
+msgid "Sign up"
+msgstr "Registrarse"
+
+#: src/Rest/ConnectionController.php:176
+msgid "Post not found."
+msgstr "No se encuentra la entrada."
+
+#: src/Settings/ConnectionTester.php:39
+msgid "Enter the URL of your Postiz instance."
+msgstr "Escribe la URL de tu instancia de Postiz."
+
+#: src/Settings/ConnectionTester.php:43
+msgid "Enter your Postiz API key (Postiz → Settings → Developers → Public API)."
+msgstr "Escribe tu clave de API de Postiz (Postiz → Settings → Developers → Public API)."
+
+#: src/Settings/ConnectionTester.php:56
+msgid "Connection to Postiz OK."
+msgstr "Conexión con Postiz correcta."
+
+#. translators: 1: host name, 2: technical error.
+#: src/Settings/ConnectionTester.php:73
+#, php-format
+msgid "Could not reach %1$s. Check the URL, DNS and firewall. (%2$s)"
+msgstr "No se ha podido conectar con %1$s. Revisa la URL, el DNS y el cortafuegos. (%2$s)"
+
+#: src/Settings/ConnectionTester.php:88
+msgid "The Postiz URL is not valid."
+msgstr "La URL de Postiz no es válida."
+
+#: src/Sharing/ShareService.php:80
+msgid "The post does not match the profile conditions; not shared."
+msgstr "La entrada no cumple las condiciones del perfil; no se comparte."
+
+#: src/Sharing/ShareService.php:86
+msgid "Postiz is not configured; nothing was sent."
+msgstr "Postiz no está configurado; no se ha enviado nada."
+
+#: src/Sharing/ShareService.php:110
+msgid "Same content was already sent; skipped to avoid a duplicate."
+msgstr "Este mismo contenido ya se envió; se omite para no duplicarlo."
+
+#: src/Sharing/ShareService.php:119
+msgid "This network needs an image and the post has none; skipped."
+msgstr "Esta red necesita una imagen y la entrada no tiene; se omite."
+
+#: src/Sharing/ShareService.php:181
+msgid "Channel no longer exists in Postiz; skipped."
+msgstr "El canal ya no existe en Postiz; se omite."
+
+#: src/Sharing/ShareService.php:189
+msgid "Channel is disabled in Postiz; skipped."
+msgstr "El canal está desactivado en Postiz; se omite."
+
+#. translators: %s: list of missing settings.
+#: src/Sharing/ShareService.php:206
+#, php-format
+msgid "Missing network settings (%s); skipped."
+msgstr "Faltan ajustes de la red (%s); se omite."
+
+#: src/Sharing/ShareService.php:287
+msgid "Pending posts cancelled in Postiz."
+msgstr "Publicaciones pendientes canceladas en Postiz."
+
+#. translators: 1: number of channels, 2: Postiz post type (now, schedule, draft).
+#: src/Sharing/ShareService.php:360
+#, php-format
+msgid "Sent to Postiz: %1$d channel, type %2$s."
+msgid_plural "Sent to Postiz: %1$d channels, type %2$s."
+msgstr[0] "Enviado a Postiz: %1$d canal, tipo %2$s."
+msgstr[1] "Enviado a Postiz: %1$d canales, tipo %2$s."
+
+#. translators: 1: error message, 2: attempt number, 3: max attempts.
+#: src/Sharing/ShareService.php:411
+#, php-format
+msgid "%1$s Retrying (%2$d of %3$d)."
+msgstr "%1$s Reintentando (%2$d de %3$d)."
+
+#: src/Sharing/ShareService.php:572
+msgid "Unexpected upload response."
+msgstr "Respuesta inesperada al subir el archivo."
+
+#. translators: %s: error message.
+#: src/Sharing/ShareService.php:576
+#, php-format
+msgid "Postiz could not fetch the featured image (%s). Sent without image."
+msgstr "Postiz no ha podido descargar la imagen destacada (%s). Se envía sin imagen."

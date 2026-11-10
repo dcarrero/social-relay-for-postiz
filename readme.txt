@@ -22,7 +22,10 @@ Works with self-hosted Postiz and with Postiz Cloud.
 * Postiz appears in Settings → Connectors (WordPress 7). The API key can come from an environment variable, a constant or the database.
 * One publishing profile per post type: channels, message template and timing.
 * Message templates with tags such as {title}, {excerpt}, {url}, {hashtags:post_tag} or {meta:key}, filters like |limit:200, and thread parts separated by ---.
-* Per-network character limits.
+* Per-network templates and settings (who can reply on X, LinkedIn carousels, Instagram post or story, Pinterest board…), with character limits.
+* Conditions: share only posts in some categories or tags, never posts in others.
+* UTM parameters per network, Postiz link shortener and Postiz tags from your categories.
+* Pending posts are cancelled in Postiz when a post is unpublished or trashed.
 * Publish now, schedule with a delay, use the next free slot in Postiz, or create drafts in Postiz.
 * Featured image upload.
 * One request per post for every channel, to respect the Postiz API rate limit.
@@ -63,6 +66,12 @@ Postiz Cloud terms: https://postiz.com/terms
 Postiz Cloud privacy policy: https://postiz.com/privacy
 
 == Changelog ==
+
+= 0.2.0 =
+* Per-network templates and settings, term conditions, UTM parameters, Postiz shortener and tags.
+* Cancels pending Postiz posts when a post is unpublished.
+* REST routes for a post's shares and a dry-run preview.
+* Spanish (es_ES) translation.
 
 = 0.1.0 =
 * First development version.

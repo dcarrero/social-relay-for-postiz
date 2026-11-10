@@ -17,9 +17,10 @@ namespace SocialRelayCvi;
  */
 final class PostMeta implements Module {
 
-	public const ENABLED = '_socialrelaycvi_enabled';
-	public const MESSAGE = '_socialrelaycvi_message';
-	public const RESHARE = '_socialrelaycvi_reshare';
+	public const ENABLED   = '_socialrelaycvi_enabled';
+	public const MESSAGE   = '_socialrelaycvi_message';
+	public const RESHARE   = '_socialrelaycvi_reshare';
+	public const OVERRIDES = '_socialrelaycvi_overrides';
 
 	/**
 	 * {@inheritDoc}
@@ -55,6 +56,25 @@ final class PostMeta implements Module {
 				'default'           => '',
 				'show_in_rest'      => true,
 				'sanitize_callback' => 'sanitize_textarea_field',
+				'auth_callback'     => $auth,
+			)
+		);
+
+		// Per-network text for this post: { "<channel id>": "text" }.
+		register_post_meta(
+			'',
+			self::OVERRIDES,
+			array(
+				'type'              => 'object',
+				'single'            => true,
+				'default'           => array(),
+				'show_in_rest'      => array(
+					'schema' => array(
+						'type'                 => 'object',
+						'additionalProperties' => array( 'type' => 'string' ),
+					),
+				),
+				'sanitize_callback' => static fn ( mixed $value ): array => is_array( $value ) ? array_map( static fn ( mixed $text ): string => sanitize_textarea_field( (string) $text ), $value ) : array(),
 				'auth_callback'     => $auth,
 			)
 		);

@@ -79,6 +79,22 @@ final class ConnectionController implements Module {
 
 		register_rest_route(
 			self::NAMESPACE,
+			'/posts/(?P<id>\d+)/preview',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'preview' ),
+				'permission_callback' => static fn ( WP_REST_Request $request ): bool => current_user_can( 'edit_post', (int) $request['id'] ),
+				'args'                => array(
+					'id' => array(
+						'type'     => 'integer',
+						'required' => true,
+					),
+				),
+			)
+		);
+
+		register_rest_route(
+			self::NAMESPACE,
 			'/channels',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -146,6 +162,23 @@ final class ConnectionController implements Module {
 		);
 
 		return new WP_REST_Response( $rows );
+	}
+
+	/**
+	 * GET /posts/{id}/preview — messages that would be sent, nothing is sent.
+	 *
+	 * @param WP_REST_Request<array<string, mixed>> $request Request.
+	 * @return WP_REST_Response|\WP_Error
+	 */
+	public function preview( WP_REST_Request $request ): WP_REST_Response|\WP_Error {
+		$post = get_post( (int) $request['id'] );
+		if ( ! $post instanceof \WP_Post ) {
+			return new \WP_Error( 'socialrelaycvi_not_found', __( 'Post not found.', 'social-relay-for-postiz' ), array( 'status' => 404 ) );
+		}
+
+		$preview = $this->plugin->share_service->preview( $post );
+
+		return is_wp_error( $preview ) ? $preview : new WP_REST_Response( $preview );
 	}
 
 	/**

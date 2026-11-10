@@ -63,7 +63,7 @@ final class LogPage implements Module {
 						<th scope="col"><?php esc_html_e( 'Date (UTC)', 'social-relay-for-postiz' ); ?></th>
 						<th scope="col"><?php esc_html_e( 'Level', 'social-relay-for-postiz' ); ?></th>
 						<th scope="col"><?php esc_html_e( 'Action', 'social-relay-for-postiz' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Post', 'social-relay-for-postiz' ); ?></th>
+						<th scope="col"><?php echo esc_html_x( 'Post', 'WordPress post', 'social-relay-for-postiz' ); ?></th>
 						<th scope="col"><?php esc_html_e( 'Channel', 'social-relay-for-postiz' ); ?></th>
 						<th scope="col"><?php esc_html_e( 'Message', 'social-relay-for-postiz' ); ?></th>
 					</tr>

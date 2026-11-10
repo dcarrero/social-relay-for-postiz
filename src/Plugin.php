@@ -171,6 +171,14 @@ final class Plugin {
 	private function init(): void {
 		Installer::maybe_upgrade();
 
+		// Bundled translations (languages/). Language packs from translate.wordpress.org take precedence.
+		add_action(
+			'init',
+			static function (): void {
+				load_plugin_textdomain( 'social-relay-for-postiz', false, dirname( plugin_basename( SOCIALRELAYCVI_FILE ) ) . '/languages' );
+			}
+		);
+
 		$modules = array(
 			'connector'     => new ConnectorRegistration( $this ),
 			'queue'         => $this->queue,
