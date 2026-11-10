@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-11-10T10:13:03+00:00\n"
-"PO-Revision-Date: 2026-11-10T16:47:21+00:00\n"
+"PO-Revision-Date: 2026-11-10T16:55:42+00:00\n"
 "Language: es_ES\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -256,6 +256,32 @@ msgstr "Ajustes"
 msgid "Open Postiz"
 msgstr "Abrir Postiz"
 
+#: src/Admin/PostsColumn.php:81
+#: build/editor-panel.js:3
+#: build/editor-panel.js:13
+msgid "Social networks"
+msgstr "Redes sociales"
+
+#: src/Admin/PostsColumn.php:118
+msgid "Off"
+msgstr "Desactivado"
+
+#: src/Admin/PostsColumn.php:163
+msgid "All social statuses"
+msgstr "Todos los estados en redes"
+
+#: src/Admin/PostsColumn.php:164
+msgid "Social: with errors"
+msgstr "Redes: con errores"
+
+#: src/Admin/PostsColumn.php:165
+msgid "Social: queued or draft"
+msgstr "Redes: en cola o borrador"
+
+#: src/Admin/PostsColumn.php:168
+msgid "Filter by social network status"
+msgstr "Filtrar por estado en redes sociales"
+
 #: src/Admin/Privacy.php:36
 msgid "Social Relay for Postiz does not collect data from your visitors. It only acts when you publish content."
 msgstr "Social Relay for Postiz no recoge datos de tus visitantes. Solo actúa cuando publicas contenido."
@@ -325,91 +351,91 @@ msgstr "429 · Se ha alcanzado el límite de peticiones de la API de Postiz."
 msgid "%d · Unexpected response from Postiz."
 msgstr "%d · Respuesta inesperada de Postiz."
 
-#: src/Postiz/ProviderRules.php:84
+#: src/Postiz/ProviderRules.php:115
 msgid "Who can reply"
 msgstr "Quién puede responder"
 
-#: src/Postiz/ProviderRules.php:86
+#: src/Postiz/ProviderRules.php:117
 msgid "Everyone"
 msgstr "Todo el mundo"
 
-#: src/Postiz/ProviderRules.php:87
+#: src/Postiz/ProviderRules.php:118
 msgid "Accounts you follow"
 msgstr "Cuentas que sigues"
 
-#: src/Postiz/ProviderRules.php:88
+#: src/Postiz/ProviderRules.php:119
 msgid "Mentioned accounts"
 msgstr "Cuentas mencionadas"
 
-#: src/Postiz/ProviderRules.php:89
+#: src/Postiz/ProviderRules.php:120
 msgid "Subscribers"
 msgstr "Suscriptores"
 
-#: src/Postiz/ProviderRules.php:90
+#: src/Postiz/ProviderRules.php:121
 msgid "Verified accounts"
 msgstr "Cuentas verificadas"
 
-#: src/Postiz/ProviderRules.php:95
+#: src/Postiz/ProviderRules.php:126
 msgid "Community URL (optional)"
 msgstr "URL de la comunidad (opcional)"
 
-#: src/Postiz/ProviderRules.php:101
+#: src/Postiz/ProviderRules.php:132
 msgid "Show several images as a carousel"
 msgstr "Mostrar varias imágenes como carrusel"
 
-#: src/Postiz/ProviderRules.php:107
+#: src/Postiz/ProviderRules.php:138
 msgid "Publish as"
 msgstr "Publicar como"
 
-#: src/Postiz/ProviderRules.php:109
+#: src/Postiz/ProviderRules.php:140
 msgctxt "Instagram publication type"
 msgid "Post"
 msgstr "Publicación"
 
-#: src/Postiz/ProviderRules.php:110
+#: src/Postiz/ProviderRules.php:141
 msgctxt "Instagram publication type"
 msgid "Story"
 msgstr "Historia"
 
-#: src/Postiz/ProviderRules.php:117
+#: src/Postiz/ProviderRules.php:148
 msgid "Board ID"
 msgstr "ID del tablero"
 
-#: src/Postiz/ProviderRules.php:124
+#: src/Postiz/ProviderRules.php:155
 msgid "Post type"
 msgstr "Tipo de publicación"
 
-#: src/Postiz/ProviderRules.php:125
+#: src/Postiz/ProviderRules.php:156
 msgctxt "Google Business publication type"
 msgid "Update"
 msgstr "Novedad"
 
-#: src/Postiz/ProviderRules.php:129
+#: src/Postiz/ProviderRules.php:160
 msgid "Button"
 msgstr "Botón"
 
-#: src/Postiz/ProviderRules.php:131
+#: src/Postiz/ProviderRules.php:162
 #: build/editor-panel.js:4
 msgid "None"
 msgstr "Ninguno"
 
-#: src/Postiz/ProviderRules.php:132
+#: src/Postiz/ProviderRules.php:163
 msgid "Learn more"
 msgstr "Más información"
 
-#: src/Postiz/ProviderRules.php:133
+#: src/Postiz/ProviderRules.php:164
 msgid "Book"
 msgstr "Reservar"
 
-#: src/Postiz/ProviderRules.php:134
+#: src/Postiz/ProviderRules.php:165
 msgid "Order"
 msgstr "Pedir"
 
-#: src/Postiz/ProviderRules.php:135
+#: src/Postiz/ProviderRules.php:166
 msgid "Shop"
 msgstr "Comprar"
 
-#: src/Postiz/ProviderRules.php:136
+#: src/Postiz/ProviderRules.php:167
 msgid "Sign up"
 msgstr "Registrarse"
 
@@ -543,11 +569,6 @@ msgstr "Al momento"
 #: build/editor-panel.js:3
 msgid "Pending"
 msgstr "Pendiente"
-
-#: build/editor-panel.js:3
-#: build/editor-panel.js:13
-msgid "Social networks"
-msgstr "Redes sociales"
 
 #. translators: %d: number of channels.
 #: build/editor-panel.js:4

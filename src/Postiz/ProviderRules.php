@@ -15,6 +15,37 @@ namespace SocialRelayCvi\Postiz;
 final class ProviderRules {
 
 	/**
+	 * Display name and accent colour of a network (same list as assets/src/common/networks.js).
+	 *
+	 * @param string $identifier Provider identifier.
+	 * @return array{label: string, color: string}
+	 */
+	public static function network( string $identifier ): array {
+		$network = match ( $identifier ) {
+			'x'                                 => array( 'X', '#000000' ),
+			'linkedin', 'linkedin-page'         => array( 'LinkedIn', '#0A66C2' ),
+			'bluesky'                           => array( 'Bluesky', '#1185FE' ),
+			'mastodon'                          => array( 'Mastodon', '#6364FF' ),
+			'threads'                           => array( 'Threads', '#000000' ),
+			'instagram', 'instagram-standalone' => array( 'Instagram', '#D62976' ),
+			'facebook'                          => array( 'Facebook', '#1877F2' ),
+			'pinterest'                         => array( 'Pinterest', '#E60023' ),
+			'tiktok'                            => array( 'TikTok', '#000000' ),
+			'youtube'                           => array( 'YouTube', '#FF0000' ),
+			'telegram'                          => array( 'Telegram', '#229ED9' ),
+			'discord'                           => array( 'Discord', '#5865F2' ),
+			'gmb'                               => array( 'Google Business', '#4285F4' ),
+			'reddit'                            => array( 'Reddit', '#FF4500' ),
+			default                             => array( $identifier, '#5B3DF5' ),
+		};
+
+		return array(
+			'label' => $network[0],
+			'color' => $network[1],
+		);
+	}
+
+	/**
 	 * Character limit per post, or null when the network has no practical limit.
 	 *
 	 * @param string $identifier Postiz provider identifier (x, bluesky, linkedin-page…).

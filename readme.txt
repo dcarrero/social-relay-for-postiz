@@ -35,6 +35,7 @@ Works with self-hosted Postiz and with Postiz Cloud.
 * After publishing, the **status of each network**: queued, published (with a link to the post) or the error reported by the platform.
 * **Share again now, retry a failed network, or cancel what is still pending** in Postiz, right from the editor.
 * A metabox for the **classic editor**, with the same timing options.
+* A **"Social networks" column** in the posts list with the status of each channel, and a filter for posts with errors or pending shares.
 
 = Reliable =
 

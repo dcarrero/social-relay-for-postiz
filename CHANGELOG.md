@@ -5,6 +5,7 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 ## [Unreleased]
 
 ### Added
+- "Social networks" column in the posts list of every post type with an enabled profile: one badge per channel (its Postiz picture or the network initial) with a dot for the latest status; the tooltip names channel, network, status and error. A filter above the list shows posts with errors, or with shares queued or in draft.
 - Timing per post ("When" in the editor panel and the classic metabox): now, a date, the next free slot or a draft in Postiz, or the profile setting. Stored in `_socialrelaycvi_mode` and `_socialrelaycvi_publish_at` (site time); a past date sends right away and no date uses the profile delay.
 - Actions in the editor status panel: "Share again now" (with a confirmation that names the channels and timing), "Retry" on a failed network (only that channel is sent) and "Cancel pending" (deletes scheduled posts and drafts in Postiz). The panel polls every 5 s for a minute after each action.
 - REST routes `POST socialrelaycvi/v1/posts/{id}/share` (optional `channels` to retry only some) and `POST socialrelaycvi/v1/posts/{id}/cancel`, for users who can edit the post.

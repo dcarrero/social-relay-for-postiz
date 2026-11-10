@@ -274,4 +274,26 @@ final class ShareRepository {
 
 		return is_array( $rows ) ? array_values( $rows ) : array();
 	}
+
+	/**
+	 * Posts whose latest share on some channel has the given status.
+	 *
+	 * @param string $status Status: error, queued or draft.
+	 * @return list<int> Post ids.
+	 */
+	public function posts_with_status( string $status ): array {
+		global $wpdb;
+
+		$table = Installer::tables()['shares'];
+		$ids   = $wpdb->get_col(
+			$wpdb->prepare(
+				'SELECT DISTINCT s.post_id FROM %i s WHERE s.status = %s AND s.id = ( SELECT MAX( l.id ) FROM %i l WHERE l.post_id = s.post_id AND l.integration_id = s.integration_id )',
+				$table,
+				$status,
+				$table
+			)
+		);
+
+		return array_values( array_map( 'intval', (array) $ids ) );
+	}
 }

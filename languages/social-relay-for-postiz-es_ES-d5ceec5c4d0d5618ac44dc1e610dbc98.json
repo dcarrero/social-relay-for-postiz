@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T16:47:21+00:00",
+    "translation-revision-date": "2026-11-10T16:55:42+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/editor-panel.js",
     "domain": "messages",
@@ -40,6 +40,9 @@
             "Log": [
                 "Registro"
             ],
+            "Social networks": [
+                "Redes sociales"
+            ],
             "Social Relay": [
                 "Social Relay"
             ],
@@ -69,9 +72,6 @@
             ],
             "Pending": [
                 "Pendiente"
-            ],
-            "Social networks": [
-                "Redes sociales"
             ],
             "Will be sent to Postiz for %d channel:": [
                 "Se enviar\u00e1 a Postiz para %d canal:",
