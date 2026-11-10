@@ -1,3 +1,4 @@
+import apiFetch from '@wordpress/api-fetch';
 import {
 	Button,
 	DropdownMenu,
@@ -6,8 +7,11 @@ import {
 	TabPanel,
 	TextareaControl,
 } from '@wordpress/components';
-import { useRef } from '@wordpress/element';
+import { useDispatch, useSelect } from '@wordpress/data';
+import { store as editorStore } from '@wordpress/editor';
+import { useRef, useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
+import { store as noticesStore } from '@wordpress/notices';
 
 import { network } from '../../common/networks';
 import { channelLabel, channelsById, config, META } from '../config';
@@ -47,10 +51,45 @@ function shorten( name ) {
  * @param {string}   props.value       Text.
  * @param {string}   props.placeholder Text used when empty.
  * @param {Function} props.onChange    Change handler.
+ * @param {string}   props.channel     Channel id the text is for, '' for all networks.
  * @return {Element} Editor.
  */
-function MessageEditor( { label, help, value, placeholder, onChange } ) {
+function MessageEditor( {
+	label,
+	help,
+	value,
+	placeholder,
+	onChange,
+	channel,
+} ) {
 	const ref = useRef();
+	const [ thinking, setThinking ] = useState( false );
+	const [ previous, setPrevious ] = useState( null );
+	const postId = useSelect(
+		( select ) => select( editorStore ).getCurrentPostId(),
+		[]
+	);
+	const { createErrorNotice } = useDispatch( noticesStore );
+
+	// Only fills the field: a person reviews the text before anything is sent.
+	const suggest = () => {
+		setThinking( true );
+		apiFetch( {
+			path: `/${ config.namespace }/posts/${ postId }/suggest`,
+			method: 'POST',
+			data: { channel },
+		} )
+			.then( ( response ) => {
+				setPrevious( value );
+				onChange( response.text );
+			} )
+			.catch( ( err ) =>
+				createErrorNotice( err.message || String( err ), {
+					type: 'snackbar',
+				} )
+			)
+			.finally( () => setThinking( false ) );
+	};
 
 	const insert = ( tag ) => {
 		const field = ref.current;
@@ -78,6 +117,18 @@ function MessageEditor( { label, help, value, placeholder, onChange } ) {
 				__nextHasNoMarginBottom
 			/>
 			<div className="socialrelaycvi-message__tools">
+				{ config.ai && (
+					<Button
+						variant="secondary"
+						size="compact"
+						icon="superhero-alt"
+						onClick={ suggest }
+						isBusy={ thinking }
+						disabled={ thinking || ! postId }
+					>
+						{ __( 'Suggest with AI', 'social-relay-for-postiz' ) }
+					</Button>
+				) }
 				<DropdownMenu
 					icon={ null }
 					text={
@@ -102,7 +153,19 @@ function MessageEditor( { label, help, value, placeholder, onChange } ) {
 						</MenuGroup>
 					) }
 				</DropdownMenu>
-				{ value && (
+				{ previous !== null && (
+					<Button
+						variant="tertiary"
+						size="compact"
+						onClick={ () => {
+							onChange( previous );
+							setPrevious( null );
+						} }
+					>
+						{ __( 'Undo', 'social-relay-for-postiz' ) }
+					</Button>
+				) }
+				{ value && previous === null && (
 					<Button
 						variant="tertiary"
 						size="compact"
@@ -112,6 +175,14 @@ function MessageEditor( { label, help, value, placeholder, onChange } ) {
 					</Button>
 				) }
 			</div>
+			{ config.ai && (
+				<p className="description socialrelaycvi-message__ai">
+					{ __(
+						'AI uses the saved post and your provider in Settings → Connectors. Review the text before publishing.',
+						'social-relay-for-postiz'
+					) }
+				</p>
+			) }
 		</>
 	);
 }
@@ -181,6 +252,7 @@ export default function MessageSection( { meta, setMeta } ) {
 								'social-relay-for-postiz'
 							) }
 							value={ message }
+							channel=""
 							placeholder={ config.profile.template }
 							onChange={ ( value ) =>
 								setMeta( META.message, value )
@@ -212,6 +284,7 @@ export default function MessageSection( { meta, setMeta } ) {
 								  )
 						}
 						value={ overrides[ tab.name ] || '' }
+						channel={ tab.name }
 						placeholder={
 							message ||
 							config.profile.templates[ tab.name ] ||

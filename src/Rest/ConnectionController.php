@@ -13,6 +13,7 @@ use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
 use SocialRelayCvi\PostMeta;
 use SocialRelayCvi\Settings\ConnectionTester;
+use SocialRelayCvi\Sharing\AiSuggester;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -129,6 +130,27 @@ final class ConnectionController implements Module {
 					'id' => array(
 						'type'     => 'integer',
 						'required' => true,
+					),
+				),
+			)
+		);
+
+		register_rest_route(
+			self::NAMESPACE,
+			'/posts/(?P<id>\d+)/suggest',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'suggest' ),
+				'permission_callback' => $can_edit,
+				'args'                => array(
+					'id'      => array(
+						'type'     => 'integer',
+						'required' => true,
+					),
+					'channel' => array(
+						'description' => __( 'Channel id to write for; empty for a text for all networks.', 'social-relay-for-postiz' ),
+						'type'        => 'string',
+						'default'     => '',
 					),
 				),
 			)
@@ -275,6 +297,30 @@ final class ConnectionController implements Module {
 				'left'      => $left,
 			)
 		);
+	}
+
+	/**
+	 * POST /posts/{id}/suggest — a message written by the site's AI provider, for review in the editor.
+	 *
+	 * @param WP_REST_Request<array<string, mixed>> $request Request.
+	 * @return WP_REST_Response|\WP_Error
+	 */
+	public function suggest( WP_REST_Request $request ): WP_REST_Response|\WP_Error {
+		$post = get_post( (int) $request['id'] );
+		if ( ! $post instanceof \WP_Post ) {
+			return new \WP_Error( 'socialrelaycvi_not_found', __( 'Post not found.', 'social-relay-for-postiz' ), array( 'status' => 404 ) );
+		}
+
+		$identifier = '';
+		$channel_id = sanitize_text_field( (string) $request->get_param( 'channel' ) );
+		if ( '' !== $channel_id ) {
+			$channels   = $this->plugin->channels->by_id();
+			$identifier = is_wp_error( $channels ) ? '' : (string) ( $channels[ $channel_id ]['identifier'] ?? '' );
+		}
+
+		$text = ( new AiSuggester() )->suggest( $post, $identifier );
+
+		return is_wp_error( $text ) ? $text : new WP_REST_Response( array( 'text' => $text ) );
 	}
 
 	/**

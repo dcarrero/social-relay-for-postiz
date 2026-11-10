@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-11-10T10:13:03+00:00\n"
-"PO-Revision-Date: 2026-11-10T16:55:42+00:00\n"
+"PO-Revision-Date: 2026-11-10T16:59:44+00:00\n"
 "Language: es_ES\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -119,8 +119,9 @@ msgid "Only published posts can be shared."
 msgstr "Solo se pueden compartir entradas publicadas."
 
 #: src/Abilities/AbilitiesRegistration.php:360
-#: src/Rest/ConnectionController.php:217
-#: src/Rest/ConnectionController.php:234
+#: src/Rest/ConnectionController.php:239
+#: src/Rest/ConnectionController.php:256
+#: src/Rest/ConnectionController.php:311
 msgid "Post not found."
 msgstr "No se encuentra la entrada."
 
@@ -294,6 +295,10 @@ msgstr "Cuando publicamos una entrada, el mensaje que hemos escrito para las red
 msgid "If we use Postiz Cloud, that information is processed by Postiz according to its privacy policy: https://postiz.com/privacy"
 msgstr "Si usamos Postiz Cloud, Postiz trata esa información según su política de privacidad: https://postiz.com/privacy"
 
+#: src/Admin/Privacy.php:39
+msgid "When we ask for a suggested message, the text of the post is sent to the AI provider we set up in WordPress, under its own terms. It contains no visitor data."
+msgstr "Cuando pedimos un mensaje sugerido, el texto de la entrada se envía al proveedor de IA que configuramos en WordPress, según sus propias condiciones. No contiene datos de visitantes."
+
 #: src/Admin/SettingsPage.php:45
 #: build/editor-panel.js:13
 msgid "Social Relay"
@@ -320,7 +325,7 @@ msgid "Publish to social networks through your Postiz instance (self-hosted or P
 msgstr "Publica en redes sociales a través de tu instancia de Postiz (autoalojada o Postiz Cloud). La URL de la instancia se configura en Social Relay → Ajustes."
 
 #: src/Postiz/ChannelRepository.php:52
-#: src/Rest/ConnectionController.php:265
+#: src/Rest/ConnectionController.php:287
 #: src/Sharing/ShareService.php:208
 msgid "Postiz is not configured yet."
 msgstr "Postiz todavía no está configurado."
@@ -439,9 +444,13 @@ msgstr "Comprar"
 msgid "Sign up"
 msgstr "Registrarse"
 
-#: src/Rest/ConnectionController.php:112
+#: src/Rest/ConnectionController.php:113
 msgid "Only these channel ids (retry). Empty: every channel of the post."
 msgstr "Solo estos ids de canal (reintento). Vacío: todos los canales de la entrada."
+
+#: src/Rest/ConnectionController.php:151
+msgid "Channel id to write for; empty for a text for all networks."
+msgstr "Id del canal para el que se escribe; vacío para un texto para todas las redes."
 
 #: src/Settings/ConnectionTester.php:39
 msgid "Enter the URL of your Postiz instance."
@@ -464,6 +473,10 @@ msgstr "No se ha podido conectar con %1$s. Revisa la URL, el DNS y el cortafuego
 #: src/Settings/ConnectionTester.php:88
 msgid "The Postiz URL is not valid."
 msgstr "La URL de Postiz no es válida."
+
+#: src/Sharing/AiSuggester.php:76
+msgid "No AI provider is set up. Add one in Settings → Connectors."
+msgstr "No hay ningún proveedor de IA configurado. Añade uno en Ajustes → Conectores."
 
 #: src/Sharing/ShareService.php:80
 msgid "The post does not match the profile conditions; not shared."
@@ -625,12 +638,24 @@ msgid "Use the profile channels"
 msgstr "Usar los canales del perfil"
 
 #: build/editor-panel.js:5
+msgid "Suggest with AI"
+msgstr "Sugerir con IA"
+
+#: build/editor-panel.js:5
 msgid "Insert tag"
 msgstr "Insertar etiqueta"
 
 #: build/editor-panel.js:5
+msgid "Undo"
+msgstr "Deshacer"
+
+#: build/editor-panel.js:5
 msgid "Reset"
 msgstr "Restablecer"
+
+#: build/editor-panel.js:5
+msgid "AI uses the saved post and your provider in Settings → Connectors. Review the text before publishing."
+msgstr "La IA usa la entrada guardada y tu proveedor de Ajustes → Conectores. Revisa el texto antes de publicar."
 
 #: build/editor-panel.js:5
 msgid "Empty = profile template, shown in grey. • marks a custom text."

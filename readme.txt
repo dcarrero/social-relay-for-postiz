@@ -30,6 +30,7 @@ Works with self-hosted Postiz and with Postiz Cloud.
 = In the editor =
 
 * A **"Social networks" panel** in the block editor: turn sharing on or off, pick channels for this post, write a text for all networks or one per network (one tab each), and preview every message as it will look on each network, with its character count.
+* **Suggest with AI**: a message for all networks or for one, written by the AI provider you set up in Settings → Connectors (WordPress 7). It only fills the field: you review it before publishing.
 * **When, per post**: now, on a date, the next free slot or a draft in Postiz, or keep the profile setting.
 * A **pre-publish summary** of the channels and timing that will be used.
 * After publishing, the **status of each network**: queued, published (with a link to the post) or the error reported by the platform.
@@ -121,6 +122,8 @@ When a post is shared, the plugin sends the generated message, the post URL, the
 
 Postiz Cloud terms of service: https://postiz.com/terms
 Postiz Cloud privacy policy: https://postiz.com/privacy
+
+"Suggest with AI" only works when you click it, and only if you set up an AI provider in Settings → Connectors (WordPress 7). It then sends the post title, excerpt, categories and text (up to 4,000 characters) to that provider through the WordPress AI Client. The provider and its terms are the ones you chose; the plugin does not add any of its own.
 
 == Privacy ==
 

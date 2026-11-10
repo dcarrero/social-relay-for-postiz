@@ -32,10 +32,11 @@ final class Privacy implements Module {
 		}
 
 		$content = sprintf(
-			'<p class="privacy-policy-tutorial">%1$s</p><p>%2$s</p><p>%3$s</p>',
+			'<p class="privacy-policy-tutorial">%1$s</p><p>%2$s</p><p>%3$s</p><p>%4$s</p>',
 			esc_html__( 'Social Relay for Postiz does not collect data from your visitors. It only acts when you publish content.', 'social-relay-for-postiz' ),
 			esc_html__( 'When we publish a post, the message we wrote for social networks, the link to the post and its featured image address are sent to our Postiz instance, which publishes them on the social networks we connected. Postiz then makes that content public on those networks.', 'social-relay-for-postiz' ),
-			esc_html__( 'If we use Postiz Cloud, that information is processed by Postiz according to its privacy policy: https://postiz.com/privacy', 'social-relay-for-postiz' )
+			esc_html__( 'If we use Postiz Cloud, that information is processed by Postiz according to its privacy policy: https://postiz.com/privacy', 'social-relay-for-postiz' ),
+			esc_html__( 'When we ask for a suggested message, the text of the post is sent to the AI provider we set up in WordPress, under its own terms. It contains no visitor data.', 'social-relay-for-postiz' )
 		);
 
 		wp_add_privacy_policy_content( 'Social Relay for Postiz', wp_kses_post( $content ) );

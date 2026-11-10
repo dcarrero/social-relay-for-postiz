@@ -36,7 +36,13 @@
 
 .socialrelaycvi-message__tools {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	gap: 8px;
 	margin-top: 8px;
+}
+
+.socialrelaycvi-message__ai {
+	margin: 6px 0 0;
+	font-size: 12px;
 }

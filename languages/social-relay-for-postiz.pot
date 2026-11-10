@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-10T16:55:42+00:00\n"
+"POT-Creation-Date: 2026-11-10T16:59:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -119,8 +119,9 @@ msgid "Only published posts can be shared."
 msgstr ""
 
 #: src/Abilities/AbilitiesRegistration.php:360
-#: src/Rest/ConnectionController.php:217
-#: src/Rest/ConnectionController.php:234
+#: src/Rest/ConnectionController.php:239
+#: src/Rest/ConnectionController.php:256
+#: src/Rest/ConnectionController.php:311
 msgid "Post not found."
 msgstr ""
 
@@ -294,6 +295,10 @@ msgstr ""
 msgid "If we use Postiz Cloud, that information is processed by Postiz according to its privacy policy: https://postiz.com/privacy"
 msgstr ""
 
+#: src/Admin/Privacy.php:39
+msgid "When we ask for a suggested message, the text of the post is sent to the AI provider we set up in WordPress, under its own terms. It contains no visitor data."
+msgstr ""
+
 #: src/Admin/SettingsPage.php:45
 #: build/editor-panel.js:13
 msgid "Social Relay"
@@ -320,7 +325,7 @@ msgid "Publish to social networks through your Postiz instance (self-hosted or P
 msgstr ""
 
 #: src/Postiz/ChannelRepository.php:52
-#: src/Rest/ConnectionController.php:265
+#: src/Rest/ConnectionController.php:287
 #: src/Sharing/ShareService.php:208
 msgid "Postiz is not configured yet."
 msgstr ""
@@ -439,8 +444,12 @@ msgstr ""
 msgid "Sign up"
 msgstr ""
 
-#: src/Rest/ConnectionController.php:112
+#: src/Rest/ConnectionController.php:113
 msgid "Only these channel ids (retry). Empty: every channel of the post."
+msgstr ""
+
+#: src/Rest/ConnectionController.php:151
+msgid "Channel id to write for; empty for a text for all networks."
 msgstr ""
 
 #: src/Settings/ConnectionTester.php:39
@@ -463,6 +472,10 @@ msgstr ""
 
 #: src/Settings/ConnectionTester.php:88
 msgid "The Postiz URL is not valid."
+msgstr ""
+
+#: src/Sharing/AiSuggester.php:76
+msgid "No AI provider is set up. Add one in Settings → Connectors."
 msgstr ""
 
 #: src/Sharing/ShareService.php:80
@@ -625,11 +638,23 @@ msgid "Use the profile channels"
 msgstr ""
 
 #: build/editor-panel.js:5
+msgid "Suggest with AI"
+msgstr ""
+
+#: build/editor-panel.js:5
 msgid "Insert tag"
 msgstr ""
 
 #: build/editor-panel.js:5
+msgid "Undo"
+msgstr ""
+
+#: build/editor-panel.js:5
 msgid "Reset"
+msgstr ""
+
+#: build/editor-panel.js:5
+msgid "AI uses the saved post and your provider in Settings → Connectors. Review the text before publishing."
 msgstr ""
 
 #: build/editor-panel.js:5

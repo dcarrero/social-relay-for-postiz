@@ -12,6 +12,7 @@ namespace SocialRelayCvi\Admin;
 use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
 use SocialRelayCvi\Postiz\ProviderRules;
+use SocialRelayCvi\Sharing\AiSuggester;
 
 /**
  * Loads build/editor-panel.js (source in assets/src/editor-panel, built with
@@ -118,6 +119,7 @@ final class EditorPanel implements Module {
 				$channels
 			),
 			'limits'      => $limits,
+			'ai'          => ( new AiSuggester() )->available(),
 		);
 	}
 }
