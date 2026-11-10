@@ -99,7 +99,7 @@ final class ErrorAlerts implements Module {
 				<?php endif; ?>
 			</ul>
 			<p>
-				<a class="button button-primary" href="<?php echo esc_url( admin_url( 'edit.php?' . PostsColumn::FILTER . '=error' ) ); ?>"><?php esc_html_e( 'Posts with errors', 'social-relay-for-postiz' ); ?></a>
+				<a class="button button-primary" href="<?php echo esc_url( self::errors_url( (int) array_key_first( $posts ) ) ); ?>"><?php esc_html_e( 'Posts with errors', 'social-relay-for-postiz' ); ?></a>
 				<a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=social-relay-log&level=error' ) ); ?>"><?php esc_html_e( 'Log', 'social-relay-for-postiz' ); ?></a>
 				<a href="<?php echo esc_url( $hide_url ); ?>" style="margin-left:8px"><?php esc_html_e( 'Hide until new errors', 'social-relay-for-postiz' ); ?></a>
 			</p>
@@ -162,7 +162,7 @@ final class ErrorAlerts implements Module {
 					__( 'These shares to Postiz failed and were not retried with success:', 'social-relay-for-postiz' ),
 					implode( "\n", $lines ),
 					/* translators: %s: URL of the posts list filtered by errors. */
-					sprintf( __( 'Posts with errors: %s', 'social-relay-for-postiz' ), admin_url( 'edit.php?' . PostsColumn::FILTER . '=error' ) ),
+					sprintf( __( 'Posts with errors: %s', 'social-relay-for-postiz' ), self::errors_url( (int) $errors[0]['post_id'] ) ),
 					__( 'You get this email because failure emails are on in Social Relay → Settings → Advanced.', 'social-relay-for-postiz' ),
 				)
 			)
@@ -171,6 +171,21 @@ final class ErrorAlerts implements Module {
 		if ( $sent ) {
 			update_option( self::OPTION_EMAIL_SENT, $now, false );
 		}
+	}
+
+	/**
+	 * Posts list filtered by errors, for the post type of this post (pages are another list).
+	 *
+	 * @param int $post_id A post with errors.
+	 */
+	private static function errors_url( int $post_id ): string {
+		$type = get_post_type( $post_id );
+		$args = array( PostsColumn::FILTER => 'error' );
+		if ( is_string( $type ) && 'post' !== $type ) {
+			$args['post_type'] = $type;
+		}
+
+		return add_query_arg( $args, admin_url( 'edit.php' ) );
 	}
 
 	/**

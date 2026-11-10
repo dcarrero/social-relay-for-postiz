@@ -110,6 +110,8 @@ final class EditorPanel implements Module {
 				'templates'     => array_map( static fn ( array $option ): string => $option['template'], $profile['channel_options'] ),
 				'template'      => $profile['template'],
 				'images'        => $profile['images'],
+				'includeTerms'  => $profile['include_terms'],
+				'excludeTerms'  => $profile['exclude_terms'],
 			),
 			'channels'    => array_map(
 				static fn ( array $channel ): array => array(

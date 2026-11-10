@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T21:16:29+00:00",
+    "translation-revision-date": "2026-11-10T21:27:07+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/log.js",
     "domain": "messages",
@@ -19,11 +19,11 @@
             "Log": [
                 "Registro"
             ],
-            "Error": [
-                "Error"
-            ],
             "(no title)": [
                 "(sin t\u00edtulo)"
+            ],
+            "Error": [
+                "Error"
             ],
             "Post": [
                 "Entrada"
@@ -82,11 +82,17 @@
             "Errors (30 days)": [
                 "Errores (30 d\u00edas)"
             ],
-            "Requests to Postiz in the last hour": [
-                "Peticiones a Postiz en la \u00faltima hora"
+            "Requests to Postiz in the last hour (it allows 90)": [
+                "Peticiones a Postiz en la \u00faltima hora (permite 90)"
             ],
             "Search messages": [
                 "Buscar en los mensajes"
+            ],
+            "Log cleared.": [
+                "Registro vaciado."
+            ],
+            "No entries match the search or filter.": [
+                "Ninguna entrada del registro coincide con la b\u00fasqueda o el filtro."
             ],
             "Nothing logged yet.": [
                 "Todav\u00eda no hay nada en el registro."

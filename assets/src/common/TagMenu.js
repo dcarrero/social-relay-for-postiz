@@ -128,8 +128,8 @@ export function insertAtCursor( ref, value, text, onChange ) {
 export default function TagMenu( { onInsert } ) {
 	return (
 		<DropdownMenu
-			icon={ null }
-			text={ '{ } ' + __( 'Insert tag', 'social-relay-for-postiz' ) }
+			icon="editor-code"
+			text={ __( 'Insert tag', 'social-relay-for-postiz' ) }
 			label={ __( 'Insert tag', 'social-relay-for-postiz' ) }
 			toggleProps={ { variant: 'secondary', size: 'compact' } }
 			popoverProps={ { className: 'socialrelaycvi-tag-menu' } }

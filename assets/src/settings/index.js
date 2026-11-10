@@ -16,6 +16,24 @@ import './style.css';
 function SettingsApp() {
 	const [ settings, setSettings ] = useState( null );
 	const [ error, setError ] = useState( '' );
+	// Profile edits live here so switching tabs does not lose them.
+	const [ draft, setDraft ] = useState( null );
+	const [ dirty, setDirty ] = useState( false );
+	// The tab panel is remounted to switch tabs from inside a tab (e.g. "Next: …").
+	const [ tab, setTab ] = useState( { name: '', key: 0 } );
+
+	// Ask before leaving the page with unsaved profiles.
+	useEffect( () => {
+		if ( ! dirty ) {
+			return;
+		}
+		const warn = ( event ) => {
+			event.preventDefault();
+			event.returnValue = '';
+		};
+		window.addEventListener( 'beforeunload', warn );
+		return () => window.removeEventListener( 'beforeunload', warn );
+	}, [ dirty ] );
 
 	useEffect( () => {
 		apiFetch( { path: `/${ config.namespace }/admin/settings` } )
@@ -42,7 +60,9 @@ function SettingsApp() {
 		},
 		{
 			name: 'profiles',
-			title: __( 'Publishing profiles', 'social-relay-for-postiz' ),
+			title:
+				__( 'Publishing profiles', 'social-relay-for-postiz' ) +
+				( dirty ? ' *' : '' ),
 		},
 		{ name: 'webhook', title: __( 'Webhook', 'social-relay-for-postiz' ) },
 		{
@@ -57,23 +77,40 @@ function SettingsApp() {
 				{ __( 'Social Relay for Postiz', 'social-relay-for-postiz' ) }
 			</h1>
 			<TabPanel
+				key={ tab.key }
 				tabs={ tabs }
 				initialTabName={
-					settings.connection.configured ? 'profiles' : 'connection'
+					tab.name ||
+					( settings.connection.configured
+						? 'profiles'
+						: 'connection' )
 				}
 			>
-				{ ( tab ) => {
-					const props = { settings, setSettings };
-					if ( tab.name === 'connection' ) {
+				{ ( current ) => {
+					const props = {
+						settings,
+						setSettings,
+						goTo: ( name ) =>
+							setTab( ( old ) => ( { name, key: old.key + 1 } ) ),
+					};
+					if ( current.name === 'connection' ) {
 						return <ConnectionTab { ...props } />;
 					}
-					if ( tab.name === 'webhook' ) {
+					if ( current.name === 'webhook' ) {
 						return <WebhookTab { ...props } />;
 					}
-					if ( tab.name === 'advanced' ) {
+					if ( current.name === 'advanced' ) {
 						return <AdvancedTab { ...props } />;
 					}
-					return <ProfilesTab { ...props } />;
+					return (
+						<ProfilesTab
+							{ ...props }
+							profiles={ draft || settings.profiles }
+							setProfiles={ setDraft }
+							dirty={ dirty }
+							setDirty={ setDirty }
+						/>
+					);
 				} }
 			</TabPanel>
 		</div>

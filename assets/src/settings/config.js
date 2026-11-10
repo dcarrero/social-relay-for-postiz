@@ -8,7 +8,7 @@ export const config = window.socialRelayCviAdmin || {};
 export const MODES = [
 	{
 		value: 'now',
-		label: __( 'Publish immediately', 'social-relay-for-postiz' ),
+		label: __( 'Publish right away', 'social-relay-for-postiz' ),
 	},
 	{
 		value: 'schedule',
@@ -16,7 +16,7 @@ export const MODES = [
 	},
 	{
 		value: 'slot',
-		label: __( 'Next free slot in Postiz', 'social-relay-for-postiz' ),
+		label: __( 'Next free time in Postiz', 'social-relay-for-postiz' ),
 	},
 	{
 		value: 'draft',

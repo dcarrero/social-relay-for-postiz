@@ -12,6 +12,7 @@ namespace SocialRelayCvi\Admin;
 use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
 use SocialRelayCvi\PostMeta;
+use SocialRelayCvi\Postiz\ProviderRules;
 use WP_Post;
 
 /**
@@ -80,7 +81,7 @@ final class ClassicMetabox implements Module {
 			<?php foreach ( $channels as $channel ) : ?>
 				<label style="display:block;margin:2px 0">
 					<input type="checkbox" name="socialrelaycvi[channels][]" value="<?php echo esc_attr( $channel['id'] ); ?>" <?php checked( in_array( $channel['id'], $selected, true ) ); ?> <?php disabled( $channel['disabled'] ); ?>>
-					<?php echo esc_html( $channel['name'] ); ?> <span class="description">· <?php echo esc_html( $channel['identifier'] ); ?></span>
+					<?php echo esc_html( $channel['name'] ); ?> <span class="description">· <?php echo esc_html( ProviderRules::network( (string) $channel['identifier'] )['label'] ); ?></span>
 				</label>
 			<?php endforeach; ?>
 		</p>
@@ -89,9 +90,9 @@ final class ClassicMetabox implements Module {
 		$publish_at = (string) get_post_meta( $post->ID, PostMeta::PUBLISH_AT, true );
 		$modes      = array(
 			''         => __( 'As in the profile', 'social-relay-for-postiz' ),
-			'now'      => __( 'On publish', 'social-relay-for-postiz' ),
+			'now'      => __( 'Right away', 'social-relay-for-postiz' ),
 			'schedule' => __( 'Schedule', 'social-relay-for-postiz' ),
-			'slot'     => __( 'Next free slot', 'social-relay-for-postiz' ),
+			'slot'     => __( 'Next free time in Postiz', 'social-relay-for-postiz' ),
 			'draft'    => __( 'Draft in Postiz', 'social-relay-for-postiz' ),
 		);
 		?>
@@ -212,7 +213,7 @@ final class ClassicMetabox implements Module {
 				$seen[ $row['integration_id'] ] = true;
 				?>
 				<li>
-					<?php echo esc_html( (string) ( $names[ $row['integration_id'] ] ?? $row['integration_id'] ) ); ?>:
+					<?php echo esc_html( (string) ( $names[ $row['integration_id'] ] ?? ProviderRules::network( (string) $row['identifier'] )['label'] ) ); ?>:
 					<strong><?php echo esc_html( StatusLabels::label( (string) $row['status'] ) ); ?></strong>
 					<?php if ( ! empty( $row['release_url'] ) ) : ?>
 						· <a href="<?php echo esc_url( (string) $row['release_url'] ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'View post', 'social-relay-for-postiz' ); ?></a>

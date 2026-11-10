@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T21:16:29+00:00",
+    "translation-revision-date": "2026-11-10T21:27:07+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/editor-panel.js",
     "domain": "messages",
@@ -10,11 +10,14 @@
                 "lang": "es_ES",
                 "plural-forms": "nplurals=2; plural=(n != 1);"
             },
-            "Share when publishing": [
-                "Compartir al publicar"
-            ],
             "Channels": [
                 "Canales"
+            ],
+            "Right away": [
+                "Al momento"
+            ],
+            "Next free time in Postiz": [
+                "Siguiente hueco libre en Postiz"
             ],
             "Draft in Postiz": [
                 "Borrador en Postiz"
@@ -27,9 +30,6 @@
             ],
             "Images": [
                 "Im\u00e1genes"
-            ],
-            "Text for all networks": [
-                "Texto para todas las redes"
             ],
             "Share again on the next update": [
                 "Volver a compartir en la pr\u00f3xima actualizaci\u00f3n"
@@ -70,18 +70,15 @@
             "Scheduled %d minutes after publishing": [
                 "Programada %d minutos despu\u00e9s de publicar"
             ],
-            "Next free slot in Postiz": [
-                "Siguiente hueco libre en Postiz"
+            "This post will not be shared: its categories or tags do not match the profile conditions.": [
+                "Esta entrada no se compartir\u00e1: sus categor\u00edas o etiquetas no cumplen las condiciones del perfil."
             ],
-            "Immediately": [
-                "Al momento"
+            "This post will not be shared.": [
+                "Esta entrada no se compartir\u00e1."
             ],
             "Will be sent to Postiz for %d channel:": [
                 "Se enviar\u00e1 a Postiz para %d canal:",
                 "Se enviar\u00e1 a Postiz para %d canales:"
-            ],
-            "This post will not be shared.": [
-                "Esta entrada no se compartir\u00e1."
             ],
             "No channels in Postiz yet.": [
                 "Todav\u00eda no hay canales en Postiz."
@@ -149,6 +146,9 @@
             ],
             "%1$s gets the first %2$d.": [
                 "%1$s recibe las %2$d primeras."
+            ],
+            "customized": [
+                "personalizada"
             ],
             "Insert tag": [
                 "Insertar etiqueta"
@@ -219,20 +219,29 @@
             "Undo": [
                 "Deshacer"
             ],
-            "Reset": [
-                "Restablecer"
+            "Use profile text": [
+                "Usar el texto del perfil"
             ],
             "AI uses the saved post and your provider in Settings \u2192 Connectors. Review the text before publishing.": [
                 "La IA usa la entrada guardada y tu proveedor de Ajustes \u2192 Conectores. Revisa el texto antes de publicar."
             ],
-            "Leave it empty to use the profile template (in grey). A dot on a network tab means it has its own text.": [
-                "D\u00e9jalo vac\u00edo para usar la plantilla del perfil (en gris). Un punto en la pesta\u00f1a de una red indica que tiene su propio texto."
+            "own text": [
+                "texto propio"
             ],
-            "Empty = text for all networks. Limit: %d characters; check the count in Preview.": [
-                "Vac\u00edo = texto para todas las redes. L\u00edmite: %d caracteres; comprueba la cuenta en la vista previa."
+            "Text for all channels": [
+                "Texto para todos los canales"
             ],
-            "Empty = text for all networks.": [
-                "Vac\u00edo = texto para todas las redes."
+            "Leave it empty to use the profile template (in grey). A dot on a channel tab means it has its own text.": [
+                "D\u00e9jalo vac\u00edo para usar la plantilla del perfil (en gris). Un punto en la pesta\u00f1a de un canal indica que tiene su propio texto."
+            ],
+            "Empty: uses the text for all channels. Limit: %d characters; check the count in Preview.": [
+                "Vac\u00edo: usa el texto para todos los canales. L\u00edmite: %d caracteres; revisa la cuenta en Vista previa."
+            ],
+            "Empty: uses the text for all channels.": [
+                "Vac\u00edo: usa el texto para todos los canales."
+            ],
+            "characters": [
+                "caracteres"
             ],
             "Thread of %d part.": [
                 "Hilo de %d parte.",
@@ -248,11 +257,17 @@
             "This post does not match the profile conditions and will not be shared.": [
                 "Esta entrada no cumple las condiciones del perfil y no se compartir\u00e1."
             ],
+            "You have unsaved changes: the preview shows the last saved version.": [
+                "Tienes cambios sin guardar: la vista previa muestra la \u00faltima versi\u00f3n guardada."
+            ],
             "Based on the last saved version.": [
                 "Seg\u00fan la \u00faltima versi\u00f3n guardada."
             ],
             "Refresh": [
                 "Actualizar"
+            ],
+            "Save a draft to see the preview.": [
+                "Guarda un borrador para ver la vista previa."
             ],
             "Cancel": [
                 "Cancelar"
@@ -280,6 +295,12 @@
                 "%d cancelado",
                 "%d cancelados"
             ],
+            "Could not load the status:": [
+                "No se pudo cargar el estado:"
+            ],
+            "Retry": [
+                "Reintentar"
+            ],
             "Nothing sent to Postiz yet.": [
                 "Todav\u00eda no se ha enviado nada a Postiz."
             ],
@@ -288,9 +309,6 @@
             ],
             "Pending": [
                 "Pendiente"
-            ],
-            "Retry": [
-                "Reintentar"
             ],
             "Share again now\u2026": [
                 "Compartir de nuevo ahora\u2026"
@@ -320,9 +338,9 @@
             "Keep them": [
                 "Mantenerlos"
             ],
-            "Cancelled %d pending group in Postiz.": [
-                "Cancelado %d grupo pendiente en Postiz.",
-                "Cancelados %d grupos pendientes en Postiz."
+            "Cancelled %d scheduled post in Postiz.": [
+                "Cancelada %d publicaci\u00f3n programada en Postiz.",
+                "Canceladas %d publicaciones programadas en Postiz."
             ],
             "Nothing pending in Postiz for this post.": [
                 "No hay nada pendiente en Postiz para esta entrada."
@@ -333,8 +351,8 @@
             "Postiz publishes right away when the post is published.": [
                 "Postiz publica en cuanto se publica la entrada."
             ],
-            "Postiz puts each channel in its next free slot (find-slot).": [
-                "Postiz coloca cada canal en su siguiente hueco libre (find-slot)."
+            "Postiz picks the next free time in the posting schedule of each channel.": [
+                "Postiz elige el siguiente hueco libre en el calendario de publicaci\u00f3n de cada canal."
             ],
             "Created as a draft in Postiz, to review and publish there.": [
                 "Se crea como borrador en Postiz, para revisarlo y publicarlo all\u00ed."
@@ -351,8 +369,8 @@
             "Now": [
                 "Ahora"
             ],
-            "Slot": [
-                "Hueco"
+            "Next free": [
+                "Hueco libre"
             ],
             "Draft": [
                 "Borrador"
@@ -384,8 +402,8 @@
             "Profile \u201c%1$s\u201d \u00b7 %2$d of %3$d channels \u00b7 %4$s": [
                 "Perfil \u00ab%1$s\u00bb \u00b7 %2$d de %3$d canales \u00b7 %4$s"
             ],
-            "Shared when published": [
-                "Se comparti\u00f3 al publicar"
+            "Share this post": [
+                "Compartir esta entrada"
             ],
             "Message": [
                 "Mensaje"

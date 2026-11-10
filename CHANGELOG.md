@@ -31,6 +31,14 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - Release workflow: on a `v*` tag, builds the zip, attaches it to a GitHub release and deploys to wordpress.org SVN once the `SVN_USERNAME`/`SVN_PASSWORD` secrets exist.
 
 ### Changed
+- Usability review:
+  - Profile edits survive switching settings tabs (the tab shows "*"), and the Connection tab offers "Next: set up a publishing profile". The profiles tab explains itself in one line, and a profile turned on with no channel says it will send nothing.
+  - The pre-publish summary says when the post's categories or tags fail the profile conditions.
+  - The editor Status panel stays visible after turning sharing off, shows load errors with Retry, and the toggle reads "Share this post". The preview asks to save a draft first and says when there are unsaved changes.
+  - Errors are no longer swallowed in "Clear log" and "Create a new URL" (which now has a clear confirm button), and the Advanced toggles confirm "Saved.".
+  - Channels show their network name instead of the raw Postiz identifier. Timing has the same names everywhere ("Right away", "Next free time in Postiz"…). "Channel" is used for accounts and "network" for platforms. The "find-slot" and "pending group" jargon is gone.
+  - Accessibility: the posts column adds a sign to each status dot (✓ ! … ✎ ×), says "Sharing off", and uses a darker grey for cancelled; tab dots are announced to screen readers; placeholder contrast is higher; the character count is announced; the "Insert tag" button uses an icon.
+  - Smaller fixes: dashboard links never have an empty title, the failure notice links to the right post type, the log tells an empty filter from an empty log, and the API key help is shorter.
 - The log names how a share was sent ("to publish now", "scheduled", "as a draft") instead of the raw Postiz type.
 - Conditions: each column explains its rule, the site categories have a "Categories" label, sit in a scrolling box with a search when there are more than eight, and show how many are selected.
 - Design pass 2: the Connection tab shows the status ("Connected · 12 channels", or why Postiz cannot be reached) and fields at a readable width; the save bar of the profiles only sticks to the bottom while there are unsaved changes, says when they were saved, and the page asks before leaving with unsaved changes; the "Test this profile" search has a hint; the webhook card has a title. In the editor status panel, the summary uses proper plurals ("4 errors"), removed channels show their network with "Channel not in Postiz", and a disabled "Share again" says why. On small screens the log shows each entry as a block and the settings tabs wrap.

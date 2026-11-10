@@ -31,7 +31,18 @@ final class PostsColumn implements Module {
 		'published' => '#007a1f',
 		'error'     => '#cc1818',
 		'draft'     => '#646970',
-		'cancelled' => '#a7aaad',
+		'cancelled' => '#646970',
+	);
+
+	/**
+	 * A sign per status inside the dot, so it does not rely on colour alone.
+	 */
+	private const GLYPHS = array(
+		'queued'    => '…',
+		'published' => '✓',
+		'error'     => '!',
+		'draft'     => '✎',
+		'cancelled' => '×',
 	);
 
 	/**
@@ -115,7 +126,7 @@ final class PostsColumn implements Module {
 			$off = ! get_post_meta( $post_id, PostMeta::ENABLED, true );
 			printf(
 				'<span class="socialrelaycvi-col__none">%s</span>',
-				esc_html( $off ? __( 'Off', 'social-relay-for-postiz' ) : '—' )
+				esc_html( $off ? __( 'Sharing off', 'social-relay-for-postiz' ) : '—' )
 			);
 			return;
 		}
@@ -138,11 +149,12 @@ final class PostsColumn implements Module {
 				: sprintf( '<span aria-hidden="true">%s</span>', esc_html( mb_strtoupper( mb_substr( $net['label'], 0, 1 ) ) ) );
 
 			printf(
-				'<span class="socialrelaycvi-col__badge" style="background:%1$s" title="%2$s">%3$s<i style="background:%4$s"></i><span class="screen-reader-text">%2$s</span></span>',
+				'<span class="socialrelaycvi-col__badge" style="background:%1$s" title="%2$s">%3$s<i style="background:%4$s" aria-hidden="true">%5$s</i><span class="screen-reader-text">%2$s</span></span>',
 				esc_attr( $net['color'] ),
 				esc_attr( $title ),
 				$face, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
-				esc_attr( self::COLORS[ $status ] ?? '#646970' )
+				esc_attr( self::COLORS[ $status ] ?? '#646970' ),
+				esc_html( self::GLYPHS[ $status ] ?? '' )
 			);
 		}
 		echo '</span>';
@@ -205,7 +217,7 @@ final class PostsColumn implements Module {
 			. '.socialrelaycvi-col{display:flex;flex-wrap:wrap;gap:4px}'
 			. '.socialrelaycvi-col__badge{position:relative;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;color:#fff;font-size:11px;font-weight:600;line-height:1}'
 			. '.socialrelaycvi-col__badge img{width:22px;height:22px;border-radius:50%;object-fit:cover;background:#fff}'
-			. '.socialrelaycvi-col__badge i{position:absolute;right:-2px;bottom:-2px;width:9px;height:9px;border:2px solid #fff;border-radius:50%}'
+			. '.socialrelaycvi-col__badge i{position:absolute;right:-4px;bottom:-4px;display:flex;align-items:center;justify-content:center;width:12px;height:12px;border:2px solid #fff;border-radius:50%;color:#fff;font-size:9px;font-style:normal;font-weight:700;line-height:1}'
 			. '.socialrelaycvi-col__none{color:#646970}'
 		);
 	}

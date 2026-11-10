@@ -6,6 +6,8 @@
 import { dateI18n, getSettings } from '@wordpress/date';
 import { __, sprintf } from '@wordpress/i18n';
 
+import { network } from '../common/networks';
+
 export const config = window.socialRelayCvi || null;
 
 export const ICON = 'share';
@@ -94,7 +96,24 @@ export const channelsById = Object.fromEntries(
  * @return {string} Label.
  */
 export function channelLabel( channel ) {
-	return channel ? `${ channel.name } · ${ channel.identifier }` : '';
+	return channel
+		? `${ channel.name } · ${ network( channel.identifier ).label }`
+		: '';
+}
+
+/**
+ * Whether the post's categories and tags pass the profile conditions (as on the server).
+ *
+ * @param {number[]} terms Category and tag ids of the post.
+ * @return {boolean} Passes.
+ */
+export function passesConditions( terms ) {
+	const include = config.profile.includeTerms || [];
+	const exclude = config.profile.excludeTerms || [];
+	if ( terms.some( ( id ) => exclude.includes( id ) ) ) {
+		return false;
+	}
+	return ! include.length || terms.some( ( id ) => include.includes( id ) );
 }
 
 export const STATUS_COLORS = {
@@ -123,11 +142,11 @@ export function modeLabel( mode ) {
 				config.profile.delayMinutes
 			);
 		case 'slot':
-			return __( 'Next free slot in Postiz', 'social-relay-for-postiz' );
+			return __( 'Next free time in Postiz', 'social-relay-for-postiz' );
 		case 'draft':
 			return __( 'Draft in Postiz', 'social-relay-for-postiz' );
 		default:
-			return __( 'Immediately', 'social-relay-for-postiz' );
+			return __( 'Right away', 'social-relay-for-postiz' );
 	}
 }
 

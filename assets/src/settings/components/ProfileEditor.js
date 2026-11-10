@@ -81,6 +81,14 @@ export default function ProfileEditor( {
 						onChange={ ( enabled ) => update( { enabled } ) }
 						__nextHasNoMarginBottom
 					/>
+					{ profile.enabled && ! selected.length && (
+						<Notice status="warning" isDismissible={ false }>
+							{ __(
+								'Sharing is on but no channel is ticked, so nothing will be sent. Pick at least one channel below.',
+								'social-relay-for-postiz'
+							) }
+						</Notice>
+					) }
 				</CardBody>
 			</Card>
 
@@ -159,7 +167,7 @@ export default function ProfileEditor( {
 						<CardBody>
 							<p className="description">
 								{ __(
-									'Optional. A network without its own template uses the common one.',
+									'Optional. A channel without its own template uses the common one.',
 									'social-relay-for-postiz'
 								) }
 							</p>
@@ -237,7 +245,7 @@ export default function ProfileEditor( {
 					/>
 					<ToggleControl
 						label={ __(
-							'Allow sharing again on update (when requested from the editor)',
+							'Let editors share a post again after updating it',
 							'social-relay-for-postiz'
 						) }
 						checked={ profile.share_on_update }

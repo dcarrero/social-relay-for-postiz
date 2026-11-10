@@ -4,6 +4,7 @@ import {
 	ExternalLink,
 	Flex,
 	Modal,
+	Notice,
 	Spinner,
 } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
@@ -160,6 +161,7 @@ function Confirm( {
  */
 export default function StatusSection( { postId, saves, meta } ) {
 	const [ rows, setRows ] = useState( null );
+	const [ loadError, setLoadError ] = useState( '' );
 	const [ asking, setAsking ] = useState( null );
 	const [ busy, setBusy ] = useState( false );
 	const [ watchUntil, setWatchUntil ] = useState( 0 );
@@ -175,8 +177,14 @@ export default function StatusSection( { postId, saves, meta } ) {
 			return;
 		}
 		apiFetch( { path: `/${ config.namespace }/posts/${ postId }/shares` } )
-			.then( setRows )
-			.catch( () => setRows( [] ) );
+			.then( ( response ) => {
+				setRows( response );
+				setLoadError( '' );
+			} )
+			.catch( ( err ) => {
+				setRows( ( current ) => current || [] );
+				setLoadError( err.message || String( err ) );
+			} );
 	}, [ postId ] );
 
 	useEffect( load, [ load, saves ] );
@@ -239,8 +247,8 @@ export default function StatusSection( { postId, saves, meta } ) {
 					? sprintf(
 							/* translators: %d: number of groups. */
 							_n(
-								'Cancelled %d pending group in Postiz.',
-								'Cancelled %d pending groups in Postiz.',
+								'Cancelled %d scheduled post in Postiz.',
+								'Cancelled %d scheduled posts in Postiz.',
 								response.cancelled,
 								'social-relay-for-postiz'
 							),
@@ -275,7 +283,19 @@ export default function StatusSection( { postId, saves, meta } ) {
 
 	return (
 		<>
-			{ ! latest.length && (
+			{ loadError && (
+				<Notice status="error" isDismissible={ false }>
+					{ __(
+						'Could not load the status:',
+						'social-relay-for-postiz'
+					) }{ ' ' }
+					{ loadError }{ ' ' }
+					<Button variant="link" onClick={ load }>
+						{ __( 'Retry', 'social-relay-for-postiz' ) }
+					</Button>
+				</Notice>
+			) }
+			{ ! latest.length && ! loadError && (
 				<p className="description">
 					{ __(
 						'Nothing sent to Postiz yet.',
@@ -452,7 +472,7 @@ export default function StatusSection( { postId, saves, meta } ) {
 					onClose={ () => setAsking( null ) }
 				>
 					{ sprintf(
-						/* translators: 1: number of channels, 2: timing, e.g. "Next free slot in Postiz". */
+						/* translators: 1: number of channels, 2: timing, e.g. "Next free time in Postiz". */
 						_n(
 							'The saved post is sent to Postiz again for %1$d channel. Timing: %2$s.',
 							'The saved post is sent to Postiz again for %1$d channels. Timing: %2$s.',

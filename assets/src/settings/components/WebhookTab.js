@@ -240,11 +240,15 @@ export default function WebhookTab( { settings, setSettings } ) {
 		apiFetch( {
 			path: `/${ config.namespace }/admin/webhook/regenerate`,
 			method: 'POST',
-		} ).then( ( response ) => {
-			setSettings( { ...settings, webhook: response } );
-			setRegenerated( true );
-			setCheck( null );
-		} );
+		} )
+			.then( ( response ) => {
+				setSettings( { ...settings, webhook: response } );
+				setRegenerated( true );
+				setCheck( null );
+			} )
+			.catch( ( err ) =>
+				setCheck( { status: 'error', text: err.message } )
+			);
 	};
 
 	const runCheck = () => {
@@ -402,9 +406,13 @@ export default function WebhookTab( { settings, setSettings } ) {
 						isOpen={ confirming }
 						onConfirm={ regenerate }
 						onCancel={ () => setConfirming( false ) }
+						confirmButtonText={ __(
+							'Create new URL',
+							'social-relay-for-postiz'
+						) }
 					>
 						{ __(
-							'The current URL will stop working. Continue?',
+							'The current URL stops working at once, and you will have to paste the new one in Postiz. Continue?',
 							'social-relay-for-postiz'
 						) }
 					</ConfirmDialog>

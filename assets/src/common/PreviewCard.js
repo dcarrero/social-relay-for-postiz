@@ -55,6 +55,9 @@ export default function PreviewCard( { item, linkTitle } ) {
 					}` }
 				>
 					{ item.limit ? `${ longest } / ${ item.limit }` : longest }
+					<span className="screen-reader-text">
+						{ ' ' + __( 'characters', 'social-relay-for-postiz' ) }
+					</span>
 				</span>
 			</div>
 

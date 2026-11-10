@@ -21,8 +21,11 @@ export default function PreviewSection( { postId, saves } ) {
 	const [ data, setData ] = useState( null );
 	const [ error, setError ] = useState( null );
 	const [ loading, setLoading ] = useState( false );
-	const title = useSelect(
-		( select ) => select( editorStore ).getEditedPostAttribute( 'title' ),
+	const { title, dirty } = useSelect(
+		( select ) => ( {
+			title: select( editorStore ).getEditedPostAttribute( 'title' ),
+			dirty: select( editorStore ).isEditedPostDirty(),
+		} ),
 		[]
 	);
 
@@ -51,7 +54,16 @@ export default function PreviewSection( { postId, saves } ) {
 	}
 
 	if ( ! data ) {
-		return loading ? <Spinner /> : null;
+		return loading ? (
+			<Spinner />
+		) : (
+			<p className="description">
+				{ __(
+					'Save a draft to see the preview.',
+					'social-relay-for-postiz'
+				) }
+			</p>
+		);
 	}
 
 	return (
@@ -81,10 +93,15 @@ export default function PreviewSection( { postId, saves } ) {
 				) }
 			/>
 			<p className="description">
-				{ __(
-					'Based on the last saved version.',
-					'social-relay-for-postiz'
-				) }{ ' ' }
+				{ dirty
+					? __(
+							'You have unsaved changes: the preview shows the last saved version.',
+							'social-relay-for-postiz'
+					  )
+					: __(
+							'Based on the last saved version.',
+							'social-relay-for-postiz'
+					  ) }{ ' ' }
 				<Button variant="link" onClick={ load } disabled={ loading }>
 					{ __( 'Refresh', 'social-relay-for-postiz' ) }
 				</Button>

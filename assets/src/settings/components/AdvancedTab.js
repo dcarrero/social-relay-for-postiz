@@ -24,6 +24,7 @@ export default function AdvancedTab( { settings, setSettings } ) {
 	const { advanced } = settings;
 	const [ busy, setBusy ] = useState( false );
 	const [ error, setError ] = useState( '' );
+	const [ saved, setSaved ] = useState( false );
 
 	const save = ( data ) => {
 		setBusy( true );
@@ -32,7 +33,11 @@ export default function AdvancedTab( { settings, setSettings } ) {
 			method: 'POST',
 			data,
 		} )
-			.then( setSettings )
+			.then( ( response ) => {
+				setSettings( response );
+				setSaved( true );
+				setTimeout( () => setSaved( false ), 3000 );
+			} )
 			.catch( ( err ) => setError( err.message || String( err ) ) )
 			.finally( () => setBusy( false ) );
 	};
@@ -50,6 +55,14 @@ export default function AdvancedTab( { settings, setSettings } ) {
 					</h3>
 				</CardHeader>
 				<CardBody>
+					{ saved && (
+						<Notice
+							status="success"
+							onRemove={ () => setSaved( false ) }
+						>
+							{ __( 'Saved.', 'social-relay-for-postiz' ) }
+						</Notice>
+					) }
 					{ error && (
 						<Notice
 							status="error"

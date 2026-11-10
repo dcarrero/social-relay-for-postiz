@@ -1,4 +1,5 @@
-import { PluginPrePublishPanel } from '@wordpress/editor';
+import { useSelect } from '@wordpress/data';
+import { PluginPrePublishPanel, store as editorStore } from '@wordpress/editor';
 import { __, _n, sprintf } from '@wordpress/i18n';
 
 import {
@@ -7,6 +8,7 @@ import {
 	config,
 	ICON,
 	META,
+	passesConditions,
 	timingLabel,
 } from '../config';
 import { effectiveChannels, usePostMeta } from '../hooks';
@@ -18,6 +20,13 @@ import { effectiveChannels, usePostMeta } from '../hooks';
  */
 export default function PrePublish() {
 	const [ meta ] = usePostMeta();
+	const terms = useSelect( ( select ) => {
+		const editor = select( editorStore );
+		return [
+			...( editor.getEditedPostAttribute( 'categories' ) || [] ),
+			...( editor.getEditedPostAttribute( 'tags' ) || [] ),
+		];
+	}, [] );
 
 	if ( ! config.configured || ! config.profile.enabled ) {
 		return null;
@@ -34,14 +43,23 @@ export default function PrePublish() {
 			initialOpen
 			icon={ ICON }
 		>
-			{ ! enabled || ! names.length ? (
+			{ enabled && names.length > 0 && ! passesConditions( terms ) && (
+				<p>
+					{ __(
+						'This post will not be shared: its categories or tags do not match the profile conditions.',
+						'social-relay-for-postiz'
+					) }
+				</p>
+			) }
+			{ ( ! enabled || ! names.length ) && (
 				<p>
 					{ __(
 						'This post will not be shared.',
 						'social-relay-for-postiz'
 					) }
 				</p>
-			) : (
+			) }
+			{ enabled && names.length > 0 && passesConditions( terms ) && (
 				<>
 					<p>
 						{ sprintf(

@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T21:16:29+00:00",
+    "translation-revision-date": "2026-11-10T21:27:07+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/settings.js",
     "domain": "messages",
@@ -15,6 +15,9 @@
             ],
             "Channels": [
                 "Canales"
+            ],
+            "Next free time in Postiz": [
+                "Siguiente hueco libre en Postiz"
             ],
             "When": [
                 "Cu\u00e1ndo"
@@ -34,9 +37,6 @@
             "This file is not an export of Social Relay profiles.": [
                 "Este archivo no es una exportaci\u00f3n de perfiles de Social Relay."
             ],
-            "Next free slot in Postiz": [
-                "Siguiente hueco libre en Postiz"
-            ],
             "Remove them": [
                 "Quitarlos"
             ],
@@ -45,6 +45,9 @@
             ],
             "Featured image": [
                 "Imagen destacada"
+            ],
+            "customized": [
+                "personalizada"
             ],
             "Insert tag": [
                 "Insertar etiqueta"
@@ -109,6 +112,9 @@
             "New part of the thread": [
                 "Nueva parte del hilo"
             ],
+            "characters": [
+                "caracteres"
+            ],
             "Thread of %d part.": [
                 "Hilo de %d parte.",
                 "Hilo de %d partes."
@@ -132,7 +138,7 @@
             "Webhook": [
                 "Webhook"
             ],
-            "Publish immediately": [
+            "Publish right away": [
                 "Publicar al momento"
             ],
             "Schedule with a delay": [
@@ -180,6 +186,9 @@
             ],
             "Notifications": [
                 "Avisos"
+            ],
+            "Saved.": [
+                "Guardado."
             ],
             "Email me when a share fails": [
                 "Avisarme por correo cuando falle un env\u00edo"
@@ -269,8 +278,11 @@
             "Create a new URL": [
                 "Crear una URL nueva"
             ],
-            "The current URL will stop working. Continue?": [
-                "La URL actual dejar\u00e1 de funcionar. \u00bfContinuar?"
+            "Create new URL": [
+                "Crear URL nueva"
+            ],
+            "The current URL stops working at once, and you will have to paste the new one in Postiz. Continue?": [
+                "La URL actual deja de funcionar al momento y tendr\u00e1s que pegar la nueva en Postiz. \u00bfContinuar?"
             ],
             "Last calls": [
                 "\u00daltimos avisos"
@@ -322,14 +334,20 @@
             "Paste your API key": [
                 "Pega tu clave de API"
             ],
-            "Postiz \u2192 Settings \u2192 Developers \u2192 Public API. Leave empty to keep the current key. For better security define SOCIALRELAYCVI_POSTIZ_API_KEY in wp-config.php or the POSTIZ_API_KEY environment variable.": [
-                "Postiz \u2192 Settings \u2192 Developers \u2192 Public API. D\u00e9jalo vac\u00edo para mantener la clave actual. Para m\u00e1s seguridad, define SOCIALRELAYCVI_POSTIZ_API_KEY en wp-config.php o la variable de entorno POSTIZ_API_KEY."
+            "In Postiz: Settings \u2192 Developers \u2192 Public API. Leave it empty to keep the current key.": [
+                "En Postiz: Settings \u2192 Developers \u2192 Public API. D\u00e9jalo vac\u00edo para mantener la clave actual."
             ],
             "Save and test connection": [
                 "Guardar y probar la conexi\u00f3n"
             ],
+            "Next: set up a publishing profile": [
+                "Siguiente: configura un perfil de publicaci\u00f3n"
+            ],
             "Postiz public API documentation": [
                 "Documentaci\u00f3n de la API p\u00fablica de Postiz"
+            ],
+            "Developers can keep the key out of the database with SOCIALRELAYCVI_POSTIZ_API_KEY in wp-config.php or the POSTIZ_API_KEY environment variable.": [
+                "Para no guardar la clave en la base de datos, se puede definir SOCIALRELAYCVI_POSTIZ_API_KEY en wp-config.php o la variable de entorno POSTIZ_API_KEY."
             ],
             "Categories": [
                 "Categor\u00edas"
@@ -362,14 +380,11 @@
             "Tags": [
                 "Etiquetas"
             ],
-            "customized": [
-                "personalizada"
+            "Template for this channel (limit: %d characters)": [
+                "Plantilla para este canal (l\u00edmite: %d caracteres)"
             ],
-            "Template for this network (limit: %d characters)": [
-                "Plantilla para esta red (l\u00edmite: %d caracteres)"
-            ],
-            "Template for this network": [
-                "Plantilla para esta red"
+            "Template for this channel": [
+                "Plantilla para este canal"
             ],
             "Empty = common template": [
                 "Vac\u00edo = plantilla com\u00fan"
@@ -379,6 +394,9 @@
             ],
             "Share %s when they are published": [
                 "Compartir %s cuando se publiquen"
+            ],
+            "Sharing is on but no channel is ticked, so nothing will be sent. Pick at least one channel below.": [
+                "Compartir est\u00e1 activado pero no hay ning\u00fan canal marcado, as\u00ed que no se enviar\u00e1 nada. Marca al menos un canal abajo."
             ],
             "No channels in Postiz yet. Add them in Postiz and reload this page.": [
                 "Todav\u00eda no hay canales en Postiz. A\u00f1\u00e1delos en Postiz y recarga esta p\u00e1gina."
@@ -393,8 +411,8 @@
             "Use \u201cInsert tag\u201d for the post data. Filters such as |limit:100, |words:30, |upper, |hashtag or |default:text go inside a tag. A line with --- starts a new thread part.": [
                 "Usa \u00abInsertar etiqueta\u00bb para los datos de la entrada. Los filtros como |limit:100, |words:30, |upper, |hashtag o |default:texto van dentro de una etiqueta. Una l\u00ednea con --- empieza una nueva parte del hilo."
             ],
-            "Optional. A network without its own template uses the common one.": [
-                "Opcional. Las redes sin plantilla propia usan la com\u00fan."
+            "Optional. A channel without its own template uses the common one.": [
+                "Opcional. Un canal sin plantilla propia usa la com\u00fan."
             ],
             "Delay in minutes": [
                 "Retraso en minutos"
@@ -402,8 +420,8 @@
             "Up to 10 images; each network gets as many as it accepts (X 4, LinkedIn 9, Instagram 10, Pinterest 1). The editor can choose others for each post.": [
                 "Hasta 10 im\u00e1genes; cada red recibe las que admite (X 4, LinkedIn 9, Instagram 10, Pinterest 1). En el editor se pueden elegir otras para cada entrada."
             ],
-            "Allow sharing again on update (when requested from the editor)": [
-                "Permitir volver a compartir al actualizar (cuando se pida desde el editor)"
+            "Let editors share a post again after updating it": [
+                "Permitir volver a compartir una entrada tras actualizarla"
             ],
             "Conditions": [
                 "Condiciones"
@@ -440,6 +458,12 @@
             ],
             "Connect Postiz first (Connection tab).": [
                 "Primero conecta Postiz (pesta\u00f1a Conexi\u00f3n)."
+            ],
+            "sharing on": [
+                "compartir activado"
+            ],
+            "One profile per type of content: turn sharing on, pick the channels, adjust the message and save. Posts are then shared when you publish them.": [
+                "Un perfil por tipo de contenido: activa compartir, elige los canales, ajusta el mensaje y guarda. Las entradas se compartir\u00e1n al publicarlas."
             ],
             "Save profiles": [
                 "Guardar perfiles"

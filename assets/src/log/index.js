@@ -116,6 +116,7 @@ function LogApp() {
 	const [ data, setData ] = useState( { items: [], total: 0, pages: 0 } );
 	const [ loading, setLoading ] = useState( true );
 	const [ error, setError ] = useState( '' );
+	const [ cleared, setCleared ] = useState( false );
 	const [ confirming, setConfirming ] = useState( false );
 	const [ stats, setStats ] = useState( null );
 
@@ -162,7 +163,12 @@ function LogApp() {
 		apiFetch( {
 			path: `/${ config.namespace }/admin/log`,
 			method: 'DELETE',
-		} ).then( () => ( page === 1 ? load() : setPage( 1 ) ) );
+		} )
+			.then( () => {
+				setCleared( true );
+				return page === 1 ? load() : setPage( 1 );
+			} )
+			.catch( ( err ) => setError( err.message || String( err ) ) );
 	};
 
 	const columns = [
@@ -217,7 +223,7 @@ function LogApp() {
 						[
 							`${ stats.lastHour } / ${ stats.limit || 90 }`,
 							__(
-								'Requests to Postiz in the last hour',
+								'Requests to Postiz in the last hour (it allows 90)',
 								'social-relay-for-postiz'
 							),
 							'',
@@ -259,6 +265,11 @@ function LogApp() {
 				{ loading && <Spinner /> }
 			</div>
 
+			{ cleared && (
+				<Notice status="success" onRemove={ () => setCleared( false ) }>
+					{ __( 'Log cleared.', 'social-relay-for-postiz' ) }
+				</Notice>
+			) }
 			{ error && (
 				<Notice status="error" isDismissible={ false }>
 					{ error }
@@ -279,10 +290,15 @@ function LogApp() {
 					{ ! loading && ! data.items.length && (
 						<tr>
 							<td colSpan={ columns.length }>
-								{ __(
-									'Nothing logged yet.',
-									'social-relay-for-postiz'
-								) }
+								{ query || level
+									? __(
+											'No entries match the search or filter.',
+											'social-relay-for-postiz'
+									  )
+									: __(
+											'Nothing logged yet.',
+											'social-relay-for-postiz'
+									  ) }
 							</td>
 						</tr>
 					) }

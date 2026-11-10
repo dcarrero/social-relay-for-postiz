@@ -77,7 +77,7 @@ final class DashboardWidget implements Module {
 					<li style="color:#cc1818">
 						<?php echo esc_html( $name( $row ) ); ?>:
 						<?php echo esc_html( wp_trim_words( (string) $row['error'], 18 ) ); ?>
-						— <a href="<?php echo esc_url( (string) get_edit_post_link( (int) $row['post_id'] ) ); ?>"><?php echo esc_html( get_the_title( (int) $row['post_id'] ) ); ?></a>
+						— <a href="<?php echo esc_url( (string) get_edit_post_link( (int) $row['post_id'] ) ); ?>"><?php echo esc_html( self::title( (int) $row['post_id'] ) ); ?></a>
 					</li>
 				<?php endforeach; ?>
 			</ul>
@@ -92,7 +92,7 @@ final class DashboardWidget implements Module {
 					<li>
 						<?php echo esc_html( get_date_from_gmt( (string) $row['publish_at'], get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) ); ?>
 						· <?php echo esc_html( $name( $row ) ); ?>
-						· <a href="<?php echo esc_url( (string) get_edit_post_link( (int) $row['post_id'] ) ); ?>"><?php echo esc_html( get_the_title( (int) $row['post_id'] ) ); ?></a>
+						· <a href="<?php echo esc_url( (string) get_edit_post_link( (int) $row['post_id'] ) ); ?>"><?php echo esc_html( self::title( (int) $row['post_id'] ) ); ?></a>
 					</li>
 				<?php endforeach; ?>
 			</ul>
@@ -106,5 +106,16 @@ final class DashboardWidget implements Module {
 			<?php endif; ?>
 		</p>
 		<?php
+	}
+
+	/**
+	 * Post title, or "(no title)" so the link is never empty.
+	 *
+	 * @param int $post_id Post id.
+	 */
+	private static function title( int $post_id ): string {
+		$title = get_the_title( $post_id );
+
+		return '' !== $title ? $title : __( '(no title)', 'social-relay-for-postiz' );
 	}
 }

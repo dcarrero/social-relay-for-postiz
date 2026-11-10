@@ -21,7 +21,7 @@ const HELP = {
 		),
 	slot: () =>
 		__(
-			'Postiz puts each channel in its next free slot (find-slot).',
+			'Postiz picks the next free time in the posting schedule of each channel.',
 			'social-relay-for-postiz'
 		),
 	draft: () =>
@@ -88,7 +88,7 @@ export default function TimingSection( { meta, setMeta } ) {
 				/>
 				<ToggleGroupControlOption
 					value="slot"
-					label={ __( 'Slot', 'social-relay-for-postiz' ) }
+					label={ __( 'Next free', 'social-relay-for-postiz' ) }
 				/>
 				<ToggleGroupControlOption
 					value="draft"

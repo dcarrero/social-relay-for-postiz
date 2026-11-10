@@ -1,8 +1,9 @@
 import apiFetch from '@wordpress/api-fetch';
 import { Button, Notice, TabPanel } from '@wordpress/components';
-import { useEffect, useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
+import Marked from '../../common/Marked';
 import { config } from '../config';
 import ProfileEditor from './ProfileEditor';
 import TestProfile from './TestProfile';
@@ -13,27 +14,23 @@ import TestProfile from './TestProfile';
  * @param {Object}   props             Props.
  * @param {Object}   props.settings    Settings from the REST route.
  * @param {Function} props.setSettings Replaces the settings after saving.
+ * @param {Object}   props.profiles    Profiles being edited (kept by the settings screen).
+ * @param {Function} props.setProfiles Replaces the edited profiles (null: the saved ones).
+ * @param {boolean}  props.dirty       Whether there are unsaved changes.
+ * @param {Function} props.setDirty    Marks unsaved changes.
  * @return {Element} Tab.
  */
-export default function ProfilesTab( { settings, setSettings } ) {
-	const [ profiles, setProfiles ] = useState( settings.profiles );
+export default function ProfilesTab( {
+	settings,
+	setSettings,
+	profiles,
+	setProfiles,
+	dirty,
+	setDirty,
+} ) {
 	const [ busy, setBusy ] = useState( false );
 	const [ notice, setNotice ] = useState( null );
-	const [ dirty, setDirty ] = useState( false );
 	const [ saved, setSaved ] = useState( false );
-
-	// Ask before leaving the page with unsaved profiles.
-	useEffect( () => {
-		if ( ! dirty ) {
-			return;
-		}
-		const warn = ( event ) => {
-			event.preventDefault();
-			event.returnValue = '';
-		};
-		window.addEventListener( 'beforeunload', warn );
-		return () => window.removeEventListener( 'beforeunload', warn );
-	}, [ dirty ] );
 
 	if ( ! settings.connection.configured ) {
 		return (
@@ -55,7 +52,7 @@ export default function ProfilesTab( { settings, setSettings } ) {
 		} )
 			.then( ( response ) => {
 				setSettings( response );
-				setProfiles( response.profiles );
+				setProfiles( null );
 				setDirty( false );
 				setNotice( null );
 				setSaved( true );
@@ -73,7 +70,13 @@ export default function ProfilesTab( { settings, setSettings } ) {
 	const tabs = Object.entries( settings.postTypes ).map(
 		( [ name, info ] ) => ( {
 			name,
-			title: info.label + ( profiles[ name ]?.enabled ? ' ●' : '' ),
+			title: (
+				<Marked
+					label={ info.label }
+					marked={ !! profiles[ name ]?.enabled }
+					note={ __( 'sharing on', 'social-relay-for-postiz' ) }
+				/>
+			),
 		} )
 	);
 
@@ -93,6 +96,12 @@ export default function ProfilesTab( { settings, setSettings } ) {
 				</Notice>
 			) }
 
+			<p className="description">
+				{ __(
+					'One profile per type of content: turn sharing on, pick the channels, adjust the message and save. Posts are then shared when you publish them.',
+					'social-relay-for-postiz'
+				) }
+			</p>
 			<TabPanel
 				className="socialrelaycvi-settings__post-types"
 				tabs={ tabs }

@@ -6,6 +6,7 @@ import {
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 
+import { network } from '../../common/networks';
 import TemplateField from '../../common/TemplateField';
 
 /**
@@ -34,7 +35,7 @@ export default function NetworkOptions( {
 		onChange( { ...options, settings: { ...settings, [ key ]: value } } );
 
 	const title =
-		`${ channel.name } · ${ channel.identifier }` +
+		`${ channel.name } · ${ network( channel.identifier ).label }` +
 		( customized
 			? ` · ${ __( 'customized', 'social-relay-for-postiz' ) }`
 			: '' );
@@ -47,13 +48,13 @@ export default function NetworkOptions( {
 						? sprintf(
 								/* translators: %d: character limit of the network. */
 								__(
-									'Template for this network (limit: %d characters)',
+									'Template for this channel (limit: %d characters)',
 									'social-relay-for-postiz'
 								),
 								limit
 						  )
 						: __(
-								'Template for this network',
+								'Template for this channel',
 								'social-relay-for-postiz'
 						  )
 				}

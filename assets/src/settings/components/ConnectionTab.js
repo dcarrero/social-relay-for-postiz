@@ -20,9 +20,10 @@ import { webhookStatus } from './WebhookTab';
  * @param {Object}   props             Props.
  * @param {Object}   props.settings    Settings from the REST route.
  * @param {Function} props.setSettings Replaces the settings after saving.
+ * @param {Function} props.goTo        Opens another tab of the settings.
  * @return {Element} Tab.
  */
-export default function ConnectionTab( { settings, setSettings } ) {
+export default function ConnectionTab( { settings, setSettings, goTo } ) {
 	const { connection } = settings;
 	const [ url, setUrl ] = useState( connection.instance_url );
 	const [ key, setKey ] = useState( '' );
@@ -181,7 +182,7 @@ export default function ConnectionTab( { settings, setSettings } ) {
 						}
 						onChange={ setKey }
 						help={ __(
-							'Postiz → Settings → Developers → Public API. Leave empty to keep the current key. For better security define SOCIALRELAYCVI_POSTIZ_API_KEY in wp-config.php or the POSTIZ_API_KEY environment variable.',
+							'In Postiz: Settings → Developers → Public API. Leave it empty to keep the current key.',
 							'social-relay-for-postiz'
 						) }
 						__nextHasNoMarginBottom
@@ -213,6 +214,21 @@ export default function ConnectionTab( { settings, setSettings } ) {
 							'social-relay-for-postiz'
 						) }
 					</Button>
+					{ status.kind === 'ok' &&
+						! Object.values( settings.profiles ).some(
+							( profile ) => profile.enabled
+						) && (
+							<Button
+								variant="secondary"
+								onClick={ () => goTo( 'profiles' ) }
+								__next40pxDefaultSize
+							>
+								{ __(
+									'Next: set up a publishing profile',
+									'social-relay-for-postiz'
+								) }
+							</Button>
+						) }
 					<ExternalLink href={ config.docsUrl }>
 						{ __(
 							'Postiz public API documentation',
@@ -220,6 +236,14 @@ export default function ConnectionTab( { settings, setSettings } ) {
 						) }
 					</ExternalLink>
 				</div>
+				{ connection.key_editable && (
+					<p className="description">
+						{ __(
+							'Developers can keep the key out of the database with SOCIALRELAYCVI_POSTIZ_API_KEY in wp-config.php or the POSTIZ_API_KEY environment variable.',
+							'social-relay-for-postiz'
+						) }
+					</p>
+				) }
 			</CardBody>
 		</Card>
 	);

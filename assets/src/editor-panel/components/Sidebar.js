@@ -79,17 +79,7 @@ export default function Sidebar() {
 		<>
 			<PanelBody className="socialrelaycvi-sidebar__share">
 				<ToggleControl
-					label={
-						published
-							? __(
-									'Shared when published',
-									'social-relay-for-postiz'
-							  )
-							: __(
-									'Share when publishing',
-									'social-relay-for-postiz'
-							  )
-					}
+					label={ __( 'Share this post', 'social-relay-for-postiz' ) }
 					checked={ enabled }
 					onChange={ ( value ) => setMeta( META.enabled, value ) }
 					help={ summary }
@@ -108,19 +98,19 @@ export default function Sidebar() {
 				) }
 			</PanelBody>
 
+			{ /* The history stays visible even when sharing is turned off afterwards. */ }
+			{ published && (
+				<PanelBody title={ __( 'Status', 'social-relay-for-postiz' ) }>
+					<StatusSection
+						postId={ postId }
+						saves={ saves }
+						meta={ meta }
+					/>
+				</PanelBody>
+			) }
+
 			{ enabled && (
 				<>
-					{ published && (
-						<PanelBody
-							title={ __( 'Status', 'social-relay-for-postiz' ) }
-						>
-							<StatusSection
-								postId={ postId }
-								saves={ saves }
-								meta={ meta }
-							/>
-						</PanelBody>
-					) }
 					<PanelBody
 						title={ __( 'Channels', 'social-relay-for-postiz' ) }
 						initialOpen={ ! published }

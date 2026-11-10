@@ -7,6 +7,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { store as noticesStore } from '@wordpress/notices';
 
 import { network } from '../../common/networks';
+import Marked from '../../common/Marked';
 import TagMenu, { insertAtCursor } from '../../common/TagMenu';
 import { channelLabel, channelsById, config, META } from '../config';
 import { effectiveChannels } from '../hooks';
@@ -119,7 +120,7 @@ function MessageEditor( {
 						size="compact"
 						onClick={ () => onChange( '' ) }
 					>
-						{ __( 'Reset', 'social-relay-for-postiz' ) }
+						{ __( 'Use profile text', 'social-relay-for-postiz' ) }
 					</Button>
 				) }
 			</div>
@@ -166,18 +167,27 @@ export default function MessageSection( { meta, setMeta } ) {
 		const { name, identifier } = channelsById[ id ];
 		const shared = names.filter( ( other ) => other === name ).length > 1;
 		return (
-			shorten( name ) +
-			( shared ? ' · ' + network( identifier ).label : '' ) +
-			( overrides[ id ] ? ' •' : '' )
+			<Marked
+				label={
+					shorten( name ) +
+					( shared ? ' · ' + network( identifier ).label : '' )
+				}
+				marked={ !! overrides[ id ] }
+				note={ __( 'own text', 'social-relay-for-postiz' ) }
+			/>
 		);
 	};
 
 	const tabs = [
 		{
 			name: ALL,
-			title:
-				__( 'All', 'social-relay-for-postiz' ) +
-				( message ? ' •' : '' ),
+			title: (
+				<Marked
+					label={ __( 'All', 'social-relay-for-postiz' ) }
+					marked={ !! message }
+					note={ __( 'own text', 'social-relay-for-postiz' ) }
+				/>
+			),
 		},
 		...selected.map( ( id ) => ( {
 			name: id,
@@ -192,11 +202,11 @@ export default function MessageSection( { meta, setMeta } ) {
 					return (
 						<MessageEditor
 							label={ __(
-								'Text for all networks',
+								'Text for all channels',
 								'social-relay-for-postiz'
 							) }
 							help={ __(
-								'Leave it empty to use the profile template (in grey). A dot on a network tab means it has its own text.',
+								'Leave it empty to use the profile template (in grey). A dot on a channel tab means it has its own text.',
 								'social-relay-for-postiz'
 							) }
 							value={ message }
@@ -221,13 +231,13 @@ export default function MessageSection( { meta, setMeta } ) {
 								? sprintf(
 										/* translators: %d: character limit of the network. */
 										__(
-											'Empty = text for all networks. Limit: %d characters; check the count in Preview.',
+											'Empty: uses the text for all channels. Limit: %d characters; check the count in Preview.',
 											'social-relay-for-postiz'
 										),
 										limit
 								  )
 								: __(
-										'Empty = text for all networks.',
+										'Empty: uses the text for all channels.',
 										'social-relay-for-postiz'
 								  )
 						}
