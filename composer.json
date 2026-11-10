@@ -1,0 +1,46 @@
+{
+	"name": "dcarrero/social-relay-for-postiz",
+	"description": "Auto-publish WordPress content to social networks through your own Postiz instance.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=8.2",
+		"woocommerce/action-scheduler": "^3.9"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^11.5",
+		"wp-coding-standards/wpcs": "^3.1",
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"phpstan/phpstan": "^2.1",
+		"szepeviktor/phpstan-wordpress": "^2.0",
+		"phpstan/extension-installer": "^1.4"
+	},
+	"autoload": {
+		"psr-4": {
+			"SocialRelayCvi\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"SocialRelayCvi\\Tests\\": "tests/"
+		}
+	},
+	"config": {
+		"platform": {
+			"php": "8.2.0"
+		},
+		"optimize-autoloader": true,
+		"sort-packages": true,
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"phpstan/extension-installer": true
+		}
+	},
+	"scripts": {
+		"lint": "phpcs",
+		"lint:fix": "phpcbf",
+		"analyse": "phpstan analyse --memory-limit=1G",
+		"test": "phpunit"
+	}
+}
