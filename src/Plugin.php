@@ -9,6 +9,7 @@ declare( strict_types=1 );
 
 namespace SocialRelayCvi;
 
+use SocialRelayCvi\Abilities\AbilitiesRegistration;
 use SocialRelayCvi\Admin\ClassicMetabox;
 use SocialRelayCvi\Admin\DashboardWidget;
 use SocialRelayCvi\Admin\EditorPanel;
@@ -102,6 +103,13 @@ final class Plugin {
 	public readonly ShareService $share_service;
 
 	/**
+	 * Status sync with Postiz.
+	 *
+	 * @var StatusSync
+	 */
+	public readonly StatusSync $status_sync;
+
+	/**
 	 * Builds the services. Nothing is hooked until init() runs.
 	 */
 	private function __construct() {
@@ -112,6 +120,7 @@ final class Plugin {
 		$this->channels      = new ChannelRepository( $this->connection, fn (): ?Gateway => $this->gateway() );
 		$this->queue         = new Queue();
 		$this->share_service = new ShareService( $this );
+		$this->status_sync   = new StatusSync( $this );
 	}
 
 	/**
@@ -191,7 +200,7 @@ final class Plugin {
 			'post_listener' => new PostListener( $this ),
 			'rest'          => new ConnectionController( $this ),
 			'webhook'       => new WebhookController( $this ),
-			'status_sync'   => new StatusSync( $this ),
+			'status_sync'   => $this->status_sync,
 			'settings_page' => new SettingsPage( $this ),
 			'log_page'      => new LogPage( $this ),
 			'editor_panel'  => new EditorPanel( $this ),
@@ -199,6 +208,7 @@ final class Plugin {
 			'dashboard'     => new DashboardWidget( $this ),
 			'log_cleanup'   => $this->logger,
 			'post_meta'     => new PostMeta(),
+			'abilities'     => new AbilitiesRegistration( $this ),
 		);
 
 		/**
@@ -217,6 +227,10 @@ final class Plugin {
 				$this->modules[ (string) $id ] = $module;
 				$module->register();
 			}
+		}
+
+		if ( defined( 'WP_CLI' ) && class_exists( \WP_CLI::class ) ) {
+			\WP_CLI::add_command( 'social-relay', new Cli\Command( $this ) );
 		}
 
 		/**

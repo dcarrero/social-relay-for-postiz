@@ -29,6 +29,7 @@ Works with self-hosted Postiz and with Postiz Cloud.
 * "Social networks" panel in the block editor: channels, text per network, preview with character counts and the status of each network after publishing. Metabox for the classic editor.
 * Status sync with Postiz (published link, platform errors) through the Postiz webhook or every 15 minutes.
 * Dashboard widget with the latest activity.
+* WP-CLI commands (`wp social-relay`) and Abilities API support, so AI agents can preview, share and check social posts.
 * Publish now, schedule with a delay, use the next free slot in Postiz, or create drafts in Postiz.
 * Featured image upload.
 * One request per post for every channel, to respect the Postiz API rate limit.

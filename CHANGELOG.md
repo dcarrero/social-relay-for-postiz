@@ -4,9 +4,13 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 
 ## [Unreleased]
 
-### Planned for 0.4
-- Evergreen, bulk publishing and calendar (to be built as Pro modules).
-- Settings and log screens rebuilt with DataViews/DataForm.
+### Added
+- WP-CLI: `wp social-relay status|test|channels|preview|share|shares|cancel|sync|log`.
+- Abilities API (WordPress 6.9+): `socialrelaycvi/get-status`, `list-channels`, `preview-post`, `share-post`, `get-post-shares` and `cancel-post-shares`, in the `social-media` category, with input/output schemas, behaviour annotations and capability checks. Exposed in REST for AI agents (MCP Adapter) and other tools.
+
+### Planned for 1.0
+- Settings and log screens rebuilt with React (DataViews).
+- wordpress.org release: Plugin Check, release zip and SVN deploy.
 
 ## [0.3.1] - 2026-11-10
 

@@ -8,15 +8,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-11-10T10:13:03+00:00\n"
-"PO-Revision-Date: 2026-11-10T10:59:43+00:00\n"
+"PO-Revision-Date: 2026-11-10T11:06:21+00:00\n"
 "Language: es_ES\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Plugin Name of the plugin
-#: social-relay-for-postiz.php:3
-#: src/Admin/SettingsPage.php:52
+#: social-relay-for-postiz.php:3 src/Admin/SettingsPage.php:52
 #: src/Admin/SettingsPage.php:167
 msgid "Social Relay for Postiz"
 msgstr "Social Relay for Postiz"
@@ -49,24 +48,93 @@ msgstr "Social Relay for Postiz necesita PHP 8.2 o superior."
 msgid "Social Relay for Postiz is missing its dependencies. Run \"composer install\" or install a release build."
 msgstr "A Social Relay for Postiz le faltan dependencias. Ejecuta \"composer install\" o instala una versión publicada."
 
-#: src/Admin/ClassicMetabox.php:57
-#: src/Admin/DashboardWidget.php:42
+#: src/Abilities/AbilitiesRegistration.php:54
+msgid "Social media"
+msgstr "Redes sociales"
+
+#: src/Abilities/AbilitiesRegistration.php:55
+msgid "Publishing and scheduling content on social networks."
+msgstr "Publicación y programación de contenido en redes sociales."
+
+#: src/Abilities/AbilitiesRegistration.php:73
+msgid "WordPress post ID."
+msgstr "ID de la entrada de WordPress."
+
+#: src/Abilities/AbilitiesRegistration.php:87
+msgid "Get Postiz connection status"
+msgstr "Ver el estado de la conexión con Postiz"
+
+#: src/Abilities/AbilitiesRegistration.php:88
+msgid "Returns whether the site is connected to Postiz, the instance URL, the detected API path and where the API key comes from. Never returns the key."
+msgstr "Indica si el sitio está conectado a Postiz, la URL de la instancia, la ruta de API detectada y de dónde sale la clave de API. Nunca devuelve la clave."
+
+#: src/Abilities/AbilitiesRegistration.php:107
+msgid "List social channels"
+msgstr "Listar los canales sociales"
+
+#: src/Abilities/AbilitiesRegistration.php:108
+msgid "Lists the social network channels connected in Postiz (id, name, network identifier, disabled)."
+msgstr "Lista los canales de redes sociales conectados en Postiz (id, nombre, identificador de la red, desactivado)."
+
+#: src/Abilities/AbilitiesRegistration.php:129
+msgid "Preview social posts"
+msgstr "Previsualizar las publicaciones sociales"
+
+#: src/Abilities/AbilitiesRegistration.php:130
+msgid "Shows the message each channel would receive for a post (templates, UTM and limits applied) without sending anything."
+msgstr "Muestra el mensaje que recibiría cada canal para una entrada (con plantillas, UTM y límites aplicados) sin enviar nada."
+
+#: src/Abilities/AbilitiesRegistration.php:140
+msgid "Share a post on social networks"
+msgstr "Compartir una entrada en redes sociales"
+
+#: src/Abilities/AbilitiesRegistration.php:141
+msgid "Queues a published post to be sent to Postiz with its publishing profile. Use preview-post first to check the messages."
+msgstr "Pone en cola una entrada publicada para enviarla a Postiz con su perfil de publicación. Usa antes preview-post para revisar los mensajes."
+
+#: src/Abilities/AbilitiesRegistration.php:150
+msgid "Send even if the same content was already sent."
+msgstr "Enviar aunque ya se haya enviado el mismo contenido."
+
+#: src/Abilities/AbilitiesRegistration.php:170
+msgid "Get social sharing status of a post"
+msgstr "Ver el estado de los envíos de una entrada"
+
+#: src/Abilities/AbilitiesRegistration.php:171
+msgid "Lists what was sent to Postiz for a post: channel, status (queued, published, error, draft, cancelled), publish date, published URL and error."
+msgstr "Lista lo enviado a Postiz para una entrada: canal, estado (en cola, publicada, error, borrador, cancelada), fecha de publicación, URL publicada y error."
+
+#: src/Abilities/AbilitiesRegistration.php:181
+msgid "Cancel pending social posts"
+msgstr "Cancelar las publicaciones sociales pendientes"
+
+#: src/Abilities/AbilitiesRegistration.php:182
+msgid "Deletes in Postiz the drafts and future scheduled posts of a WordPress post. Posts already published on the networks are not touched."
+msgstr "Borra en Postiz los borradores y las publicaciones programadas a futuro de una entrada de WordPress. No toca lo que ya está publicado en las redes."
+
+#: src/Abilities/AbilitiesRegistration.php:262
+msgid "Only published posts can be shared."
+msgstr "Solo se pueden compartir entradas publicadas."
+
+#: src/Abilities/AbilitiesRegistration.php:360
+#: src/Rest/ConnectionController.php:176
+msgid "Post not found."
+msgstr "No se encuentra la entrada."
+
+#: src/Admin/ClassicMetabox.php:57 src/Admin/DashboardWidget.php:42
 msgid "Social networks (Postiz)"
 msgstr "Redes sociales (Postiz)"
 
-#: src/Admin/ClassicMetabox.php:77
-#: build/editor-panel.js:4
+#: src/Admin/ClassicMetabox.php:77 build/editor-panel.js:4
 msgid "Share when publishing"
 msgstr "Compartir al publicar"
 
-#: src/Admin/ClassicMetabox.php:79
-#: src/Admin/SettingsPage.php:260
+#: src/Admin/ClassicMetabox.php:79 src/Admin/SettingsPage.php:260
 #: build/editor-panel.js:4
 msgid "Channels"
 msgstr "Canales"
 
-#: src/Admin/ClassicMetabox.php:88
-#: build/editor-panel.js:3
+#: src/Admin/ClassicMetabox.php:88 build/editor-panel.js:3
 msgid "Text for all networks"
 msgstr "Texto para todas las redes"
 
@@ -74,18 +142,15 @@ msgstr "Texto para todas las redes"
 msgid "Empty = profile template"
 msgstr "Vacío = plantilla del perfil"
 
-#: src/Admin/ClassicMetabox.php:92
-#: build/editor-panel.js:4
+#: src/Admin/ClassicMetabox.php:92 build/editor-panel.js:4
 msgid "Share again on the next update"
 msgstr "Volver a compartir en la próxima actualización"
 
-#: src/Admin/ClassicMetabox.php:147
-#: build/editor-panel.js:4
+#: src/Admin/ClassicMetabox.php:147 build/editor-panel.js:4
 msgid "Status"
 msgstr "Estado"
 
-#: src/Admin/ClassicMetabox.php:160
-#: build/editor-panel.js:4
+#: src/Admin/ClassicMetabox.php:160 build/editor-panel.js:4
 msgid "View post"
 msgstr "Ver publicación"
 
@@ -93,8 +158,7 @@ msgstr "Ver publicación"
 msgid "Published (7 days)"
 msgstr "Publicadas (7 días)"
 
-#: src/Admin/DashboardWidget.php:57
-#: src/Admin/StatusLabels.php:24
+#: src/Admin/DashboardWidget.php:57 src/Admin/StatusLabels.php:24
 #: build/editor-panel.js:4
 msgid "Queued"
 msgstr "En cola"
@@ -115,16 +179,12 @@ msgstr "Próximas"
 msgid "Nothing scheduled."
 msgstr "No hay nada programado."
 
-#: src/Admin/DashboardWidget.php:99
-#: src/Admin/LogPage.php:40
-#: src/Admin/LogPage.php:41
-#: src/Admin/LogPage.php:59
-#: build/editor-panel.js:4
+#: src/Admin/DashboardWidget.php:99 src/Admin/LogPage.php:40
+#: src/Admin/LogPage.php:41 src/Admin/LogPage.php:59 build/editor-panel.js:4
 msgid "Log"
 msgstr "Registro"
 
-#: src/Admin/DashboardWidget.php:100
-#: src/Admin/SettingsPage.php:61
+#: src/Admin/DashboardWidget.php:100 src/Admin/SettingsPage.php:61
 #: src/Admin/SettingsPage.php:71
 msgid "Settings"
 msgstr "Ajustes"
@@ -154,8 +214,7 @@ msgstr "Entrada"
 msgid "Channel"
 msgstr "Canal"
 
-#: src/Admin/LogPage.php:68
-#: build/editor-panel.js:4
+#: src/Admin/LogPage.php:68 build/editor-panel.js:4
 msgid "Message"
 msgstr "Mensaje"
 
@@ -163,8 +222,7 @@ msgstr "Mensaje"
 msgid "Nothing logged yet."
 msgstr "Todavía no hay nada en el registro."
 
-#: src/Admin/SettingsPage.php:53
-#: build/editor-panel.js:4
+#: src/Admin/SettingsPage.php:53 build/editor-panel.js:4
 msgid "Social Relay"
 msgstr "Social Relay"
 
@@ -224,8 +282,7 @@ msgstr "Publicar al momento"
 msgid "Schedule with a delay"
 msgstr "Programar con un retraso"
 
-#: src/Admin/SettingsPage.php:245
-#: build/editor-panel.js:2
+#: src/Admin/SettingsPage.php:245 build/editor-panel.js:2
 msgid "Next free slot in Postiz"
 msgstr "Siguiente hueco libre en Postiz"
 
@@ -379,24 +436,20 @@ msgstr "Perfiles guardados."
 msgid "You are not allowed to do this."
 msgstr "No tienes permiso para hacer esto."
 
-#: src/Admin/StatusLabels.php:25
-#: build/editor-panel.js:4
+#: src/Admin/StatusLabels.php:25 build/editor-panel.js:4
 msgid "Published"
 msgstr "Publicada"
 
-#: src/Admin/StatusLabels.php:26
-#: build/editor-panel.js:4
+#: src/Admin/StatusLabels.php:26 build/editor-panel.js:4
 msgid "Error"
 msgstr "Error"
 
-#: src/Admin/StatusLabels.php:27
-#: build/editor-panel.js:2
+#: src/Admin/StatusLabels.php:27 build/editor-panel.js:2
 #: build/editor-panel.js:4
 msgid "Draft in Postiz"
 msgstr "Borrador en Postiz"
 
-#: src/Admin/StatusLabels.php:28
-#: build/editor-panel.js:4
+#: src/Admin/StatusLabels.php:28 build/editor-panel.js:4
 msgid "Cancelled"
 msgstr "Cancelada"
 
@@ -521,10 +574,6 @@ msgstr "Comprar"
 msgid "Sign up"
 msgstr "Registrarse"
 
-#: src/Rest/ConnectionController.php:176
-msgid "Post not found."
-msgstr "No se encuentra la entrada."
-
 #: src/Settings/ConnectionTester.php:39
 msgid "Enter the URL of your Postiz instance."
 msgstr "Escribe la URL de tu instancia de Postiz."
@@ -615,7 +664,6 @@ msgstr "Postiz indica un error en esta publicación."
 
 #. translators: %d: minutes of delay.
 #: build/editor-panel.js:2
-#, js-format
 msgid "Scheduled %d minutes after publishing"
 msgstr "Programada %d minutos después de publicar"
 
@@ -623,14 +671,12 @@ msgstr "Programada %d minutos después de publicar"
 msgid "Immediately"
 msgstr "Al momento"
 
-#: build/editor-panel.js:2
-#: build/editor-panel.js:4
+#: build/editor-panel.js:2 build/editor-panel.js:4
 msgid "Social networks"
 msgstr "Redes sociales"
 
 #. translators: %d: number of channels.
 #: build/editor-panel.js:3
-#, js-format
 msgid "Will be sent to Postiz for %d channel:"
 msgid_plural "Will be sent to Postiz for %d channels:"
 msgstr[0] "Se enviará a Postiz para %d canal:"
@@ -670,7 +716,6 @@ msgstr "Vacío = texto para todas las redes"
 
 #. translators: %d: number of parts in a thread.
 #: build/editor-panel.js:4
-#, js-format
 msgid "Thread of %d part."
 msgid_plural "Thread of %d parts."
 msgstr[0] "Hilo de %d parte."

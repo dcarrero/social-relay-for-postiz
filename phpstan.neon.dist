@@ -6,4 +6,5 @@ parameters:
 		- tests/phpstan/bootstrap.php
 	scanDirectories:
 		- vendor/woocommerce/action-scheduler
+		- vendor/wp-cli/wp-cli/php
 	treatPhpDocTypesAsCertain: false

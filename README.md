@@ -16,6 +16,8 @@ WordPress plugin that auto-publishes and schedules your content on social networ
 - Status sync with Postiz (published URL, platform errors), triggered by the Postiz webhook or every 15 minutes.
 - Block editor panel (channels, text per network, preview, status), classic editor metabox and dashboard widget.
 - REST routes for status, channels, a post's shares and a dry-run preview.
+- WP-CLI: `wp social-relay status|test|channels|preview|share|shares|cancel|sync|log` (`wp help social-relay` for details).
+- Abilities API: `socialrelaycvi/get-status`, `list-channels`, `preview-post`, `share-post`, `get-post-shares`, `cancel-post-shares`, available to AI agents through the MCP Adapter.
 - English base, Spanish (es_ES) translation included.
 
 ## Development
@@ -44,6 +46,8 @@ composer analyse   # PHPStan
 | `src/Connector/` | Settings → Connectors registration (WordPress 7) |
 | `src/Rest/` | `socialrelaycvi/v1` routes and the Postiz webhook |
 | `src/Sync/` | Status sync with Postiz |
+| `src/Cli/` | WP-CLI commands |
+| `src/Abilities/` | Abilities API registration |
 | `src/Admin/` | Settings and log screens, editor panel loader, classic metabox, dashboard widget |
 | `assets/src/editor-panel/` | Block editor panel in JSX (built into `build/` with @wordpress/scripts; @wordpress/* packages come from WordPress) |
 | `languages/` | `.pot` template and translations |

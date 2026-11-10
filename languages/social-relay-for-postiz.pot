@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Social Relay for Postiz 0.3.0-dev\n"
+"Project-Id-Version: Social Relay for Postiz 0.3.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/social-relay-for-postiz\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-10T10:59:43+00:00\n"
+"POT-Creation-Date: 2026-11-10T11:06:20+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -47,6 +47,79 @@ msgstr ""
 
 #: social-relay-for-postiz.php:43
 msgid "Social Relay for Postiz is missing its dependencies. Run \"composer install\" or install a release build."
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:54
+msgid "Social media"
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:55
+msgid "Publishing and scheduling content on social networks."
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:73
+msgid "WordPress post ID."
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:87
+msgid "Get Postiz connection status"
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:88
+msgid "Returns whether the site is connected to Postiz, the instance URL, the detected API path and where the API key comes from. Never returns the key."
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:107
+msgid "List social channels"
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:108
+msgid "Lists the social network channels connected in Postiz (id, name, network identifier, disabled)."
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:129
+msgid "Preview social posts"
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:130
+msgid "Shows the message each channel would receive for a post (templates, UTM and limits applied) without sending anything."
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:140
+msgid "Share a post on social networks"
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:141
+msgid "Queues a published post to be sent to Postiz with its publishing profile. Use preview-post first to check the messages."
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:150
+msgid "Send even if the same content was already sent."
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:170
+msgid "Get social sharing status of a post"
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:171
+msgid "Lists what was sent to Postiz for a post: channel, status (queued, published, error, draft, cancelled), publish date, published URL and error."
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:181
+msgid "Cancel pending social posts"
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:182
+msgid "Deletes in Postiz the drafts and future scheduled posts of a WordPress post. Posts already published on the networks are not touched."
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:262
+msgid "Only published posts can be shared."
+msgstr ""
+
+#: src/Abilities/AbilitiesRegistration.php:360
+#: src/Rest/ConnectionController.php:176
+msgid "Post not found."
 msgstr ""
 
 #: src/Admin/ClassicMetabox.php:57
@@ -519,10 +592,6 @@ msgstr ""
 
 #: src/Postiz/ProviderRules.php:136
 msgid "Sign up"
-msgstr ""
-
-#: src/Rest/ConnectionController.php:176
-msgid "Post not found."
 msgstr ""
 
 #: src/Settings/ConnectionTester.php:39
