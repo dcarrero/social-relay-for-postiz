@@ -18,6 +18,7 @@ export const META = {
 	reshare: '_socialrelaycvi_reshare',
 	mode: '_socialrelaycvi_mode',
 	publishAt: '_socialrelaycvi_publish_at',
+	images: '_socialrelaycvi_images',
 };
 
 /**
@@ -78,6 +79,9 @@ export function timingLabel( meta ) {
 
 // Stored alone in the channels meta when every channel is unticked (empty = use the profile's).
 export const NO_CHANNELS = '__none';
+
+// Stored alone in the images meta for "no images" (empty = use the profile's setting).
+export const NO_IMAGES = 0;
 
 export const channelsById = Object.fromEntries(
 	( config?.channels || [] ).map( ( channel ) => [ channel.id, channel ] )

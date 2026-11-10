@@ -106,6 +106,26 @@ final class ClassicMetabox implements Module {
 			<input type="datetime-local" id="socialrelaycvi-publish-at" name="socialrelaycvi[publish_at]" class="widefat" value="<?php echo esc_attr( substr( $publish_at, 0, 16 ) ); ?>" style="margin-top:4px">
 			<span class="description"><?php esc_html_e( 'The date is used with "Schedule". Empty: the profile delay after publishing.', 'social-relay-for-postiz' ); ?></span>
 		</p>
+		<?php
+		$images  = PostMeta::sanitize_images( get_post_meta( $post->ID, PostMeta::IMAGES, true ) );
+		$choice  = array() === $images ? '' : ( array( PostMeta::NO_IMAGES ) === $images ? 'none' : 'keep' );
+		$choices = array(
+			''     => __( 'As in the profile', 'social-relay-for-postiz' ),
+			'none' => __( 'No images', 'social-relay-for-postiz' ),
+		);
+		if ( 'keep' === $choice ) {
+			/* translators: %d: number of images. */
+			$choices['keep'] = sprintf( _n( '%d image chosen in the block editor', '%d images chosen in the block editor', count( $images ), 'social-relay-for-postiz' ), count( $images ) );
+		}
+		?>
+		<p>
+			<label for="socialrelaycvi-images"><strong><?php esc_html_e( 'Images', 'social-relay-for-postiz' ); ?></strong></label><br>
+			<select id="socialrelaycvi-images" name="socialrelaycvi[images]" class="widefat">
+				<?php foreach ( $choices as $value => $label ) : ?>
+					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $choice, $value ); ?>><?php echo esc_html( $label ); ?></option>
+				<?php endforeach; ?>
+			</select>
+		</p>
 		<p>
 			<label for="socialrelaycvi-message"><strong><?php esc_html_e( 'Text for all networks', 'social-relay-for-postiz' ); ?></strong></label>
 			<textarea id="socialrelaycvi-message" name="socialrelaycvi[message]" rows="4" class="widefat" placeholder="<?php esc_attr_e( 'Empty = profile template', 'social-relay-for-postiz' ); ?>"><?php echo esc_textarea( (string) get_post_meta( $post->ID, PostMeta::MESSAGE, true ) ); ?></textarea>
@@ -140,6 +160,13 @@ final class ClassicMetabox implements Module {
 		$mode = sanitize_key( (string) ( $raw['mode'] ?? '' ) );
 		update_post_meta( $post_id, PostMeta::MODE, in_array( $mode, PostMeta::MODES, true ) ? $mode : '' );
 		update_post_meta( $post_id, PostMeta::PUBLISH_AT, PostMeta::sanitize_datetime( (string) ( $raw['publish_at'] ?? '' ) ) );
+
+		$images = sanitize_key( (string) ( $raw['images'] ?? '' ) );
+		if ( 'none' === $images ) {
+			update_post_meta( $post_id, PostMeta::IMAGES, array( PostMeta::NO_IMAGES ) );
+		} elseif ( '' === $images ) {
+			update_post_meta( $post_id, PostMeta::IMAGES, array() );
+		}
 
 		$profile  = $this->plugin->profiles->for_post_type( $post->post_type );
 		$channels = isset( $raw['channels'] ) && is_array( $raw['channels'] ) ? array_values( array_map( 'sanitize_text_field', array_map( 'strval', $raw['channels'] ) ) ) : array();

@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T19:37:16+00:00",
+    "translation-revision-date": "2026-11-10T19:45:12+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/settings.js",
     "domain": "messages",
@@ -19,6 +19,12 @@
             "When": [
                 "Cu\u00e1ndo"
             ],
+            "No images": [
+                "Sin im\u00e1genes"
+            ],
+            "Images": [
+                "Im\u00e1genes"
+            ],
             "(no title)": [
                 "(sin t\u00edtulo)"
             ],
@@ -30,6 +36,12 @@
             ],
             "Remove them": [
                 "Quitarlos"
+            ],
+            "Featured image and images in the post": [
+                "Imagen destacada e im\u00e1genes de la entrada"
+            ],
+            "Featured image": [
+                "Imagen destacada"
             ],
             "Thread of %d part.": [
                 "Hilo de %d parte.",
@@ -201,8 +213,8 @@
             "Delay in minutes": [
                 "Retraso en minutos"
             ],
-            "Attach the featured image": [
-                "Adjuntar la imagen destacada"
+            "Up to 10 images; each network gets as many as it accepts (X 4, LinkedIn 9, Instagram 10, Pinterest 1). The editor can choose others for each post.": [
+                "Hasta 10 im\u00e1genes; cada red recibe las que admite (X 4, LinkedIn 9, Instagram 10, Pinterest 1). En el editor se pueden elegir otras para cada entrada."
             ],
             "Allow sharing again on update (when requested from the editor)": [
                 "Permitir volver a compartir al actualizar (cuando se pida desde el editor)"

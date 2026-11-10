@@ -37,6 +37,7 @@ delete_post_meta_by_key( '_socialrelaycvi_channels' );
 delete_post_meta_by_key( '_socialrelaycvi_mode' );
 delete_post_meta_by_key( '_socialrelaycvi_publish_at' );
 delete_post_meta_by_key( '_socialrelaycvi_only' );
+delete_post_meta_by_key( '_socialrelaycvi_images' );
 delete_metadata( 'user', 0, 'socialrelaycvi_errors_seen', '', true );
 
 // Cached channel lists.

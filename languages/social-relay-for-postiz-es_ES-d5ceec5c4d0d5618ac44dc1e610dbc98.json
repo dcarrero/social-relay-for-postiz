@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T19:37:16+00:00",
+    "translation-revision-date": "2026-11-10T19:45:12+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/editor-panel.js",
     "domain": "messages",
@@ -21,6 +21,12 @@
             ],
             "When": [
                 "Cu\u00e1ndo"
+            ],
+            "No images": [
+                "Sin im\u00e1genes"
+            ],
+            "Images": [
+                "Im\u00e1genes"
             ],
             "Text for all networks": [
                 "Texto para todas las redes"
@@ -107,6 +113,45 @@
             ],
             "Use the profile channels": [
                 "Usar los canales del perfil"
+            ],
+            "Profile setting: %s.": [
+                "Ajuste del perfil: %s."
+            ],
+            "Featured image and images in the post": [
+                "Imagen destacada e im\u00e1genes de la entrada"
+            ],
+            "Featured image": [
+                "Imagen destacada"
+            ],
+            "Shared without images. Networks that need one (Instagram, Pinterest\u2026) are skipped.": [
+                "Se comparte sin im\u00e1genes. Las redes que las necesitan (Instagram, Pinterest\u2026) se omiten."
+            ],
+            "Only these images, in this order.": [
+                "Solo estas im\u00e1genes, en este orden."
+            ],
+            "Pick the images for this post in the media library.": [
+                "Elige las im\u00e1genes de esta entrada en la biblioteca de medios."
+            ],
+            "This post has no images for the profile setting yet.": [
+                "Esta entrada a\u00fan no tiene im\u00e1genes para el ajuste del perfil."
+            ],
+            "Profile": [
+                "Perfil"
+            ],
+            "Choose": [
+                "Elegir"
+            ],
+            "Remove image": [
+                "Quitar imagen"
+            ],
+            "Edit selection": [
+                "Cambiar selecci\u00f3n"
+            ],
+            "Select images": [
+                "Seleccionar im\u00e1genes"
+            ],
+            "%1$s gets the first %2$d.": [
+                "%1$s recibe las %2$d primeras."
             ],
             "Suggest with AI": [
                 "Sugerir con IA"

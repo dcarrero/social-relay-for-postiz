@@ -40,4 +40,14 @@ final class PostMetaTest extends TestCase {
 		$this->assertSame( '', PostMeta::sanitize_datetime( 'tomorrow' ) );
 		$this->assertSame( '', PostMeta::sanitize_datetime( '13/11/2026 10:00' ) );
 	}
+
+	/**
+	 * Image ids: unique, positive, at most 10; a lone 0 means "no images".
+	 */
+	public function test_sanitize_images(): void {
+		$this->assertSame( array( 0 ), PostMeta::sanitize_images( array( '0' ) ) );
+		$this->assertSame( array( 5, 3 ), PostMeta::sanitize_images( array( 5, '3', 5, 0, -2 ) ) );
+		$this->assertSame( range( 1, 10 ), PostMeta::sanitize_images( range( 1, 12 ) ) );
+		$this->assertSame( array(), PostMeta::sanitize_images( 'x' ) );
+	}
 }

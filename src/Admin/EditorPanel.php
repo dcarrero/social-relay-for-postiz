@@ -87,9 +87,11 @@ final class EditorPanel implements Module {
 		$channels   = $connection->is_configured() ? $this->plugin->channels->all() : array();
 		$channels   = is_wp_error( $channels ) ? array() : $channels;
 
-		$limits = array();
+		$limits     = array();
+		$max_images = array();
 		foreach ( $channels as $channel ) {
-			$limits[ $channel['identifier'] ] = ProviderRules::char_limit( $channel['identifier'] );
+			$limits[ $channel['identifier'] ]     = ProviderRules::char_limit( $channel['identifier'] );
+			$max_images[ $channel['identifier'] ] = ProviderRules::max_images( $channel['identifier'] );
 		}
 
 		return array(
@@ -107,6 +109,7 @@ final class EditorPanel implements Module {
 				'shareOnUpdate' => $profile['share_on_update'],
 				'templates'     => array_map( static fn ( array $option ): string => $option['template'], $profile['channel_options'] ),
 				'template'      => $profile['template'],
+				'images'        => $profile['images'],
 			),
 			'channels'    => array_map(
 				static fn ( array $channel ): array => array(
@@ -119,6 +122,7 @@ final class EditorPanel implements Module {
 				$channels
 			),
 			'limits'      => $limits,
+			'maxImages'   => $max_images,
 			'ai'          => ( new AiSuggester() )->available(),
 		);
 	}

@@ -4,6 +4,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { channelsById, config, META, timingLabel } from '../config';
 import { effectiveChannels, usePostMeta, usePostState } from '../hooks';
 import ChannelsSection from './ChannelsSection';
+import ImagesSection from './ImagesSection';
 import MessageSection from './MessageSection';
 import PreviewSection from './PreviewSection';
 import StatusSection from './StatusSection';
@@ -137,6 +138,12 @@ export default function Sidebar() {
 						initialOpen={ ! published }
 					>
 						<MessageSection meta={ meta } setMeta={ setMeta } />
+					</PanelBody>
+					<PanelBody
+						title={ __( 'Images', 'social-relay-for-postiz' ) }
+						initialOpen={ false }
+					>
+						<ImagesSection meta={ meta } setMeta={ setMeta } />
 					</PanelBody>
 					<PanelBody
 						title={ __( 'Preview', 'social-relay-for-postiz' ) }

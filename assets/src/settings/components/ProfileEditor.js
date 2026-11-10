@@ -14,7 +14,7 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 
 import { ChannelLabel } from '../../common/ChannelAvatar';
 
-import { MODES } from '../config';
+import { IMAGE_MODES, MODES } from '../config';
 import Conditions from './Conditions';
 import NetworkOptions from './NetworkOptions';
 
@@ -227,16 +227,17 @@ export default function ProfileEditor( {
 							__next40pxDefaultSize
 						/>
 					) }
-					<ToggleControl
-						label={ __(
-							'Attach the featured image',
+					<SelectControl
+						label={ __( 'Images', 'social-relay-for-postiz' ) }
+						value={ profile.images }
+						options={ IMAGE_MODES }
+						onChange={ ( images ) => update( { images } ) }
+						help={ __(
+							'Up to 10 images; each network gets as many as it accepts (X 4, LinkedIn 9, Instagram 10, Pinterest 1). The editor can choose others for each post.',
 							'social-relay-for-postiz'
 						) }
-						checked={ profile.use_featured_image }
-						onChange={ ( value ) =>
-							update( { use_featured_image: value } )
-						}
 						__nextHasNoMarginBottom
+						__next40pxDefaultSize
 					/>
 					<ToggleControl
 						label={ __(

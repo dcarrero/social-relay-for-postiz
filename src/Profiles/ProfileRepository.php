@@ -23,7 +23,7 @@ use SocialRelayCvi\Postiz\ProviderRules;
  *     mode: string,
  *     delay_minutes: int,
  *     share_on_update: bool,
- *     use_featured_image: bool,
+ *     images: string,
  *     include_terms: list<int>,
  *     exclude_terms: list<int>,
  *     utm: bool,
@@ -39,6 +39,7 @@ use SocialRelayCvi\Postiz\ProviderRules;
  *  - mode             now | schedule | slot (next free slot per channel) | draft.
  *  - delay_minutes    only for schedule.
  *  - share_on_update  share again on update when the editor asks for it.
+ *  - images           featured | content (featured image and the images in the post) | none.
  *  - include_terms    category/tag ids; the post needs at least one (empty = any post).
  *  - exclude_terms    category/tag ids that block sharing.
  *  - utm, utm_campaign  add utm_source/medium/campaign to {url}; campaign accepts tags.
@@ -49,6 +50,7 @@ final class ProfileRepository {
 
 	public const OPTION = 'socialrelaycvi_profiles';
 	public const MODES  = array( 'now', 'schedule', 'slot', 'draft' );
+	public const IMAGES = array( 'featured', 'content', 'none' );
 
 	/**
 	 * Default profile.
@@ -57,20 +59,20 @@ final class ProfileRepository {
 	 */
 	public static function defaults(): array {
 		return array(
-			'enabled'            => false,
-			'channels'           => array(),
-			'template'           => "{title}\n\n{excerpt|limit:200}\n\n{url}",
-			'channel_options'    => array(),
-			'mode'               => 'now',
-			'delay_minutes'      => 0,
-			'share_on_update'    => false,
-			'use_featured_image' => true,
-			'include_terms'      => array(),
-			'exclude_terms'      => array(),
-			'utm'                => false,
-			'utm_campaign'       => '{slug}',
-			'short_link'         => false,
-			'postiz_tags'        => false,
+			'enabled'         => false,
+			'channels'        => array(),
+			'template'        => "{title}\n\n{excerpt|limit:200}\n\n{url}",
+			'channel_options' => array(),
+			'mode'            => 'now',
+			'delay_minutes'   => 0,
+			'share_on_update' => false,
+			'images'          => 'featured',
+			'include_terms'   => array(),
+			'exclude_terms'   => array(),
+			'utm'             => false,
+			'utm_campaign'    => '{slug}',
+			'short_link'      => false,
+			'postiz_tags'     => false,
 		);
 	}
 
@@ -145,21 +147,34 @@ final class ProfileRepository {
 		}
 
 		return array(
-			'enabled'            => ! empty( $raw['enabled'] ),
-			'channels'           => $channels,
-			'template'           => isset( $raw['template'] ) ? sanitize_textarea_field( (string) $raw['template'] ) : $defaults['template'],
-			'channel_options'    => $options,
-			'mode'               => in_array( $mode, self::MODES, true ) ? $mode : $defaults['mode'],
-			'delay_minutes'      => isset( $raw['delay_minutes'] ) ? max( 0, min( 43200, (int) $raw['delay_minutes'] ) ) : 0,
-			'share_on_update'    => ! empty( $raw['share_on_update'] ),
-			'use_featured_image' => ! isset( $raw['use_featured_image'] ) || ! empty( $raw['use_featured_image'] ),
-			'include_terms'      => self::term_ids( $raw['include_terms'] ?? array() ),
-			'exclude_terms'      => self::term_ids( $raw['exclude_terms'] ?? array() ),
-			'utm'                => ! empty( $raw['utm'] ),
-			'utm_campaign'       => isset( $raw['utm_campaign'] ) ? sanitize_text_field( (string) $raw['utm_campaign'] ) : $defaults['utm_campaign'],
-			'short_link'         => ! empty( $raw['short_link'] ),
-			'postiz_tags'        => ! empty( $raw['postiz_tags'] ),
+			'enabled'         => ! empty( $raw['enabled'] ),
+			'channels'        => $channels,
+			'template'        => isset( $raw['template'] ) ? sanitize_textarea_field( (string) $raw['template'] ) : $defaults['template'],
+			'channel_options' => $options,
+			'mode'            => in_array( $mode, self::MODES, true ) ? $mode : $defaults['mode'],
+			'delay_minutes'   => isset( $raw['delay_minutes'] ) ? max( 0, min( 43200, (int) $raw['delay_minutes'] ) ) : 0,
+			'share_on_update' => ! empty( $raw['share_on_update'] ),
+			'images'          => self::images_mode( $raw ),
+			'include_terms'   => self::term_ids( $raw['include_terms'] ?? array() ),
+			'exclude_terms'   => self::term_ids( $raw['exclude_terms'] ?? array() ),
+			'utm'             => ! empty( $raw['utm'] ),
+			'utm_campaign'    => isset( $raw['utm_campaign'] ) ? sanitize_text_field( (string) $raw['utm_campaign'] ) : $defaults['utm_campaign'],
+			'short_link'      => ! empty( $raw['short_link'] ),
+			'postiz_tags'     => ! empty( $raw['postiz_tags'] ),
 		);
+	}
+
+	/**
+	 * Image mode, reading the old use_featured_image switch of profiles saved before 1.0.
+	 *
+	 * @param array<string, mixed> $raw Raw profile.
+	 */
+	private static function images_mode( array $raw ): string {
+		if ( isset( $raw['images'] ) && in_array( $raw['images'], self::IMAGES, true ) ) {
+			return (string) $raw['images'];
+		}
+
+		return isset( $raw['use_featured_image'] ) && empty( $raw['use_featured_image'] ) ? 'none' : 'featured';
 	}
 
 	/**

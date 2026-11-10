@@ -67,6 +67,20 @@ final class ProviderRules {
 	}
 
 	/**
+	 * Most images a post can carry on the network.
+	 *
+	 * @param string $identifier Provider identifier.
+	 */
+	public static function max_images( string $identifier ): int {
+		return match ( $identifier ) {
+			'pinterest', 'gmb'                                                => 1,
+			'linkedin', 'linkedin-page'                                       => 9,
+			'instagram', 'instagram-standalone', 'facebook', 'threads', 'tiktok' => 10,
+			default                                                           => 4,
+		};
+	}
+
+	/**
 	 * Whether the network refuses posts without media.
 	 *
 	 * @param string $identifier Provider identifier.

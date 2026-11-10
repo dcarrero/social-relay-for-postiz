@@ -25,7 +25,7 @@ Works with self-hosted Postiz and with Postiz Cloud.
 * **Network settings**: who can reply on X, LinkedIn carousels, Instagram post or story, Pinterest board, Google Business button.
 * **Conditions**: share only posts in some categories or tags, never posts in others.
 * **UTM parameters per network**, Postiz link shortener and Postiz tags from your categories.
-* **Featured image** uploaded to Postiz automatically.
+* **Images**: the featured image, the images in the post or the ones you pick, up to what each network accepts (4 on X, 10 on Instagram…).
 * **Export and import profiles** to copy your setup to another site.
 
 = In the editor =
@@ -33,6 +33,7 @@ Works with self-hosted Postiz and with Postiz Cloud.
 * A **"Social networks" panel** in the block editor: turn sharing on or off, pick channels for this post, write a text for all networks or one per network (one tab each), and preview every message as it will look on each network, with its character count.
 * **Suggest with AI**: a message for all networks or for one, written by the AI provider you set up in Settings → Connectors (WordPress 7). It only fills the field: you review it before publishing.
 * **When, per post**: now, on a date, the next free slot or a draft in Postiz, or keep the profile setting.
+* **Images, per post**: keep the profile setting, pick images in the media library or share without images.
 * A **pre-publish summary** of the channels and timing that will be used.
 * After publishing, the **status of each network**: queued, published (with a link to the post) or the error reported by the platform.
 * **Share again now, retry a failed network, or cancel what is still pending** in Postiz, right from the editor.

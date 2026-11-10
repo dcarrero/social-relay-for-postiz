@@ -38,6 +38,13 @@ final class PostMeta implements Module {
 	 */
 	public const ONLY = '_socialrelaycvi_only';
 
+	/**
+	 * Attachment ids chosen for this post. Empty: the profile setting. NO_IMAGES alone: no images.
+	 */
+	public const IMAGES = '_socialrelaycvi_images';
+
+	public const NO_IMAGES = 0;
+
 	public const MODES = array( 'now', 'schedule', 'slot', 'draft' );
 
 	/**
@@ -123,6 +130,24 @@ final class PostMeta implements Module {
 
 		register_post_meta(
 			'',
+			self::IMAGES,
+			array(
+				'type'              => 'array',
+				'single'            => true,
+				'default'           => array(),
+				'show_in_rest'      => array(
+					'schema' => array(
+						'type'  => 'array',
+						'items' => array( 'type' => 'integer' ),
+					),
+				),
+				'sanitize_callback' => static fn ( mixed $value ): array => self::sanitize_images( $value ),
+				'auth_callback'     => $auth,
+			)
+		);
+
+		register_post_meta(
+			'',
 			self::MODE,
 			array(
 				'type'              => 'string',
@@ -184,5 +209,24 @@ final class PostMeta implements Module {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Unique attachment ids, at most 10; [NO_IMAGES] stays as it is.
+	 *
+	 * @param mixed $value Raw list.
+	 * @return list<int>
+	 */
+	public static function sanitize_images( mixed $value ): array {
+		if ( ! is_array( $value ) ) {
+			return array();
+		}
+
+		$ids = array_map( 'intval', $value );
+		if ( array( self::NO_IMAGES ) === $ids ) {
+			return $ids;
+		}
+
+		return array_slice( array_values( array_unique( array_filter( $ids, static fn ( int $id ): bool => $id > 0 ) ) ), 0, 10 );
 	}
 }

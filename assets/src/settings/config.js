@@ -23,3 +23,21 @@ export const MODES = [
 		label: __( 'Create as draft in Postiz', 'social-relay-for-postiz' ),
 	},
 ];
+
+export const IMAGE_MODES = [
+	{
+		value: 'featured',
+		label: __( 'Featured image', 'social-relay-for-postiz' ),
+	},
+	{
+		value: 'content',
+		label: __(
+			'Featured image and images in the post',
+			'social-relay-for-postiz'
+		),
+	},
+	{
+		value: 'none',
+		label: __( 'No images', 'social-relay-for-postiz' ),
+	},
+];

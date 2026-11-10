@@ -29,7 +29,7 @@ function firstHost( text ) {
  * part), link card and character count against the network limit.
  *
  * @param {Object} props           Props.
- * @param {Object} props.item      Preview item: name, identifier, parts, limit.
+ * @param {Object} props.item      Preview item: name, identifier, parts, limit, images.
  * @param {string} props.linkTitle Title shown in the link card (the post title).
  * @return {Element} Card.
  */
@@ -38,6 +38,8 @@ export default function PreviewCard( { item, linkTitle } ) {
 	const longest = Math.max( ...item.parts.map( ( part ) => part.length ) );
 	const over = item.limit && longest > item.limit;
 	const host = firstHost( item.parts.join( '\n' ) );
+	// With images, networks show them instead of the link card.
+	const images = item.images || [];
 
 	return (
 		<div className="socialrelaycvi-card">
@@ -67,7 +69,25 @@ export default function PreviewCard( { item, linkTitle } ) {
 				</div>
 			) ) }
 
-			{ host && (
+			{ images.length > 0 && (
+				<div
+					className={ `socialrelaycvi-card__images is-${ Math.min(
+						images.length,
+						4
+					) }` }
+				>
+					{ images.slice( 0, 4 ).map( ( image, index ) => (
+						<span key={ image.id }>
+							<img src={ image.url } alt="" />
+							{ index === 3 && images.length > 4 && (
+								<em>+{ images.length - 4 }</em>
+							) }
+						</span>
+					) ) }
+				</div>
+			) }
+
+			{ host && ! images.length && (
 				<div className="socialrelaycvi-card__link">
 					<span>{ host }</span>
 					{ linkTitle && <strong>{ linkTitle }</strong> }

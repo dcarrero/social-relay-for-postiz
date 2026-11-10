@@ -118,15 +118,16 @@ final class ShareService implements Module {
 			return;
 		}
 
-		$reshare = (bool) get_post_meta( $post_id, PostMeta::RESHARE, true );
-		$hash    = sha1( (string) wp_json_encode( array( $items, $profile['mode'] ) ) );
+		$image_ids = $this->image_ids( $post, $profile );
+		$reshare   = (bool) get_post_meta( $post_id, PostMeta::RESHARE, true );
+		$hash      = sha1( (string) wp_json_encode( array( $items, $profile['mode'], $image_ids ) ) );
 
 		if ( ! $reshare && $this->plugin->shares->was_sent( $post_id, $hash ) ) {
 			$log->info( 'share', __( 'Same content was already sent; skipped to avoid a duplicate.', 'social-relay-for-postiz' ), $post_id );
 			return;
 		}
 
-		$images = $profile['use_featured_image'] ? $this->featured_image( $client, $post ) : array();
+		$images = $this->upload_images( $client, $post, $image_ids );
 
 		$sendable = array();
 		foreach ( $items as $item ) {
@@ -134,7 +135,7 @@ final class ShareService implements Module {
 				$log->error( 'share', __( 'This network needs an image and the post has none; skipped.', 'social-relay-for-postiz' ), $post_id, $item['integration_id'] );
 				continue;
 			}
-			$item['images'] = $images;
+			$item['images'] = array_slice( $images, 0, ProviderRules::max_images( $item['identifier'] ) );
 			$sendable[]     = $item;
 		}
 		$items = $sendable;
@@ -323,6 +324,18 @@ final class ShareService implements Module {
 		$timing          = $this->timing( $post, $profile );
 		$profile['mode'] = $timing['mode'];
 		$prepared        = $this->prepare( $post, $profile, $channels );
+		$images          = array_values(
+			array_filter(
+				array_map(
+					static fn ( int $id ): array => array(
+						'id'  => $id,
+						'url' => (string) wp_get_attachment_image_url( $id, 'medium' ),
+					),
+					$this->image_ids( $post, $profile )
+				),
+				static fn ( array $image ): bool => '' !== $image['url']
+			)
+		);
 
 		return array(
 			'enabled'           => $profile['enabled'] && (bool) get_post_meta( $post->ID, PostMeta::ENABLED, true ),
@@ -336,6 +349,7 @@ final class ShareService implements Module {
 					'name'    => (string) ( $channels[ $item['integration_id'] ]['name'] ?? '' ),
 					'picture' => (string) ( $channels[ $item['integration_id'] ]['picture'] ?? '' ),
 					'limit'   => ProviderRules::char_limit( $item['identifier'] ),
+					'images'  => array_slice( $images, 0, ProviderRules::max_images( $item['identifier'] ) ),
 				),
 				$prepared['items']
 			),
@@ -634,43 +648,110 @@ final class ShareService implements Module {
 	}
 
 	/**
-	 * Uploads the featured image to Postiz.
+	 * Attachment ids to send, in order: the post's own choice, or the profile setting.
 	 *
-	 * @param Gateway $client Gateway to Postiz.
-	 * @param WP_Post $post   Post.
+	 * @param WP_Post              $post    Post.
+	 * @param array<string, mixed> $profile Profile (see ProfileRepository).
+	 * @return list<int> At most 10 image attachments.
+	 */
+	public function image_ids( WP_Post $post, array $profile ): array {
+		$chosen = PostMeta::sanitize_images( get_post_meta( $post->ID, PostMeta::IMAGES, true ) );
+
+		if ( array( PostMeta::NO_IMAGES ) === $chosen ) {
+			$ids = array();
+		} elseif ( array() !== $chosen ) {
+			$ids = $chosen;
+		} else {
+			$mode = (string) ( $profile['images'] ?? 'featured' );
+			$ids  = 'none' === $mode ? array() : array( (int) get_post_thumbnail_id( $post ) );
+			if ( 'content' === $mode ) {
+				$ids = array_merge( $ids, self::content_image_ids( $post->post_content ) );
+			}
+		}
+
+		/**
+		 * Filters the images sent with a post (attachment ids, in order).
+		 *
+		 * Each network gets the first ones it accepts (ProviderRules::max_images()).
+		 *
+		 * @param list<int>            $ids     Attachment ids.
+		 * @param WP_Post              $post    Post.
+		 * @param array<string, mixed> $profile Profile.
+		 */
+		$ids = (array) apply_filters( 'socialrelaycvi_image_ids', $ids, $post, $profile );
+		$ids = array_values( array_unique( array_filter( array_map( 'intval', $ids ), static fn ( int $id ): bool => $id > 0 && wp_attachment_is_image( $id ) ) ) );
+
+		return array_slice( $ids, 0, 10 );
+	}
+
+	/**
+	 * Attachment ids of the images in the content (image and gallery blocks, classic wp-image-N).
+	 *
+	 * @param string $content Post content.
+	 * @return list<int>
+	 */
+	public static function content_image_ids( string $content ): array {
+		$ids = array();
+
+		if ( preg_match_all( '/<!--\s+wp:(?:image|gallery|media-text|cover)\s+(\{[^>]*?\})\s+\/?-->/', $content, $blocks ) ) {
+			foreach ( $blocks[1] as $json ) {
+				$attrs = json_decode( $json, true );
+				foreach ( array( 'id', 'mediaId' ) as $key ) {
+					if ( is_array( $attrs ) && isset( $attrs[ $key ] ) && is_numeric( $attrs[ $key ] ) ) {
+						$ids[] = (int) $attrs[ $key ];
+					}
+				}
+				if ( is_array( $attrs ) && isset( $attrs['ids'] ) && is_array( $attrs['ids'] ) ) {
+					$ids = array_merge( $ids, array_map( 'intval', $attrs['ids'] ) );
+				}
+			}
+		}
+
+		if ( preg_match_all( '/wp-image-(\d+)/', $content, $classes ) ) {
+			$ids = array_merge( $ids, array_map( 'intval', $classes[1] ) );
+		}
+
+		return array_values( array_unique( array_filter( $ids, static fn ( int $id ): bool => $id > 0 ) ) );
+	}
+
+	/**
+	 * Uploads images to Postiz, once each. Images Postiz cannot fetch are logged and left out.
+	 *
+	 * @param Gateway   $client Gateway to Postiz.
+	 * @param WP_Post   $post   Post.
+	 * @param list<int> $ids    Attachment ids.
 	 * @return list<array{id: string, path: string}>
 	 */
-	private function featured_image( Gateway $client, WP_Post $post ): array {
-		$thumbnail_id = get_post_thumbnail_id( $post );
-		if ( ! $thumbnail_id ) {
-			return array();
-		}
+	private function upload_images( Gateway $client, WP_Post $post, array $ids ): array {
+		$images = array();
 
-		$url = wp_get_attachment_image_url( $thumbnail_id, 'full' );
-		if ( ! $url ) {
-			return array();
-		}
+		foreach ( $ids as $id ) {
+			$url = wp_get_attachment_image_url( $id, 'full' );
+			if ( ! $url ) {
+				continue;
+			}
 
-		$upload = $client->upload_from_url( $url, true );
-		if ( is_wp_error( $upload ) || empty( $upload['id'] ) || empty( $upload['path'] ) ) {
-			$message = is_wp_error( $upload ) ? $upload->get_error_message() : __( 'Unexpected upload response.', 'social-relay-for-postiz' );
-			$this->plugin->logger->error(
-				'upload',
-				/* translators: %s: error message. */
-				sprintf( __( 'Postiz could not fetch the featured image (%s). Sent without image.', 'social-relay-for-postiz' ), $message ),
-				$post->ID,
-				'',
-				array( 'url' => $url )
-			);
-			return array();
-		}
+			$upload = $client->upload_from_url( $url, true );
+			if ( is_wp_error( $upload ) || empty( $upload['id'] ) || empty( $upload['path'] ) ) {
+				$message = is_wp_error( $upload ) ? $upload->get_error_message() : __( 'Unexpected upload response.', 'social-relay-for-postiz' );
+				$this->plugin->logger->error(
+					'upload',
+					/* translators: %s: error message. */
+					sprintf( __( 'Postiz could not fetch an image (%s). Sent without it.', 'social-relay-for-postiz' ), $message ),
+					$post->ID,
+					'',
+					array( 'url' => $url )
+				);
+				continue;
+			}
 
-		return array(
-			array(
+			$images[] = array(
 				'id'   => (string) $upload['id'],
 				'path' => (string) $upload['path'],
-			),
-		);
+			);
+		}
+
+		return $images;
 	}
 
 	/**
