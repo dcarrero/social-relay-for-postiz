@@ -95,7 +95,7 @@ Yes. Each publishing profile has a common template and an optional template per 
 
 = Which tags can I use in the message? =
 
-Post: `{title}`, `{excerpt}`, `{content}`, `{url}`, `{shortlink}`, `{slug}`, `{author}`, `{date}`, `{reading_time}` (minutes). Terms: `{categories}`, `{first_category}` (the Yoast SEO or Rank Math primary category), `{tags}`, `{term:taxonomy}`, `{hashtags:post_tag}`. Site and SEO: `{site_name}`, `{seo_title}`, `{seo_description}`. Custom fields: `{meta:key}`.
+Post: `{title}`, `{excerpt}`, `{content}`, `{url}`, `{shortlink}`, `{slug}`, `{author}`, `{date}`, `{reading_time}` (minutes). Terms: `{categories}`, `{first_category}` (the Yoast SEO or Rank Math primary category), `{tags}`, `{term:taxonomy}` (public taxonomies), `{hashtags:post_tag}`. Site and SEO: `{site_name}`, `{seo_title}`, `{seo_description}`. Custom fields: `{meta:key}`.
 
 Filters go inside a tag and can be chained: `|limit:180` (characters), `|words:30`, `|upper`, `|lower`, `|strip`, `|hashtag`, `|default:text` (when the value is empty). For example `{excerpt|words:30}` or `{categories|hashtag}`. A line with only `---` starts a new part of a thread.
 

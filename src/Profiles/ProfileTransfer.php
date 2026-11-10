@@ -152,7 +152,8 @@ final class ProfileTransfer {
 	 * @param string $name     Name.
 	 */
 	public static function find_term( string $taxonomy, string $slug, string $name ): ?int {
-		if ( ! taxonomy_exists( $taxonomy ) ) {
+		// Conditions only use categories and tags, as in the settings screen.
+		if ( ! in_array( $taxonomy, array( 'category', 'post_tag' ), true ) ) {
 			return null;
 		}
 

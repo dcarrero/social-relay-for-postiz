@@ -41,10 +41,33 @@ final class PostListener implements Module {
 	public function register(): void {
 		add_action( 'wp_after_insert_post', array( $this, 'on_save' ), 20, 4 );
 		add_action( 'transition_post_status', array( $this, 'on_unpublish' ), 10, 3 );
+		// Deleting permanently (REST force=true, WP-CLI --force, no trash) skips the status transition.
+		add_action( 'before_delete_post', array( $this, 'on_delete' ), 10, 2 );
+	}
+
+	/**
+	 * Cancels pending posts in Postiz when a post is deleted without going through the trash.
+	 *
+	 * The cancel job needs only the post id and the plugin's own records, so it still works
+	 * after the post is gone.
+	 *
+	 * @param int          $post_id Post id.
+	 * @param WP_Post|null $post    Post being deleted.
+	 */
+	public function on_delete( int $post_id, ?WP_Post $post = null ): void {
+		if ( ! $post instanceof WP_Post || array() === $this->plugin->shares->cancellable_batches( $post_id ) ) {
+			return;
+		}
+
+		/** This filter is documented in src/Lifecycle/PostListener.php */
+		if ( apply_filters( 'socialrelaycvi_cancel_on_unpublish', true, $post, 'deleted' ) ) {
+			$this->plugin->queue->enqueue_cancel( $post_id );
+		}
 	}
 
 	/**
 	 * Cancels pending posts in Postiz when a published post goes back to draft, private or trash.
+	 * Permanent deletion is handled by on_delete().
 	 *
 	 * @param string  $new_status New status.
 	 * @param string  $old_status Old status.
@@ -90,6 +113,11 @@ final class PostListener implements Module {
 		if ( $was_published && ! ( $profile['share_on_update'] && get_post_meta( $post_id, PostMeta::RESHARE, true ) ) ) {
 			// A "share again" flag left while the profile did not allow it must not fire later.
 			delete_post_meta( $post_id, PostMeta::RESHARE );
+			return;
+		}
+
+		// Sharing again on update follows the same once-a-minute rule as the "Share again" button.
+		if ( $was_published && ! ShareService::claim_reshare_slot( $post_id ) ) {
 			return;
 		}
 

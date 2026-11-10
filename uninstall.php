@@ -43,4 +43,4 @@ delete_transient( 'socialrelaycvi_webhook_check' );
 delete_metadata( 'user', 0, 'socialrelaycvi_errors_seen', '', true );
 
 // Cached channel lists.
-$wpdb->query( $wpdb->prepare( 'DELETE FROM %i WHERE option_name LIKE %s OR option_name LIKE %s', $wpdb->options, $wpdb->esc_like( '_transient_socialrelaycvi_' ) . '%', $wpdb->esc_like( '_transient_timeout_socialrelaycvi_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Removing our own transients.
+$wpdb->query( $wpdb->prepare( 'DELETE FROM %i WHERE option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s', $wpdb->options, $wpdb->esc_like( '_transient_socialrelaycvi_' ) . '%', $wpdb->esc_like( '_transient_timeout_socialrelaycvi_' ) . '%', $wpdb->esc_like( 'socialrelaycvi_share_lock_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Removing our own transients.

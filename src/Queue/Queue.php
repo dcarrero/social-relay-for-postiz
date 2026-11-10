@@ -72,19 +72,21 @@ final class Queue implements Module {
 	 * Queues the cancellation in Postiz of a post's pending shares.
 	 *
 	 * @param int $post_id Post id.
+	 * @param int $delay   Seconds to wait before running (retries).
 	 */
-	public function enqueue_cancel( int $post_id ): void {
-		$args = array( $post_id );
+	public function enqueue_cancel( int $post_id, int $delay = 0 ): void {
+		// A retry carries its time so the running cancel job does not count as "already queued".
+		$args = 0 === $delay ? array( $post_id ) : array( $post_id, time() + $delay );
 
-		if ( function_exists( 'as_enqueue_async_action' ) && function_exists( 'as_has_scheduled_action' ) ) {
+		if ( function_exists( 'as_schedule_single_action' ) && function_exists( 'as_has_scheduled_action' ) ) {
 			if ( ! as_has_scheduled_action( self::HOOK_CANCEL, $args, self::GROUP ) ) {
-				as_enqueue_async_action( self::HOOK_CANCEL, $args, self::GROUP );
+				as_schedule_single_action( time() + max( 0, $delay ), self::HOOK_CANCEL, $args, self::GROUP );
 			}
 			return;
 		}
 
 		if ( ! wp_next_scheduled( self::HOOK_CANCEL, $args ) ) {
-			wp_schedule_single_event( time(), self::HOOK_CANCEL, $args );
+			wp_schedule_single_event( time() + max( 0, $delay ), self::HOOK_CANCEL, $args );
 		}
 	}
 

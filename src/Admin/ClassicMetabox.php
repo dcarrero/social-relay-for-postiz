@@ -67,6 +67,10 @@ final class ClassicMetabox implements Module {
 		$profile  = $this->plugin->profiles->for_post_type( $post->post_type );
 		$channels = $this->plugin->channels->all();
 		$channels = is_wp_error( $channels ) ? array() : $channels;
+		// Like the block editor: only people who manage the site can pick channels outside the profile.
+		if ( ! current_user_can( SettingsPage::CAPABILITY ) ) {
+			$channels = array_values( array_filter( $channels, static fn ( array $channel ): bool => in_array( $channel['id'], $profile['channels'], true ) ) );
+		}
 		$chosen   = get_post_meta( $post->ID, PostMeta::CHANNELS, true );
 		$selected = is_array( $chosen ) && array() !== $chosen ? $chosen : $profile['channels'];
 		$enabled  = (bool) get_post_meta( $post->ID, PostMeta::ENABLED, true );
@@ -181,7 +185,13 @@ final class ClassicMetabox implements Module {
 		} elseif ( array() === $channels ) {
 			$channels = array( PostMeta::NO_CHANNELS );
 		}
-		update_post_meta( $post_id, PostMeta::CHANNELS, $channels );
+		// Only write a real change: rewriting the same set would mark it as chosen by whoever saved.
+		$stored = get_post_meta( $post_id, PostMeta::CHANNELS, true );
+		$stored = is_array( $stored ) ? array_map( 'strval', $stored ) : array();
+		sort( $stored );
+		if ( $stored !== $channels ) {
+			update_post_meta( $post_id, PostMeta::CHANNELS, $channels );
+		}
 
 		if ( ! empty( $raw['reshare'] ) ) {
 			update_post_meta( $post_id, PostMeta::RESHARE, true );

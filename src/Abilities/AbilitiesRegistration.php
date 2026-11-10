@@ -12,6 +12,7 @@ namespace SocialRelayCvi\Abilities;
 use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
 use SocialRelayCvi\PostMeta;
+use SocialRelayCvi\Sharing\ShareService;
 use WP_Error;
 use WP_Post;
 
@@ -258,11 +259,16 @@ final class AbilitiesRegistration implements Module {
 			return $post;
 		}
 
-		if ( 'publish' !== $post->post_status ) {
-			return new WP_Error( 'socialrelaycvi_not_published', __( 'Only published posts can be shared.', 'social-relay-for-postiz' ) );
+		// Same checks as the REST route, so an agent gets the real answer.
+		$reason = $this->plugin->share_service->why_not_shared( $post );
+		if ( null !== $reason ) {
+			return new WP_Error( 'socialrelaycvi_not_shareable', $reason );
 		}
 
 		if ( ! empty( $input['force'] ) ) {
+			if ( ! ShareService::claim_reshare_slot( $post->ID ) ) {
+				return new WP_Error( 'socialrelaycvi_too_soon', __( 'This post was just sent. Wait a minute before sharing it again.', 'social-relay-for-postiz' ) );
+			}
 			update_post_meta( $post->ID, PostMeta::RESHARE, true );
 		}
 

@@ -14,6 +14,7 @@ use SocialRelayCvi\Plugin;
 use SocialRelayCvi\PostMeta;
 use SocialRelayCvi\Settings\ConnectionTester;
 use SocialRelayCvi\Sharing\AiSuggester;
+use SocialRelayCvi\Sharing\ShareService;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -261,12 +262,9 @@ final class ConnectionController implements Module {
 			return new \WP_Error( 'socialrelaycvi_not_shareable', $reason, array( 'status' => 409 ) );
 		}
 
-		// One "share again" per post and minute, so the accounts cannot be flooded.
-		$lock = 'socialrelaycvi_share_lock_' . $post->ID;
-		if ( get_transient( $lock ) ) {
+		if ( ! ShareService::claim_reshare_slot( $post->ID ) ) {
 			return new \WP_Error( 'socialrelaycvi_too_soon', __( 'This post was just sent. Wait a minute before sharing it again.', 'social-relay-for-postiz' ), array( 'status' => 429 ) );
 		}
-		set_transient( $lock, 1, MINUTE_IN_SECONDS );
 
 		$channels = array_values( array_filter( array_map( 'sanitize_text_field', array_map( 'strval', (array) $request->get_param( 'channels' ) ) ) ) );
 		if ( array() !== $channels ) {

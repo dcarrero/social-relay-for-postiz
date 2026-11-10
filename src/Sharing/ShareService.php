@@ -307,6 +307,27 @@ final class ShareService implements Module {
 	}
 
 	/**
+	 * Takes the one-a-minute "share again" slot of a post, so the accounts cannot be flooded.
+	 *
+	 * Atomic: add_option() only succeeds once while the slot is held, even with parallel requests.
+	 *
+	 * @param int $post_id Post id.
+	 * @return bool False when the post was shared again less than a minute ago.
+	 */
+	public static function claim_reshare_slot( int $post_id ): bool {
+		$key   = 'socialrelaycvi_share_lock_' . $post_id;
+		$until = (int) get_option( $key, 0 );
+		if ( $until > time() ) {
+			return false;
+		}
+		if ( $until > 0 ) {
+			delete_option( $key );
+		}
+
+		return add_option( $key, time() + MINUTE_IN_SECONDS, '', false );
+	}
+
+	/**
 	 * Password-protected posts are not shared: their excerpt would leak the protected text.
 	 *
 	 * @param WP_Post $post Post.
@@ -479,16 +500,28 @@ final class ShareService implements Module {
 			return;
 		}
 
+		$retry = false;
 		foreach ( $batches as $batch ) {
 			$result = $client->delete_group( $batch );
 
 			if ( is_wp_error( $result ) ) {
 				$this->plugin->logger->error( 'cancel', $result->get_error_message(), $post_id, '', array( 'batch' => $batch ) );
+				$retry = $retry || ! empty( ( (array) $result->get_error_data() )['retryable'] );
 				continue;
 			}
 
 			$this->plugin->shares->set_batch_status( $batch, 'cancelled' );
 			$this->plugin->logger->info( 'cancel', __( 'Pending posts cancelled in Postiz.', 'social-relay-for-postiz' ), $post_id, '', array( 'batch' => $batch ) );
+		}
+
+		// A retraction must not fail open: try again later when Postiz failed for a passing reason.
+		$tries_key = 'socialrelaycvi_cancel_tries_' . $post_id;
+		$tries     = (int) get_transient( $tries_key );
+		if ( $retry && $tries < 3 ) {
+			set_transient( $tries_key, $tries + 1, DAY_IN_SECONDS );
+			$this->plugin->queue->enqueue_cancel( $post_id, ( $tries + 1 ) * 10 * MINUTE_IN_SECONDS );
+		} elseif ( ! $retry ) {
+			delete_transient( $tries_key );
 		}
 	}
 
@@ -776,6 +809,8 @@ final class ShareService implements Module {
 			if ( 'content' === $mode ) {
 				$ids = array_merge( $ids, self::content_image_ids( $post->post_content ) );
 			}
+			// Ids found in the content or set as thumbnail were not checked when written.
+			$ids = array_values( array_filter( array_map( 'intval', $ids ), fn ( int $id ): bool => $this->image_allowed( $post, $id ) ) );
 		}
 
 		/**
@@ -791,6 +826,36 @@ final class ShareService implements Module {
 		$ids = array_values( array_unique( array_filter( array_map( 'intval', $ids ), static fn ( int $id ): bool => $id > 0 && wp_attachment_is_image( $id ) ) ) );
 
 		return array_slice( $ids, 0, 10 );
+	}
+
+	/**
+	 * Whether an image taken from the post (content or thumbnail) may go out with it.
+	 *
+	 * Ids in the content are plain text an author can type, so an image is only used when it
+	 * belongs to this post, its author can edit it, it is an unattached library image and the
+	 * author can browse the library, or it is attached to a published post.
+	 * This keeps images of other people's drafts and private posts out of social networks.
+	 *
+	 * @param WP_Post $post Post being shared.
+	 * @param int     $id   Attachment id.
+	 */
+	private function image_allowed( WP_Post $post, int $id ): bool {
+		$attachment = get_post( $id );
+		if ( ! $attachment instanceof WP_Post || 'attachment' !== $attachment->post_type ) {
+			return false;
+		}
+
+		$parent = (int) $attachment->post_parent;
+		if ( $parent === $post->ID || user_can( (int) $post->post_author, 'edit_post', $id ) ) {
+			return true;
+		}
+
+		// Unattached library images are already visible to anyone who can browse the media library.
+		if ( 0 === $parent ) {
+			return user_can( (int) $post->post_author, 'upload_files' );
+		}
+
+		return 'publish' === get_post_status( $parent ) && '' === (string) get_post_field( 'post_password', $parent );
 	}
 
 	/**

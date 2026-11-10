@@ -43,6 +43,15 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
   - New indexes on the shares table (database version 2), one query for the whole posts list, the recurring jobs checked once an hour instead of on every page view, a 15-minute status sync also without Action Scheduler, and a stale "share again" flag is dropped when the profile does not allow it.
 
 ### Security
+- Security audit fixes:
+  - The release zip is built only from files tracked by git (minus `.distignore`), and the build fails if any hidden file reaches the package, so local tool output can never be shipped.
+  - Images taken from the post content or set as the featured image are used only when they belong to the post, its author can edit them, they are unattached library images and the author can browse the library, or they are attached to a published post. This keeps images of other people's drafts out of previews and social posts.
+  - Deleting a post permanently (REST `force=true`, WP-CLI `--force`, no trash) now cancels its pending Postiz posts, like unpublishing or trashing it; a cancel that fails for a passing reason is retried up to 3 times.
+  - The "Social networks" column of the posts list shows share results and errors only for posts the viewer can edit.
+  - The "share again" limit (once a minute per post) is atomic and shared by the REST route, the `share-post` ability (which now also returns why a post cannot be shared) and "share again on update".
+  - The classic metabox only offers the profile's channels to users who cannot manage the site; saving an unchanged channel list no longer marks it as an administrator's choice.
+  - `{meta:key}` refuses meta that WordPress or a plugin marks as protected; `{term:…}` and `{hashtags:…}` read only public taxonomies; imported conditions only accept categories and tags.
+  - GitHub Actions: read-only token in CI, actions pinned to commit SHAs, no persisted credentials during the release build, and the release fails when the tag does not match the plugin Version and Stable tag.
 - Password-protected posts are not shared (their excerpt would leak the protected text); filter `socialrelaycvi_share_protected` to allow it.
 - The plugin's post meta (per-post texts, channels, timing) is only exposed in the REST `edit` context, no longer to anonymous visitors.
 - Users who cannot manage the site only pick among the profile's channels for a post (channels outside it are ignored unless an administrator chose them) and only attach images they can edit. "Share again" is limited to once a minute per post, and "Suggest with AI" to 30 suggestions per user and hour.

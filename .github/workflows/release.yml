@@ -18,15 +18,28 @@ jobs:
     env:
       HAS_SVN: ${{ secrets.SVN_USERNAME != '' }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          # The write token must not sit in .git/config while composer and npm scripts run.
+          persist-credentials: false
 
-      - uses: shivammathur/setup-php@v2
+      - name: Tag matches the plugin version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          HEADER="$(grep -E '^\s*\*\s*Version:' social-relay-for-postiz.php | awk '{print $NF}')"
+          STABLE="$(grep -E '^Stable tag:' readme.txt | awk '{print $NF}')"
+          if [ "$TAG" != "$HEADER" ] || [ "$TAG" != "$STABLE" ]; then
+            echo "Tag $TAG does not match Version $HEADER / Stable tag $STABLE" >&2
+            exit 1
+          fi
+
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
         with:
           php-version: '8.2'
           coverage: none
           tools: composer
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: '22'
           cache: npm
@@ -38,14 +51,14 @@ jobs:
         run: unzip -q dist/social-relay-for-postiz.zip -d dist/build
 
       - name: GitHub release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           files: dist/social-relay-for-postiz.zip
           generate_release_notes: true
 
       - name: Deploy to wordpress.org
         if: env.HAS_SVN == 'true'
-        uses: 10up/action-wordpress-plugin-deploy@stable
+        uses: 10up/action-wordpress-plugin-deploy@54bd289b8525fd23a5c365ec369185f2966529c2 # stable
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}

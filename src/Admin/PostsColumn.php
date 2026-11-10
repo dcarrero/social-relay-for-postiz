@@ -124,6 +124,12 @@ final class PostsColumn implements Module {
 			return;
 		}
 
+		// Same rule as the REST status route: share results and errors only for posts you can edit.
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			echo '<span class="socialrelaycvi-col__none">—</span>';
+			return;
+		}
+
 		// One query for every post of the page, on the first row.
 		if ( null === $this->rows ) {
 			global $wp_query;

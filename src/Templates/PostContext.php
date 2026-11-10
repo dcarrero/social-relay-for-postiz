@@ -28,6 +28,11 @@ final class PostContext {
 		$excerpt = has_excerpt( $post ) ? $post->post_excerpt : wp_trim_words( strip_shortcodes( $post->post_content ), 55, '…' );
 
 		$terms = static function ( string $taxonomy ) use ( $post ): string {
+			// Only public taxonomies: internal or editorial ones must not reach public networks.
+			$object = get_taxonomy( $taxonomy );
+			if ( ! $object instanceof \WP_Taxonomy || ! $object->public ) {
+				return '';
+			}
 			$names = wp_get_post_terms( $post->ID, $taxonomy, array( 'fields' => 'names' ) );
 			return is_array( $names ) ? implode( ', ', array_map( 'strval', $names ) ) : '';
 		};
@@ -49,7 +54,8 @@ final class PostContext {
 			'tags'            => static fn (): string => $terms( 'post_tag' ),
 			'term'            => static fn ( string $taxonomy ): string => '' === $taxonomy ? '' : $terms( $taxonomy ),
 			'hashtags'        => static fn ( string $taxonomy ): string => TemplateEngine::hashtags( $terms( '' === $taxonomy ? 'post_tag' : $taxonomy ) ),
-			'meta'            => static fn ( string $key ): string => '' === $key || str_starts_with( $key, '_' ) ? '' : $plain( (string) get_post_meta( $post->ID, $key, true ) ),
+			// Protected meta (leading "_" or marked protected by a plugin) is never readable from a template.
+			'meta'            => static fn ( string $key ): string => '' === $key || is_protected_meta( $key, 'post' ) ? '' : $plain( (string) get_post_meta( $post->ID, $key, true ) ),
 			'seo_title'       => static fn (): string => self::seo_value( $post, array( '_yoast_wpseo_title', 'rank_math_title', '_aioseo_title', '_seopress_titles_title' ), get_the_title( $post ) ),
 			'seo_description' => static fn (): string => self::seo_value( $post, array( '_yoast_wpseo_metadesc', 'rank_math_description', '_aioseo_description', '_seopress_titles_desc' ), $excerpt ),
 		);
