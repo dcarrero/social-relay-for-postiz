@@ -185,6 +185,69 @@ final class ShareRepository {
 	}
 
 	/**
+	 * Rows sent as these Postiz posts, newest first.
+	 *
+	 * @param list<string> $postiz_ids Postiz post ids.
+	 * @return list<array<string, mixed>>
+	 */
+	public function by_postiz_ids( array $postiz_ids ): array {
+		global $wpdb;
+
+		$postiz_ids = array_values( array_filter( array_map( 'strval', $postiz_ids ) ) );
+		if ( array() === $postiz_ids ) {
+			return array();
+		}
+
+		$table = Installer::tables()['shares'];
+		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- One %s placeholder per id.
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT * FROM %i WHERE postiz_post_id IN (' . implode( ',', array_fill( 0, count( $postiz_ids ), '%s' ) ) . ') ORDER BY id DESC',
+				$table,
+				...$postiz_ids
+			),
+			ARRAY_A
+		);
+		// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+		return is_array( $rows ) ? array_values( $rows ) : array();
+	}
+
+	/**
+	 * Rows by id, keyed by id.
+	 *
+	 * @param list<int> $ids Row ids.
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function by_ids( array $ids ): array {
+		global $wpdb;
+
+		$ids = array_values( array_filter( array_map( 'intval', $ids ) ) );
+		if ( array() === $ids ) {
+			return array();
+		}
+
+		$table = Installer::tables()['shares'];
+		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- One %d placeholder per id.
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT * FROM %i WHERE id IN (' . implode( ',', array_fill( 0, count( $ids ), '%d' ) ) . ')',
+				$table,
+				...$ids
+			),
+			ARRAY_A
+		);
+		// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+		$out = array();
+		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+			$out[ (int) $row['id'] ] = $row;
+		}
+
+		return $out;
+	}
+
+	/**
 	 * Updates one row.
 	 *
 	 * @param int                                                          $id      Row id.

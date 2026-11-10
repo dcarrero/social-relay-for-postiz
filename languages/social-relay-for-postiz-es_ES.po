@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-11-10T10:13:03+00:00\n"
-"PO-Revision-Date: 2026-11-10T20:42:57+00:00\n"
+"PO-Revision-Date: 2026-11-10T20:50:14+00:00\n"
 "Language: es_ES\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: social-relay-for-postiz.php:3
 #: src/Admin/SettingsPage.php:44
 #: src/Admin/SettingsPage.php:89
-#: build/settings.js:17
+#: build/settings.js:21
 msgid "Social Relay for Postiz"
 msgstr "Social Relay for Postiz"
 
@@ -145,7 +145,7 @@ msgstr "Compartir al publicar"
 
 #: src/Admin/ClassicMetabox.php:79
 #: build/editor-panel.js:20
-#: build/settings.js:13
+#: build/settings.js:18
 msgid "Channels"
 msgstr "Canales"
 
@@ -176,7 +176,7 @@ msgstr "Borrador en Postiz"
 #: src/Admin/ClassicMetabox.php:99
 #: build/editor-panel.js:18
 #: build/editor-panel.js:20
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "When"
 msgstr "Cuándo"
 
@@ -205,7 +205,7 @@ msgstr[1] "%d imágenes elegidas en el editor de bloques"
 #: src/Admin/ClassicMetabox.php:122
 #: build/editor-panel.js:6
 #: build/editor-panel.js:20
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Images"
 msgstr "Imágenes"
 
@@ -230,6 +230,7 @@ msgstr "Estado"
 
 #: src/Admin/ClassicMetabox.php:218
 #: build/editor-panel.js:15
+#: build/settings.js:9
 msgid "View post"
 msgstr "Ver publicación"
 
@@ -336,7 +337,8 @@ msgstr "Error"
 #: src/Admin/ErrorAlerts.php:191
 #: src/Admin/ErrorAlerts.php:225
 #: build/log.js:1
-#: build/settings.js:16
+#: build/settings.js:9
+#: build/settings.js:21
 msgid "(no title)"
 msgstr "(sin título)"
 
@@ -522,7 +524,7 @@ msgstr "Comprar"
 msgid "Sign up"
 msgstr "Registrarse"
 
-#: src/Rest/AdminController.php:308
+#: src/Rest/AdminController.php:330
 #: build/settings.js:5
 msgid "This file is not an export of Social Relay profiles."
 msgstr "Este archivo no es una exportación de perfiles de Social Relay."
@@ -633,11 +635,11 @@ msgstr "Respuesta inesperada al subir el archivo."
 msgid "Postiz could not fetch an image (%s). Sent without it."
 msgstr "Postiz no pudo descargar una imagen (%s). Se ha enviado sin ella."
 
-#: src/Sync/StatusSync.php:113
+#: src/Sync/StatusSync.php:122
 msgid "Published on the network."
 msgstr "Publicado en la red."
 
-#: src/Sync/StatusSync.php:115
+#: src/Sync/StatusSync.php:124
 msgid "Postiz reports an error for this post."
 msgstr "Postiz indica un error en esta publicación."
 
@@ -704,7 +706,7 @@ msgstr[0] "%d canal elegido ya no existe en Postiz y se omitirá."
 msgstr[1] "%d canales elegidos ya no existen en Postiz y se omitirán."
 
 #: build/editor-panel.js:5
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Remove them"
 msgstr "Quitarlos"
 
@@ -775,110 +777,110 @@ msgid "%1$s gets the first %2$d."
 msgstr "%1$s recibe las %2$d primeras."
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Insert tag"
 msgstr "Insertar etiqueta"
 
 #: build/editor-panel.js:7
 #: build/log.js:1
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Post"
 msgstr "Entrada"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Title"
 msgstr "Título"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Excerpt, up to 180 characters"
 msgstr "Extracto, hasta 180 caracteres"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "First 40 words of the content"
 msgstr "Primeras 40 palabras del contenido"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Link to the post"
 msgstr "Enlace a la entrada"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Short link"
 msgstr "Enlace corto"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Author"
 msgstr "Autor"
 
 #: build/editor-panel.js:7
 #: build/editor-panel.js:18
 #: build/log.js:1
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Date"
 msgstr "Fecha"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Minutes to read"
 msgstr "Minutos de lectura"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Categories and tags"
 msgstr "Categorías y etiquetas"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Main category (Yoast or Rank Math) or the first one"
 msgstr "Categoría principal (Yoast o Rank Math) o la primera"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "All categories"
 msgstr "Todas las categorías"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Tags as #hashtags"
 msgstr "Etiquetas como #hashtags"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Categories as #hashtags"
 msgstr "Categorías como #hashtags"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Site and SEO"
 msgstr "Sitio y SEO"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Site name"
 msgstr "Nombre del sitio"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "SEO title, or the title"
 msgstr "Título SEO, o el título"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Meta description, or the excerpt"
 msgstr "Meta descripción, o el extracto"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Threads"
 msgstr "Hilos"
 
 #: build/editor-panel.js:7
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "New part of the thread"
 msgstr "Nueva parte del hilo"
 
@@ -914,7 +916,7 @@ msgstr "Vacío = texto para todas las redes."
 
 #. translators: %d: number of parts in a thread.
 #: build/editor-panel.js:9
-#: build/settings.js:15
+#: build/settings.js:20
 #, js-format
 msgid "Thread of %d part."
 msgid_plural "Thread of %d parts."
@@ -922,13 +924,13 @@ msgstr[0] "Hilo de %d parte."
 msgstr[1] "Hilo de %d partes."
 
 #: build/editor-panel.js:9
-#: build/settings.js:15
+#: build/settings.js:20
 msgid "Longer than the network allows: it will be shortened."
 msgstr "Más largo de lo que admite la red: se recortará."
 
 #. translators: 1: reason, 2: number of channels.
 #: build/editor-panel.js:10
-#: build/settings.js:16
+#: build/settings.js:21
 #, js-format
 msgid "%1$s (%2$d channel)"
 msgid_plural "%1$s (%2$d channels)"
@@ -936,7 +938,7 @@ msgstr[0] "%1$s (%2$d canal)"
 msgstr[1] "%1$s (%2$d canales)"
 
 #: build/editor-panel.js:10
-#: build/settings.js:16
+#: build/settings.js:21
 msgid "This post does not match the profile conditions and will not be shared."
 msgstr "Esta entrada no cumple las condiciones del perfil y no se compartirá."
 
@@ -1158,7 +1160,7 @@ msgstr "Se compartió al publicar"
 
 #: build/editor-panel.js:20
 #: build/log.js:1
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Message"
 msgstr "Mensaje"
 
@@ -1191,7 +1193,7 @@ msgid "Image upload"
 msgstr "Subida de imagen"
 
 #: build/log.js:1
-#: build/settings.js:17
+#: build/settings.js:21
 msgid "Webhook"
 msgstr "Webhook"
 
@@ -1285,7 +1287,7 @@ msgstr[0] "%d canal no está en tu instancia de Postiz. Revisa los perfiles para
 msgstr[1] "%d canales no están en tu instancia de Postiz. Revisa los perfiles para quitarlos."
 
 #: build/settings.js:5
-#: build/settings.js:17
+#: build/settings.js:21
 msgid "Publishing profiles"
 msgstr "Perfiles de publicación"
 
@@ -1349,291 +1351,373 @@ msgstr "Elimina los ajustes, el registro, el historial de envíos y las opciones
 msgid "Forced by SOCIALRELAYCVI_DELETE_DATA in wp-config.php."
 msgstr "Forzado por SOCIALRELAYCVI_DELETE_DATA en wp-config.php."
 
-#: build/settings.js:7
+#. translators: %s: time since the last call, e.g. "5 minutes ago".
+#: build/settings.js:8
+#, js-format
+msgid "Last call %s"
+msgstr "Último aviso %s"
+
+#: build/settings.js:8
+msgid "Never received"
+msgstr "Ningún aviso aún"
+
+#: build/settings.js:8
+msgid "Call without posts (a test from Postiz?)."
+msgstr "Aviso sin publicaciones (¿una prueba desde Postiz?)."
+
+#. translators: %d: number of posts.
+#: build/settings.js:9
+#, js-format
+msgid "%d post not sent from this site."
+msgid_plural "%d posts not sent from this site."
+msgstr[0] "%d publicación que no se envió desde este sitio."
+msgstr[1] "%d publicaciones que no se enviaron desde este sitio."
+
+#: build/settings.js:9
+msgid "Postiz webhook"
+msgstr "Webhook de Postiz"
+
+#: build/settings.js:9
+msgid "Postiz calls this URL as soon as a post goes out, and the status in WordPress updates right away. Without it, the plugin asks Postiz every 15 minutes."
+msgstr "Postiz llama a esta URL en cuanto sale una publicación, y el estado en WordPress se actualiza al momento. Sin ella, el plugin pregunta a Postiz cada 15 minutos."
+
+#. translators: %s: site host name, e.g. localhost.
+#: build/settings.js:10
+#, js-format
+msgid "This site (%s) is not reachable from the internet, so Postiz can only call it if both run on the same machine or network. Statuses still update every 15 minutes."
+msgstr "Este sitio (%s) no es accesible desde internet, así que Postiz solo puede llamarlo si ambos están en la misma máquina o red. Los estados se siguen actualizando cada 15 minutos."
+
+#: build/settings.js:10
+msgid "No call for several days. If you published in the meantime, check that the webhook still exists in Postiz with this URL."
+msgstr "Ningún aviso desde hace varios días. Si has publicado entretanto, comprueba que el webhook sigue en Postiz con esta URL."
+
+#: build/settings.js:10
+msgid "Webhook URL"
+msgstr "URL del webhook"
+
+#: build/settings.js:10
+msgid "Copied"
+msgstr "Copiada"
+
+#: build/settings.js:10
+msgid "Copy"
+msgstr "Copiar"
+
+#: build/settings.js:10
+msgid "New webhook URL created. Update it in Postiz: the old one no longer works."
+msgstr "Se ha creado una URL nueva para el webhook. Cámbiala en Postiz: la anterior ya no funciona."
+
+#: build/settings.js:10
+msgid "Set it up in Postiz"
+msgstr "Configúralo en Postiz"
+
+#: build/settings.js:10
+msgid "In Postiz, open Settings → Webhooks and add a webhook."
+msgstr "En Postiz, abre Settings → Webhooks y añade un webhook."
+
+#: build/settings.js:10
+msgid "Give it a name (for example “WordPress”), paste the URL above and choose all channels, or the ones used on this site."
+msgstr "Ponle un nombre (por ejemplo «WordPress»), pega la URL de arriba y elige todos los canales, o los que uses en este sitio."
+
+#: build/settings.js:10
+msgid "Save it and press “Send test”: the call appears below within a few seconds."
+msgstr "Guárdalo y pulsa «Send test»: el aviso aparece abajo en unos segundos."
+
+#: build/settings.js:10
+msgid "The URL answers. Postiz can use it if it can reach this site."
+msgstr "La URL responde. Postiz puede usarla si llega hasta este sitio."
+
+#: build/settings.js:10
+msgid "The URL answers “not found” (404). The REST API may be off or rewritten: check the permalinks and any plugin that limits the REST API."
+msgstr "La URL responde «no encontrada» (404). Puede que la API REST esté desactivada o reescrita: revisa los enlaces permanentes y cualquier plugin que limite la API REST."
+
+#. translators: %d: HTTP status code.
+#: build/settings.js:11
+#, js-format
+msgid "The URL is blocked (%d). A security plugin, Cloudflare or a firewall is stopping calls to the REST API: allow /wp-json/socialrelaycvi/v1/webhook/."
+msgstr "La URL está bloqueada (%d). Un plugin de seguridad, Cloudflare o un cortafuegos frena las llamadas a la API REST: permite /wp-json/socialrelaycvi/v1/webhook/."
+
+#: build/settings.js:11
+msgid "This server could not call its own address. Many hosts block that, so it does not mean Postiz cannot: use “Send test” in Postiz to be sure."
+msgstr "Este servidor no ha podido llamar a su propia dirección. Muchos alojamientos lo bloquean, así que no significa que Postiz no pueda: usa «Send test» en Postiz para asegurarte."
+
+#. translators: %d: HTTP status code.
+#: build/settings.js:12
+#, js-format
+msgid "Unexpected answer (%d). Use “Send test” in Postiz to check it."
+msgstr "Respuesta inesperada (%d). Usa «Send test» en Postiz para comprobarlo."
+
+#: build/settings.js:12
+msgid "Check URL"
+msgstr "Comprobar URL"
+
+#: build/settings.js:12
+msgid "Create a new URL"
+msgstr "Crear una URL nueva"
+
+#: build/settings.js:12
+msgid "The current URL will stop working. Continue?"
+msgstr "La URL actual dejará de funcionar. ¿Continuar?"
+
+#: build/settings.js:12
+msgid "Last calls"
+msgstr "Últimos avisos"
+
+#: build/settings.js:12
+msgid "No calls yet. The first one shows up here when Postiz publishes, or when you press “Send test”."
+msgstr "Aún no hay avisos. El primero aparecerá aquí cuando Postiz publique o cuando pulses «Send test»."
+
+#: build/settings.js:12
 msgid "Read from the POSTIZ_API_KEY environment variable."
 msgstr "Se lee de la variable de entorno POSTIZ_API_KEY."
 
-#: build/settings.js:7
+#: build/settings.js:12
 msgid "Defined in wp-config.php (SOCIALRELAYCVI_POSTIZ_API_KEY)."
 msgstr "Definida en wp-config.php (SOCIALRELAYCVI_POSTIZ_API_KEY)."
 
-#: build/settings.js:7
+#: build/settings.js:12
 msgid "Not connected"
 msgstr "Sin conectar"
 
-#: build/settings.js:7
+#: build/settings.js:12
 msgid "Cannot reach Postiz"
 msgstr "No se puede contactar con Postiz"
 
 #. translators: %d: number of channels.
-#: build/settings.js:8
+#: build/settings.js:13
 #, js-format
 msgid "Connected · %d channel"
 msgid_plural "Connected · %d channels"
 msgstr[0] "Conectado · %d canal"
 msgstr[1] "Conectado · %d canales"
 
-#: build/settings.js:8
+#: build/settings.js:13
 msgid "Postiz instance"
 msgstr "Instancia de Postiz"
 
+#: build/settings.js:13
+msgid "Statuses update at once through the Postiz webhook."
+msgstr "Los estados se actualizan al momento con el webhook de Postiz."
+
+#: build/settings.js:13
+msgid "Statuses update every 15 minutes. Set up the webhook (Webhook tab) to get them at once."
+msgstr "Los estados se actualizan cada 15 minutos. Configura el webhook (pestaña Webhook) para tenerlos al momento."
+
 #. translators: %d: number of channels.
-#: build/settings.js:9
+#: build/settings.js:14
 #, php-format,js-format
 msgid "Connected to Postiz. %d channel available."
 msgid_plural "Connected to Postiz. %d channels available."
 msgstr[0] "Conectado a Postiz. %d canal disponible."
 msgstr[1] "Conectado a Postiz. %d canales disponibles."
 
-#: build/settings.js:9
+#: build/settings.js:14
 msgid "Postiz URL"
 msgstr "URL de Postiz"
 
 #. translators: %s: detected API URL.
-#: build/settings.js:10
+#: build/settings.js:15
 #, js-format
 msgid "Detected API: %s"
 msgstr "API detectada: %s"
 
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Your self-hosted Postiz address. For Postiz Cloud, use https://api.postiz.com."
 msgstr "La dirección de tu Postiz autoalojado. Si usas Postiz Cloud, pon https://api.postiz.com."
 
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "API key"
 msgstr "Clave de API"
 
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Paste your API key"
 msgstr "Pega tu clave de API"
 
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Postiz → Settings → Developers → Public API. Leave empty to keep the current key. For better security define SOCIALRELAYCVI_POSTIZ_API_KEY in wp-config.php or the POSTIZ_API_KEY environment variable."
 msgstr "Postiz → Settings → Developers → Public API. Déjalo vacío para mantener la clave actual. Para más seguridad, define SOCIALRELAYCVI_POSTIZ_API_KEY en wp-config.php o la variable de entorno POSTIZ_API_KEY."
 
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Save and test connection"
 msgstr "Guardar y probar la conexión"
 
-#: build/settings.js:10
+#: build/settings.js:15
 msgid "Postiz public API documentation"
 msgstr "Documentación de la API pública de Postiz"
 
-#: build/settings.js:10
-#: build/settings.js:11
+#: build/settings.js:15
+#: build/settings.js:16
 msgid "Categories"
 msgstr "Categorías"
 
 #. translators: %d: number of categories.
-#: build/settings.js:11
+#: build/settings.js:16
 #, js-format
 msgid "%d category selected."
 msgid_plural "%d categories selected."
 msgstr[0] "%d categoría marcada."
 msgstr[1] "%d categorías marcadas."
 
-#: build/settings.js:11
+#: build/settings.js:16
 msgid "Search categories"
 msgstr "Buscar categorías"
 
-#: build/settings.js:11
+#: build/settings.js:16
 msgid "No categories match."
 msgstr "Ninguna categoría coincide."
 
-#: build/settings.js:11
+#: build/settings.js:16
 msgid "Only"
 msgstr "Solo"
 
-#: build/settings.js:11
+#: build/settings.js:16
 msgid "Share only posts with at least one of these. Empty: any post."
 msgstr "Solo se comparten las entradas con al menos una de estas. Vacío: cualquier entrada."
 
-#: build/settings.js:11
+#: build/settings.js:16
 msgid "Never"
 msgstr "Nunca"
 
-#: build/settings.js:11
+#: build/settings.js:16
 msgid "Never share posts with any of these, even if they match “Only”."
 msgstr "Nunca se comparten las entradas con alguna de estas, aunque cumplan «Solo»."
 
-#: build/settings.js:11
+#: build/settings.js:16
 msgid "Choose which posts are shared by their categories and tags (those of this site). Leave everything empty to share all posts."
 msgstr "Elige qué entradas se comparten según sus categorías y etiquetas (las de este sitio). Déjalo todo vacío para compartir todas las entradas."
 
-#: build/settings.js:11
+#: build/settings.js:16
 msgid "Tags"
 msgstr "Etiquetas"
 
-#: build/settings.js:11
+#: build/settings.js:16
 msgid "customized"
 msgstr "personalizada"
 
 #. translators: %d: character limit of the network.
-#: build/settings.js:12
+#: build/settings.js:17
 #, js-format
 msgid "Template for this network (limit: %d characters)"
 msgstr "Plantilla para esta red (límite: %d caracteres)"
 
-#: build/settings.js:12
+#: build/settings.js:17
 msgid "Template for this network"
 msgstr "Plantilla para esta red"
 
-#: build/settings.js:12
+#: build/settings.js:17
 msgid "Empty = common template"
 msgstr "Vacío = plantilla común"
 
-#: build/settings.js:12
+#: build/settings.js:17
 msgid "Default"
 msgstr "Por defecto"
 
 #. translators: %s: post type label, e.g. Posts.
-#: build/settings.js:13
+#: build/settings.js:18
 #, php-format,js-format
 msgid "Share %s when they are published"
 msgstr "Compartir %s cuando se publiquen"
 
-#: build/settings.js:13
+#: build/settings.js:18
 msgid "No channels in Postiz yet. Add them in Postiz and reload this page."
 msgstr "Todavía no hay canales en Postiz. Añádelos en Postiz y recarga esta página."
 
 #. translators: %d: number of channels.
-#: build/settings.js:14
+#: build/settings.js:19
 #, js-format
 msgid "%d channel of this profile no longer exists in Postiz and is skipped."
 msgid_plural "%d channels of this profile no longer exist in Postiz and are skipped."
 msgstr[0] "%d canal de este perfil ya no existe en Postiz y se omite."
 msgstr[1] "%d canales de este perfil ya no existen en Postiz y se omiten."
 
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Message template"
 msgstr "Plantilla del mensaje"
 
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Use “Insert tag” for the post data. Filters such as |limit:100, |words:30, |upper, |hashtag or |default:text go inside a tag. A line with --- starts a new thread part."
 msgstr "Usa «Insertar etiqueta» para los datos de la entrada. Los filtros como |limit:100, |words:30, |upper, |hashtag o |default:texto van dentro de una etiqueta. Una línea con --- empieza una nueva parte del hilo."
 
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Optional. A network without its own template uses the common one."
 msgstr "Opcional. Las redes sin plantilla propia usan la común."
 
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Delay in minutes"
 msgstr "Retraso en minutos"
 
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Up to 10 images; each network gets as many as it accepts (X 4, LinkedIn 9, Instagram 10, Pinterest 1). The editor can choose others for each post."
 msgstr "Hasta 10 imágenes; cada red recibe las que admite (X 4, LinkedIn 9, Instagram 10, Pinterest 1). En el editor se pueden elegir otras para cada entrada."
 
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Allow sharing again on update (when requested from the editor)"
 msgstr "Permitir volver a compartir al actualizar (cuando se pida desde el editor)"
 
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Conditions"
 msgstr "Condiciones"
 
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Links and tags"
 msgstr "Enlaces y etiquetas"
 
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Add UTM parameters to {url} (utm_source = network, utm_medium = social)"
 msgstr "Añadir parámetros UTM a {url} (utm_source = red, utm_medium = social)"
 
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Accepts tags, e.g. {slug}."
 msgstr "Admite variables, por ejemplo {slug}."
 
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Shorten links with Postiz"
 msgstr "Acortar los enlaces con Postiz"
 
-#: build/settings.js:14
+#: build/settings.js:19
 msgid "Tag the posts in Postiz with the post categories"
 msgstr "Etiquetar las publicaciones en Postiz con las categorías de la entrada"
 
-#: build/settings.js:16
+#: build/settings.js:21
 msgid "Test this profile"
 msgstr "Probar este perfil"
 
-#: build/settings.js:16
+#: build/settings.js:21
 msgid "Pick a post to see the messages the saved profile would send. Nothing is sent."
 msgstr "Elige una entrada para ver los mensajes que enviaría el perfil guardado. No se envía nada."
 
-#: build/settings.js:16
+#: build/settings.js:21
 msgid "Save the profile to test your latest changes."
 msgstr "Guarda el perfil para probar tus últimos cambios."
 
-#: build/settings.js:16
+#: build/settings.js:21
 msgid "Type to search a post…"
 msgstr "Escribe para buscar una entrada…"
 
-#: build/settings.js:16
+#: build/settings.js:21
 msgid "No channels selected."
 msgstr "No hay canales seleccionados."
 
-#: build/settings.js:16
+#: build/settings.js:21
 msgid "Connect Postiz first (Connection tab)."
 msgstr "Primero conecta Postiz (pestaña Conexión)."
 
-#: build/settings.js:16
+#: build/settings.js:21
 msgid "Save profiles"
 msgstr "Guardar perfiles"
 
-#: build/settings.js:16
+#: build/settings.js:21
 msgid "Unsaved changes"
 msgstr "Cambios sin guardar"
 
-#: build/settings.js:16
+#: build/settings.js:21
 msgid "Profiles saved."
 msgstr "Perfiles guardados."
 
-#: build/settings.js:16
-msgid "Postiz webhook"
-msgstr "Webhook de Postiz"
-
-#: build/settings.js:16
-msgid "Paste this URL in Postiz → Settings → Webhooks to update the status of your posts as soon as they are published. Without it, the plugin checks Postiz every 15 minutes."
-msgstr "Pega esta URL en Postiz → Settings → Webhooks para actualizar el estado de tus publicaciones en cuanto salgan. Sin ella, el plugin consulta Postiz cada 15 minutos."
-
-#: build/settings.js:16
-msgid "Webhook URL"
-msgstr "URL del webhook"
-
-#: build/settings.js:16
-msgid "Copied"
-msgstr "Copiada"
-
-#: build/settings.js:16
-msgid "Copy"
-msgstr "Copiar"
-
-#. translators: %s: time since the last webhook call, e.g. "5 minutes ago".
-#: build/settings.js:17
-#, js-format
-msgid "Last call received %s."
-msgstr "Último aviso recibido %s."
-
-#: build/settings.js:17
-msgid "No call received yet. Use “Send Test” in Postiz to check it."
-msgstr "Todavía no ha llegado ningún aviso. Usa «Send Test» en Postiz para comprobarlo."
-
-#: build/settings.js:17
-msgid "New webhook URL created. Update it in Postiz: the old one no longer works."
-msgstr "Se ha creado una URL nueva para el webhook. Cámbiala en Postiz: la anterior ya no funciona."
-
-#: build/settings.js:17
-msgid "Create a new URL"
-msgstr "Crear una URL nueva"
-
-#: build/settings.js:17
-msgid "The current URL will stop working. Continue?"
-msgstr "La URL actual dejará de funcionar. ¿Continuar?"
-
-#: build/settings.js:17
+#: build/settings.js:21
 msgid "Connection"
 msgstr "Conexión"
 
-#: build/settings.js:17
+#: build/settings.js:21
 msgid "Advanced"
 msgstr "Avanzado"

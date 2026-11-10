@@ -99,6 +99,10 @@ Post: `{title}`, `{excerpt}`, `{content}`, `{url}`, `{shortlink}`, `{slug}`, `{a
 
 Filters go inside a tag and can be chained: `|limit:180` (characters), `|words:30`, `|upper`, `|lower`, `|strip`, `|hashtag`, `|default:text` (when the value is empty). For example `{excerpt|words:30}` or `{categories|hashtag}`. A line with only `---` starts a new part of a thread.
 
+= How do I set up the Postiz webhook? =
+
+In Social Relay → Settings → Webhook, copy the URL. In Postiz open Settings → Webhooks, add a webhook, paste the URL, choose the channels and press "Send test": the call appears in the "Last calls" list. The webhook only makes statuses update at once; without it they update every 15 minutes. The URL contains a secret, and the plugin never trusts what the call says: it asks the Postiz API for the real status. "Check URL" tells you if a security plugin or a firewall blocks it.
+
 = Will my posts be shared twice if I update them? =
 
 No. Updates are not shared again unless you allow it in the profile and ask for it in the editor. The plugin also skips content that was already sent.

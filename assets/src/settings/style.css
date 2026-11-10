@@ -168,3 +168,72 @@
 .socialrelaycvi-settings__hint {
 	margin: -4px 0 12px;
 }
+
+/* Webhook */
+.socialrelaycvi-connection__status.is-warning {
+	background: #fcf9e8;
+	color: #8a6d00;
+}
+
+.socialrelaycvi-webhook__title {
+	margin: 20px 0 8px;
+}
+
+.socialrelaycvi-webhook__steps {
+	margin: 0 0 16px 1.4em;
+}
+
+.socialrelaycvi-webhook__steps li {
+	margin-bottom: 4px;
+}
+
+.socialrelaycvi-webhook__history {
+	margin: 0;
+}
+
+.socialrelaycvi-webhook__call {
+	display: flex;
+	gap: 16px;
+	margin: 0;
+	padding: 10px 0;
+	border-top: 1px solid #f0f0f1;
+}
+
+.socialrelaycvi-webhook__call:first-child {
+	border-top: 0;
+}
+
+.socialrelaycvi-webhook__time {
+	flex: 0 0 150px;
+	color: #646970;
+}
+
+.socialrelaycvi-webhook__items {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.socialrelaycvi-webhook__item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 16px;
+}
+
+@media (max-width: 600px) {
+
+	.socialrelaycvi-webhook__call {
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	.socialrelaycvi-webhook__time {
+		flex-basis: auto;
+	}
+}
+
+.socialrelaycvi-webhook__status {
+	color: #646970;
+}

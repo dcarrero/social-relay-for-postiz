@@ -12,6 +12,7 @@ import { useState } from '@wordpress/element';
 import { __, _n, sprintf } from '@wordpress/i18n';
 
 import { config } from '../config';
+import { webhookStatus } from './WebhookTab';
 
 /**
  * Postiz URL and API key.
@@ -100,6 +101,19 @@ export default function ConnectionTab( { settings, setSettings } ) {
 				</span>
 			</CardHeader>
 			<CardBody>
+				{ connection.configured && (
+					<p className="description">
+						{ webhookStatus( settings.webhook.last ).kind === 'ok'
+							? __(
+									'Statuses update at once through the Postiz webhook.',
+									'social-relay-for-postiz'
+							  )
+							: __(
+									'Statuses update every 15 minutes. Set up the webhook (Webhook tab) to get them at once.',
+									'social-relay-for-postiz'
+							  ) }
+					</p>
+				) }
 				{ connection.configured && settings.channelsError && (
 					<Notice status="error" isDismissible={ false }>
 						{ settings.channelsError }

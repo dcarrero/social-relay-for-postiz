@@ -14,7 +14,7 @@ WordPress plugin that auto-publishes and schedules your content on social networ
 - Conditions on categories and tags, UTM parameters per network, Postiz shortener and tags.
 - Background sending (Action Scheduler) with retries, duplicate protection and an activity log with summary cards (published, queued, errors, requests in the last hour against the Postiz limit).
 - Pending posts are cancelled in Postiz when a post is unpublished.
-- Status sync with Postiz (published URL, platform errors), triggered by the Postiz webhook or every 15 minutes.
+- Status sync with Postiz (published URL, platform errors), triggered by the Postiz webhook or every 15 minutes. The Webhook tab shows its state, a setup guide, a self-check of the URL and the last calls.
 - Block editor panel (channels, timing per post, one tab per network for its own text, preview drawn like each network, status with share again / retry / cancel pending), classic editor metabox, posts list column with a status filter, dashboard widget, and failure alerts (admin notice and optional email).
 - "Test this profile" panel in the settings: pick a post and see what the saved profile would send.
 - Export and import of publishing profiles (JSON) to copy them between sites.

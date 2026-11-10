@@ -10,6 +10,7 @@ declare( strict_types=1 );
 namespace SocialRelayCvi\Rest;
 
 use SocialRelayCvi\Admin\ErrorAlerts;
+use SocialRelayCvi\Admin\StatusLabels;
 use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
 use SocialRelayCvi\Postiz\EndpointResolver;
@@ -19,6 +20,7 @@ use SocialRelayCvi\Profiles\ProfileRepository;
 use SocialRelayCvi\Profiles\ProfileTransfer;
 use SocialRelayCvi\Settings\Connection;
 use SocialRelayCvi\Settings\ConnectionTester;
+use SocialRelayCvi\Sync\WebhookPayload;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -154,6 +156,26 @@ final class AdminController implements Module {
 						'type' => 'boolean',
 					),
 				),
+			)
+		);
+
+		register_rest_route(
+			$ns,
+			'/admin/webhook',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => fn (): WP_REST_Response => new WP_REST_Response( $this->webhook_payload() ),
+				'permission_callback' => $admin,
+			)
+		);
+
+		register_rest_route(
+			$ns,
+			'/admin/webhook/check',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => static fn (): WP_REST_Response => new WP_REST_Response( WebhookController::check() ),
+				'permission_callback' => $admin,
 			)
 		);
 
@@ -498,14 +520,51 @@ final class AdminController implements Module {
 	}
 
 	/**
-	 * Webhook URL and last call.
+	 * Webhook URL, last call, history and whether Postiz can reach this site.
 	 *
-	 * @return array{url: string, last: int}
+	 * @return array<string, mixed>
 	 */
 	private function webhook_payload(): array {
+		$history = get_option( WebhookController::OPTION_HISTORY, array() );
+		$history = is_array( $history ) ? $history : array();
+		$row_ids = array();
+		foreach ( $history as $call ) {
+			$row_ids = array_merge( $row_ids, array_map( 'intval', (array) ( $call['rows'] ?? array() ) ) );
+		}
+		$shares = $this->plugin->shares->by_ids( $row_ids );
+
 		return array(
-			'url'  => WebhookController::url(),
-			'last' => (int) get_option( WebhookController::OPTION_LAST, 0 ),
+			'url'     => WebhookController::url(),
+			'last'    => (int) get_option( WebhookController::OPTION_LAST, 0 ),
+			'local'   => WebhookPayload::is_local_url( home_url() ),
+			'host'    => (string) wp_parse_url( home_url(), PHP_URL_HOST ),
+			'history' => array_map(
+				function ( array $call ) use ( $shares ): array {
+					$items = array();
+					foreach ( (array) ( $call['rows'] ?? array() ) as $row_id ) {
+						$row = $shares[ (int) $row_id ] ?? null;
+						if ( null === $row ) {
+							continue;
+						}
+						$items[] = array(
+							'post_title'     => get_the_title( (int) $row['post_id'] ),
+							'edit_link'      => (string) get_edit_post_link( (int) $row['post_id'], 'raw' ),
+							'integration_id' => (string) $row['integration_id'],
+							'identifier'     => (string) $row['identifier'],
+							'status'         => (string) $row['status'],
+							'status_label'   => StatusLabels::label( (string) $row['status'] ),
+							'release_url'    => (string) $row['release_url'],
+						);
+					}
+
+					return array(
+						'time'  => (int) ( $call['time'] ?? 0 ),
+						'posts' => (int) ( $call['posts'] ?? 0 ),
+						'items' => $items,
+					);
+				},
+				$history
+			),
 		);
 	}
 

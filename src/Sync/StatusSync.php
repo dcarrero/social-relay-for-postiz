@@ -12,6 +12,7 @@ namespace SocialRelayCvi\Sync;
 use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
 use SocialRelayCvi\Queue\Queue;
+use SocialRelayCvi\Rest\WebhookController;
 
 /**
  * Reads GET /posts for the pending shares and records published, error and draft states.
@@ -51,6 +52,14 @@ final class StatusSync implements Module {
 		$rows = $this->plugin->shares->syncable();
 		if ( array() === $rows ) {
 			return;
+		}
+
+		// After a webhook call, only the posts it named: a narrower request to Postiz.
+		$hint = get_transient( WebhookController::SYNC_HINT );
+		if ( is_array( $hint ) && array() !== $hint ) {
+			delete_transient( WebhookController::SYNC_HINT );
+			$named = array_values( array_filter( $rows, static fn ( array $row ): bool => in_array( (string) $row['postiz_post_id'], $hint, true ) ) );
+			$rows  = array() !== $named ? $named : $rows;
 		}
 
 		$gateway = $this->plugin->gateway();

@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T20:42:57+00:00",
+    "translation-revision-date": "2026-11-10T20:50:14+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/settings.js",
     "domain": "messages",
@@ -24,6 +24,9 @@
             ],
             "Images": [
                 "Im\u00e1genes"
+            ],
+            "View post": [
+                "Ver publicaci\u00f3n"
             ],
             "(no title)": [
                 "(sin t\u00edtulo)"
@@ -196,6 +199,85 @@
             "Forced by SOCIALRELAYCVI_DELETE_DATA in wp-config.php.": [
                 "Forzado por SOCIALRELAYCVI_DELETE_DATA en wp-config.php."
             ],
+            "Last call %s": [
+                "\u00daltimo aviso %s"
+            ],
+            "Never received": [
+                "Ning\u00fan aviso a\u00fan"
+            ],
+            "Call without posts (a test from Postiz?).": [
+                "Aviso sin publicaciones (\u00bfuna prueba desde Postiz?)."
+            ],
+            "%d post not sent from this site.": [
+                "%d publicaci\u00f3n que no se envi\u00f3 desde este sitio.",
+                "%d publicaciones que no se enviaron desde este sitio."
+            ],
+            "Postiz webhook": [
+                "Webhook de Postiz"
+            ],
+            "Postiz calls this URL as soon as a post goes out, and the status in WordPress updates right away. Without it, the plugin asks Postiz every 15 minutes.": [
+                "Postiz llama a esta URL en cuanto sale una publicaci\u00f3n, y el estado en WordPress se actualiza al momento. Sin ella, el plugin pregunta a Postiz cada 15 minutos."
+            ],
+            "This site (%s) is not reachable from the internet, so Postiz can only call it if both run on the same machine or network. Statuses still update every 15 minutes.": [
+                "Este sitio (%s) no es accesible desde internet, as\u00ed que Postiz solo puede llamarlo si ambos est\u00e1n en la misma m\u00e1quina o red. Los estados se siguen actualizando cada 15 minutos."
+            ],
+            "No call for several days. If you published in the meantime, check that the webhook still exists in Postiz with this URL.": [
+                "Ning\u00fan aviso desde hace varios d\u00edas. Si has publicado entretanto, comprueba que el webhook sigue en Postiz con esta URL."
+            ],
+            "Webhook URL": [
+                "URL del webhook"
+            ],
+            "Copied": [
+                "Copiada"
+            ],
+            "Copy": [
+                "Copiar"
+            ],
+            "New webhook URL created. Update it in Postiz: the old one no longer works.": [
+                "Se ha creado una URL nueva para el webhook. C\u00e1mbiala en Postiz: la anterior ya no funciona."
+            ],
+            "Set it up in Postiz": [
+                "Config\u00faralo en Postiz"
+            ],
+            "In Postiz, open Settings \u2192 Webhooks and add a webhook.": [
+                "En Postiz, abre Settings \u2192 Webhooks y a\u00f1ade un webhook."
+            ],
+            "Give it a name (for example \u201cWordPress\u201d), paste the URL above and choose all channels, or the ones used on this site.": [
+                "Ponle un nombre (por ejemplo \u00abWordPress\u00bb), pega la URL de arriba y elige todos los canales, o los que uses en este sitio."
+            ],
+            "Save it and press \u201cSend test\u201d: the call appears below within a few seconds.": [
+                "Gu\u00e1rdalo y pulsa \u00abSend test\u00bb: el aviso aparece abajo en unos segundos."
+            ],
+            "The URL answers. Postiz can use it if it can reach this site.": [
+                "La URL responde. Postiz puede usarla si llega hasta este sitio."
+            ],
+            "The URL answers \u201cnot found\u201d (404). The REST API may be off or rewritten: check the permalinks and any plugin that limits the REST API.": [
+                "La URL responde \u00abno encontrada\u00bb (404). Puede que la API REST est\u00e9 desactivada o reescrita: revisa los enlaces permanentes y cualquier plugin que limite la API REST."
+            ],
+            "The URL is blocked (%d). A security plugin, Cloudflare or a firewall is stopping calls to the REST API: allow \/wp-json\/socialrelaycvi\/v1\/webhook\/.": [
+                "La URL est\u00e1 bloqueada (%d). Un plugin de seguridad, Cloudflare o un cortafuegos frena las llamadas a la API REST: permite \/wp-json\/socialrelaycvi\/v1\/webhook\/."
+            ],
+            "This server could not call its own address. Many hosts block that, so it does not mean Postiz cannot: use \u201cSend test\u201d in Postiz to be sure.": [
+                "Este servidor no ha podido llamar a su propia direcci\u00f3n. Muchos alojamientos lo bloquean, as\u00ed que no significa que Postiz no pueda: usa \u00abSend test\u00bb en Postiz para asegurarte."
+            ],
+            "Unexpected answer (%d). Use \u201cSend test\u201d in Postiz to check it.": [
+                "Respuesta inesperada (%d). Usa \u00abSend test\u00bb en Postiz para comprobarlo."
+            ],
+            "Check URL": [
+                "Comprobar URL"
+            ],
+            "Create a new URL": [
+                "Crear una URL nueva"
+            ],
+            "The current URL will stop working. Continue?": [
+                "La URL actual dejar\u00e1 de funcionar. \u00bfContinuar?"
+            ],
+            "Last calls": [
+                "\u00daltimos avisos"
+            ],
+            "No calls yet. The first one shows up here when Postiz publishes, or when you press \u201cSend test\u201d.": [
+                "A\u00fan no hay avisos. El primero aparecer\u00e1 aqu\u00ed cuando Postiz publique o cuando pulses \u00abSend test\u00bb."
+            ],
             "Read from the POSTIZ_API_KEY environment variable.": [
                 "Se lee de la variable de entorno POSTIZ_API_KEY."
             ],
@@ -214,6 +296,12 @@
             ],
             "Postiz instance": [
                 "Instancia de Postiz"
+            ],
+            "Statuses update at once through the Postiz webhook.": [
+                "Los estados se actualizan al momento con el webhook de Postiz."
+            ],
+            "Statuses update every 15 minutes. Set up the webhook (Webhook tab) to get them at once.": [
+                "Los estados se actualizan cada 15 minutos. Configura el webhook (pesta\u00f1a Webhook) para tenerlos al momento."
             ],
             "Connected to Postiz. %d channel available.": [
                 "Conectado a Postiz. %d canal disponible.",
@@ -361,36 +449,6 @@
             ],
             "Profiles saved.": [
                 "Perfiles guardados."
-            ],
-            "Postiz webhook": [
-                "Webhook de Postiz"
-            ],
-            "Paste this URL in Postiz \u2192 Settings \u2192 Webhooks to update the status of your posts as soon as they are published. Without it, the plugin checks Postiz every 15 minutes.": [
-                "Pega esta URL en Postiz \u2192 Settings \u2192 Webhooks para actualizar el estado de tus publicaciones en cuanto salgan. Sin ella, el plugin consulta Postiz cada 15 minutos."
-            ],
-            "Webhook URL": [
-                "URL del webhook"
-            ],
-            "Copied": [
-                "Copiada"
-            ],
-            "Copy": [
-                "Copiar"
-            ],
-            "Last call received %s.": [
-                "\u00daltimo aviso recibido %s."
-            ],
-            "No call received yet. Use \u201cSend Test\u201d in Postiz to check it.": [
-                "Todav\u00eda no ha llegado ning\u00fan aviso. Usa \u00abSend Test\u00bb en Postiz para comprobarlo."
-            ],
-            "New webhook URL created. Update it in Postiz: the old one no longer works.": [
-                "Se ha creado una URL nueva para el webhook. C\u00e1mbiala en Postiz: la anterior ya no funciona."
-            ],
-            "Create a new URL": [
-                "Crear una URL nueva"
-            ],
-            "The current URL will stop working. Continue?": [
-                "La URL actual dejar\u00e1 de funcionar. \u00bfContinuar?"
             ],
             "Connection": [
                 "Conexi\u00f3n"

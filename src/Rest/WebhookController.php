@@ -11,6 +11,7 @@ namespace SocialRelayCvi\Rest;
 
 use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
+use SocialRelayCvi\Sync\WebhookPayload;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -19,13 +20,32 @@ use WP_REST_Server;
  * Public endpoint protected by a secret in the URL.
  *
  * Postiz webhooks are not signed, so the URL itself is the credential:
- * /wp-json/socialrelaycvi/v1/webhook/{secret}. The handler only queues a status
- * sync; it never trusts the payload.
+ * /wp-json/socialrelaycvi/v1/webhook/{secret}. The body only says which shares to
+ * check first (WebhookPayload); statuses always come from the Postiz API.
  */
 final class WebhookController implements Module {
 
 	public const OPTION_SECRET = 'socialrelaycvi_webhook_secret';
 	public const OPTION_LAST   = 'socialrelaycvi_webhook_last';
+
+	/**
+	 * Last calls: list of { time, posts, rows } (rows = share row ids the call named).
+	 */
+	public const OPTION_HISTORY = 'socialrelaycvi_webhook_history';
+
+	/**
+	 * Postiz post ids named by the last calls, for a narrower status sync.
+	 */
+	public const SYNC_HINT = 'socialrelaycvi_sync_hint';
+
+	/**
+	 * One-time token of "Check URL" calls, so they are not counted as Postiz calls.
+	 */
+	public const CHECK_TOKEN = 'socialrelaycvi_webhook_check';
+
+	public const CHECK_HEADER = 'X-Socialrelaycvi-Check';
+
+	private const HISTORY_SIZE = 20;
 
 	/**
 	 * Constructor.
@@ -68,10 +88,98 @@ final class WebhookController implements Module {
 			return new WP_REST_Response( array( 'code' => 'rest_no_route' ), 404 );
 		}
 
+		// "Check URL" from the settings: answers, but is not a call from Postiz.
+		$token = (string) get_transient( self::CHECK_TOKEN );
+		if ( '' !== $token && hash_equals( $token, (string) $request->get_header( self::CHECK_HEADER ) ) ) {
+			delete_transient( self::CHECK_TOKEN );
+			return new WP_REST_Response( array( 'check' => true ), 200 );
+		}
+
+		$payload = WebhookPayload::parse( json_decode( (string) $request->get_body(), true ) );
+		$rows    = $this->plugin->shares->by_postiz_ids( $payload['ids'] );
+
 		update_option( self::OPTION_LAST, time(), false );
+		$this->remember( $payload['posts'], array_map( static fn ( array $row ): int => (int) $row['id'], $rows ) );
+
+		// Only a hint of what to check: the status still comes from the Postiz API.
+		if ( array() !== $rows ) {
+			$hint = get_transient( self::SYNC_HINT );
+			$hint = is_array( $hint ) ? $hint : array();
+			set_transient( self::SYNC_HINT, array_values( array_unique( array_merge( $hint, array_column( $rows, 'postiz_post_id' ) ) ) ), 10 * MINUTE_IN_SECONDS );
+		}
 		$this->plugin->queue->enqueue_sync( 0 );
 
 		return new WP_REST_Response( array( 'queued' => true ), 202 );
+	}
+
+	/**
+	 * Adds a call to the history (newest first).
+	 *
+	 * @param int       $posts Posts in the body.
+	 * @param list<int> $rows  Share rows they match.
+	 */
+	private function remember( int $posts, array $rows ): void {
+		$history = get_option( self::OPTION_HISTORY, array() );
+		$history = is_array( $history ) ? $history : array();
+
+		array_unshift(
+			$history,
+			array(
+				'time'  => time(),
+				'posts' => $posts,
+				'rows'  => array_slice( $rows, 0, 10 ),
+			)
+		);
+
+		update_option( self::OPTION_HISTORY, array_slice( $history, 0, self::HISTORY_SIZE ), false );
+	}
+
+	/**
+	 * Calls the webhook URL from this server, as Postiz would, to see whether it answers.
+	 *
+	 * @return array{ok: bool, code: string, status: int}
+	 *         code: ok, not_found (route blocked or permalinks), forbidden (security plugin or firewall),
+	 *         unreachable (the server cannot call itself) or unexpected.
+	 */
+	public static function check(): array {
+		$token = wp_generate_password( 24, false, false );
+		set_transient( self::CHECK_TOKEN, $token, MINUTE_IN_SECONDS );
+
+		$response = wp_remote_post(
+			self::url(),
+			array(
+				'timeout' => 10,
+				'headers' => array(
+					'Content-Type'     => 'application/json',
+					self::CHECK_HEADER => $token,
+				),
+				'body'    => '[]',
+			)
+		);
+		delete_transient( self::CHECK_TOKEN );
+
+		if ( is_wp_error( $response ) ) {
+			return array(
+				'ok'     => false,
+				'code'   => 'unreachable',
+				'status' => 0,
+			);
+		}
+
+		$status = (int) wp_remote_retrieve_response_code( $response );
+		$body   = json_decode( (string) wp_remote_retrieve_body( $response ), true );
+		$code   = match ( true ) {
+			200 === $status && is_array( $body ) && ! empty( $body['check'] ) => 'ok',
+			404 === $status => 'not_found',
+			401 === $status, 403 === $status => 'forbidden',
+			default => 'unexpected',
+		};
+
+		return array(
+			'ok'     => 'ok' === $code,
+			'code'   => $code,
+			'status' => $status,
+		);
 	}
 
 	/**
