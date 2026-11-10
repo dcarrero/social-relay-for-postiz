@@ -1,7 +1,12 @@
 import apiFetch from '@wordpress/api-fetch';
-import { CheckboxControl, FormTokenField } from '@wordpress/components';
+import {
+	BaseControl,
+	CheckboxControl,
+	FormTokenField,
+	SearchControl,
+} from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
 
 /**
@@ -52,6 +57,89 @@ function TagsField( { label, value, onChange } ) {
 	);
 }
 
+// Above this many categories the list gets a search box.
+const SEARCH_FROM = 8;
+
+/**
+ * Categories of the site as checkboxes, in a scrolling box with a search when there are many.
+ *
+ * @param {Object}   props            Props.
+ * @param {string}   props.id         Unique id for the label.
+ * @param {Object[]} props.categories All categories ({ id, name }).
+ * @param {number[]} props.value      Checked category ids.
+ * @param {Function} props.onToggle   Receives ( id, checked ).
+ * @return {Element} Field.
+ */
+function CategoriesField( { id, categories, value, onToggle } ) {
+	const [ search, setSearch ] = useState( '' );
+	const term = search.trim().toLowerCase();
+	const shown = term
+		? categories.filter( ( category ) =>
+				category.name.toLowerCase().includes( term )
+		  )
+		: categories;
+
+	return (
+		<BaseControl
+			id={ id }
+			label={ __( 'Categories', 'social-relay-for-postiz' ) }
+			help={
+				value.length
+					? sprintf(
+							/* translators: %d: number of categories. */
+							_n(
+								'%d category selected.',
+								'%d categories selected.',
+								value.length,
+								'social-relay-for-postiz'
+							),
+							value.length
+					  )
+					: undefined
+			}
+			__nextHasNoMarginBottom
+		>
+			{ categories.length > SEARCH_FROM && (
+				<SearchControl
+					value={ search }
+					onChange={ setSearch }
+					placeholder={ __(
+						'Search categories',
+						'social-relay-for-postiz'
+					) }
+					size="compact"
+					__nextHasNoMarginBottom
+				/>
+			) }
+			<div
+				className="socialrelaycvi-settings__terms"
+				role="group"
+				aria-label={ __( 'Categories', 'social-relay-for-postiz' ) }
+			>
+				{ shown.map( ( category ) => (
+					<CheckboxControl
+						key={ category.id }
+						label={ category.name }
+						checked={ value.includes( category.id ) }
+						onChange={ ( checked ) =>
+							onToggle( category.id, checked )
+						}
+						__nextHasNoMarginBottom
+					/>
+				) ) }
+				{ ! shown.length && (
+					<p className="description">
+						{ __(
+							'No categories match.',
+							'social-relay-for-postiz'
+						) }
+					</p>
+				) }
+			</div>
+		</BaseControl>
+	);
+}
+
 /**
  * "Only" and "Never" rules on categories and tags.
  *
@@ -83,40 +171,51 @@ export default function Conditions( {
 	};
 
 	const groups = [
-		{ kind: 'include', title: __( 'Only', 'social-relay-for-postiz' ) },
-		{ kind: 'exclude', title: __( 'Never', 'social-relay-for-postiz' ) },
+		{
+			kind: 'include',
+			title: __( 'Only', 'social-relay-for-postiz' ),
+			hint: __(
+				'Share only posts with at least one of these. Empty: any post.',
+				'social-relay-for-postiz'
+			),
+		},
+		{
+			kind: 'exclude',
+			title: __( 'Never', 'social-relay-for-postiz' ),
+			hint: __(
+				'Never share posts with any of these, even if they match “Only”.',
+				'social-relay-for-postiz'
+			),
+		},
 	];
 
 	return (
 		<>
 			<p className="description">
 				{ __(
-					'Share only posts in at least one of the “Only” terms, and never posts in a “Never” term. Leave everything empty to share all posts.',
+					'Choose which posts are shared by their categories and tags (those of this site). Leave everything empty to share all posts.',
 					'social-relay-for-postiz'
 				) }
 			</p>
 			<div className="socialrelaycvi-settings__columns">
-				{ groups.map( ( { kind, title } ) => (
+				{ groups.map( ( { kind, title, hint } ) => (
 					<div key={ kind }>
 						<h4>{ title }</h4>
-						{ postType.categories &&
-							categories.map( ( category ) => (
-								<CheckboxControl
-									key={ category.id }
-									label={ category.name }
-									checked={ (
-										profile[ `${ kind }_categories` ] || []
-									).includes( category.id ) }
-									onChange={ ( checked ) =>
-										toggleCategory(
-											kind,
-											category.id,
-											checked
-										)
-									}
-									__nextHasNoMarginBottom
-								/>
-							) ) }
+						<p className="description socialrelaycvi-settings__hint">
+							{ hint }
+						</p>
+						{ postType.categories && (
+							<CategoriesField
+								id={ `socialrelaycvi-${ kind }-categories` }
+								categories={ categories }
+								value={
+									profile[ `${ kind }_categories` ] || []
+								}
+								onToggle={ ( id, checked ) =>
+									toggleCategory( kind, id, checked )
+								}
+							/>
+						) }
 						{ postType.tags && (
 							<TagsField
 								label={ __(

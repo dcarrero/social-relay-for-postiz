@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T20:19:41+00:00",
+    "translation-revision-date": "2026-11-10T20:42:57+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/settings.js",
     "domain": "messages",
@@ -243,14 +243,33 @@
             "Postiz public API documentation": [
                 "Documentaci\u00f3n de la API p\u00fablica de Postiz"
             ],
+            "Categories": [
+                "Categor\u00edas"
+            ],
+            "%d category selected.": [
+                "%d categor\u00eda marcada.",
+                "%d categor\u00edas marcadas."
+            ],
+            "Search categories": [
+                "Buscar categor\u00edas"
+            ],
+            "No categories match.": [
+                "Ninguna categor\u00eda coincide."
+            ],
             "Only": [
                 "Solo"
+            ],
+            "Share only posts with at least one of these. Empty: any post.": [
+                "Solo se comparten las entradas con al menos una de estas. Vac\u00edo: cualquier entrada."
             ],
             "Never": [
                 "Nunca"
             ],
-            "Share only posts in at least one of the \u201cOnly\u201d terms, and never posts in a \u201cNever\u201d term. Leave everything empty to share all posts.": [
-                "Comparte solo las entradas que tengan al menos uno de los t\u00e9rminos de \u00abSolo\u00bb y nunca las que tengan alguno de \u00abNunca\u00bb. D\u00e9jalo todo vac\u00edo para compartir todas las entradas."
+            "Never share posts with any of these, even if they match \u201cOnly\u201d.": [
+                "Nunca se comparten las entradas con alguna de estas, aunque cumplan \u00abSolo\u00bb."
+            ],
+            "Choose which posts are shared by their categories and tags (those of this site). Leave everything empty to share all posts.": [
+                "Elige qu\u00e9 entradas se comparten seg\u00fan sus categor\u00edas y etiquetas (las de este sitio). D\u00e9jalo todo vac\u00edo para compartir todas las entradas."
             ],
             "Tags": [
                 "Etiquetas"
