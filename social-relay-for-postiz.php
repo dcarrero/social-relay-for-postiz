@@ -3,7 +3,7 @@
  * Plugin Name:       Social Relay for Postiz
  * Plugin URI:        https://github.com/dcarrero/social-relay-for-postiz
  * Description:       Auto-publish and schedule your WordPress content on social networks through your own Postiz instance (self-hosted or Postiz Cloud).
- * Version:           0.2.0-dev
+ * Version:           0.3.0-dev
  * Requires at least: 7.0
  * Requires PHP:      8.2
  * Author:            Color Vivo
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SOCIALRELAYCVI_VERSION', '0.2.0-dev' );
+define( 'SOCIALRELAYCVI_VERSION', '0.3.0-dev' );
 define( 'SOCIALRELAYCVI_FILE', __FILE__ );
 define( 'SOCIALRELAYCVI_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SOCIALRELAYCVI_URL', plugin_dir_url( __FILE__ ) );

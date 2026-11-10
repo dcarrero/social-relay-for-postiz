@@ -21,6 +21,7 @@ final class PostMeta implements Module {
 	public const MESSAGE   = '_socialrelaycvi_message';
 	public const RESHARE   = '_socialrelaycvi_reshare';
 	public const OVERRIDES = '_socialrelaycvi_overrides';
+	public const CHANNELS  = '_socialrelaycvi_channels';
 
 	/**
 	 * {@inheritDoc}
@@ -75,6 +76,25 @@ final class PostMeta implements Module {
 					),
 				),
 				'sanitize_callback' => static fn ( mixed $value ): array => is_array( $value ) ? array_map( static fn ( mixed $text ): string => sanitize_textarea_field( (string) $text ), $value ) : array(),
+				'auth_callback'     => $auth,
+			)
+		);
+
+		// Channels chosen for this post; empty = the profile's channels.
+		register_post_meta(
+			'',
+			self::CHANNELS,
+			array(
+				'type'              => 'array',
+				'single'            => true,
+				'default'           => array(),
+				'show_in_rest'      => array(
+					'schema' => array(
+						'type'  => 'array',
+						'items' => array( 'type' => 'string' ),
+					),
+				),
+				'sanitize_callback' => static fn ( mixed $value ): array => is_array( $value ) ? array_values( array_unique( array_map( static fn ( mixed $id ): string => sanitize_text_field( (string) $id ), $value ) ) ) : array(),
 				'auth_callback'     => $auth,
 			)
 		);

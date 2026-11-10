@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-10T10:25:33+00:00\n"
+"POT-Creation-Date: 2026-11-10T10:32:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -49,10 +49,88 @@ msgstr ""
 msgid "Social Relay for Postiz is missing its dependencies. Run \"composer install\" or install a release build."
 msgstr ""
 
+#: src/Admin/ClassicMetabox.php:57
+#: src/Admin/DashboardWidget.php:42
+msgid "Social networks (Postiz)"
+msgstr ""
+
+#: src/Admin/ClassicMetabox.php:77
+#: assets/js/editor-panel.js:460
+msgid "Share when publishing"
+msgstr ""
+
+#: src/Admin/ClassicMetabox.php:79
+#: src/Admin/SettingsPage.php:260
+#: assets/js/editor-panel.js:488
+msgid "Channels"
+msgstr ""
+
+#: src/Admin/ClassicMetabox.php:88
+#: assets/js/editor-panel.js:199
+msgid "Text for all networks"
+msgstr ""
+
+#: src/Admin/ClassicMetabox.php:89
+msgid "Empty = profile template"
+msgstr ""
+
+#: src/Admin/ClassicMetabox.php:92
+#: assets/js/editor-panel.js:468
+msgid "Share again on the next update"
+msgstr ""
+
+#: src/Admin/ClassicMetabox.php:147
+#: assets/js/editor-panel.js:482
+msgid "Status"
+msgstr ""
+
+#: src/Admin/ClassicMetabox.php:160
+#: assets/js/editor-panel.js:405
+msgid "View post"
+msgstr ""
+
+#: src/Admin/DashboardWidget.php:56
+msgid "Published (7 days)"
+msgstr ""
+
+#: src/Admin/DashboardWidget.php:57
+#: src/Admin/StatusLabels.php:24
+#: assets/js/editor-panel.js:66
+msgid "Queued"
+msgstr ""
+
+#: src/Admin/DashboardWidget.php:58
+msgid "Errors"
+msgstr ""
+
+#: src/Admin/DashboardWidget.php:71
+msgid "Latest errors"
+msgstr ""
+
+#: src/Admin/DashboardWidget.php:83
+msgid "Next"
+msgstr ""
+
+#: src/Admin/DashboardWidget.php:85
+msgid "Nothing scheduled."
+msgstr ""
+
+#: src/Admin/DashboardWidget.php:99
 #: src/Admin/LogPage.php:40
 #: src/Admin/LogPage.php:41
 #: src/Admin/LogPage.php:59
+#: assets/js/editor-panel.js:417
 msgid "Log"
+msgstr ""
+
+#: src/Admin/DashboardWidget.php:100
+#: src/Admin/SettingsPage.php:61
+#: src/Admin/SettingsPage.php:71
+msgid "Settings"
+msgstr ""
+
+#: src/Admin/DashboardWidget.php:102
+msgid "Open Postiz"
 msgstr ""
 
 #: src/Admin/LogPage.php:63
@@ -77,6 +155,7 @@ msgid "Channel"
 msgstr ""
 
 #: src/Admin/LogPage.php:68
+#: assets/js/editor-panel.js:493
 msgid "Message"
 msgstr ""
 
@@ -85,12 +164,8 @@ msgid "Nothing logged yet."
 msgstr ""
 
 #: src/Admin/SettingsPage.php:53
+#: assets/js/editor-panel.js:550
 msgid "Social Relay"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:61
-#: src/Admin/SettingsPage.php:71
-msgid "Settings"
 msgstr ""
 
 #: src/Admin/SettingsPage.php:170
@@ -150,6 +225,7 @@ msgid "Schedule with a delay"
 msgstr ""
 
 #: src/Admin/SettingsPage.php:245
+#: assets/js/editor-panel.js:56
 msgid "Next free slot in Postiz"
 msgstr ""
 
@@ -161,10 +237,6 @@ msgstr ""
 #: src/Admin/SettingsPage.php:256
 #, php-format
 msgid "Share %s when they are published"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:260
-msgid "Channels"
 msgstr ""
 
 #: src/Admin/SettingsPage.php:262
@@ -305,6 +377,27 @@ msgstr ""
 
 #: src/Admin/SettingsPage.php:535
 msgid "You are not allowed to do this."
+msgstr ""
+
+#: src/Admin/StatusLabels.php:25
+#: assets/js/editor-panel.js:67
+msgid "Published"
+msgstr ""
+
+#: src/Admin/StatusLabels.php:26
+#: assets/js/editor-panel.js:68
+msgid "Error"
+msgstr ""
+
+#: src/Admin/StatusLabels.php:27
+#: assets/js/editor-panel.js:58
+#: assets/js/editor-panel.js:69
+msgid "Draft in Postiz"
+msgstr ""
+
+#: src/Admin/StatusLabels.php:28
+#: assets/js/editor-panel.js:70
+msgid "Cancelled"
 msgstr ""
 
 #: src/Connector/ConnectorRegistration.php:57
@@ -470,26 +563,26 @@ msgstr ""
 msgid "This network needs an image and the post has none; skipped."
 msgstr ""
 
-#: src/Sharing/ShareService.php:181
+#: src/Sharing/ShareService.php:185
 msgid "Channel no longer exists in Postiz; skipped."
 msgstr ""
 
-#: src/Sharing/ShareService.php:189
+#: src/Sharing/ShareService.php:193
 msgid "Channel is disabled in Postiz; skipped."
 msgstr ""
 
 #. translators: %s: list of missing settings.
-#: src/Sharing/ShareService.php:206
+#: src/Sharing/ShareService.php:210
 #, php-format
 msgid "Missing network settings (%s); skipped."
 msgstr ""
 
-#: src/Sharing/ShareService.php:287
+#: src/Sharing/ShareService.php:291
 msgid "Pending posts cancelled in Postiz."
 msgstr ""
 
 #. translators: 1: number of channels, 2: Postiz post type (now, schedule, draft).
-#: src/Sharing/ShareService.php:360
+#: src/Sharing/ShareService.php:364
 #, php-format
 msgid "Sent to Postiz: %1$d channel, type %2$s."
 msgid_plural "Sent to Postiz: %1$d channels, type %2$s."
@@ -497,17 +590,17 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: error message, 2: attempt number, 3: max attempts.
-#: src/Sharing/ShareService.php:411
+#: src/Sharing/ShareService.php:415
 #, php-format
 msgid "%1$s Retrying (%2$d of %3$d)."
 msgstr ""
 
-#: src/Sharing/ShareService.php:572
+#: src/Sharing/ShareService.php:576
 msgid "Unexpected upload response."
 msgstr ""
 
 #. translators: %s: error message.
-#: src/Sharing/ShareService.php:576
+#: src/Sharing/ShareService.php:580
 #, php-format
 msgid "Postiz could not fetch the featured image (%s). Sent without image."
 msgstr ""
@@ -519,3 +612,111 @@ msgstr ""
 #: src/Sync/StatusSync.php:115
 msgid "Postiz reports an error for this post."
 msgstr ""
+
+#. translators: %d: minutes of delay.
+#: assets/js/editor-panel.js:52
+#, js-format
+msgid "Scheduled %d minutes after publishing"
+msgstr ""
+
+#: assets/js/editor-panel.js:60
+msgid "Immediately"
+msgstr ""
+
+#: assets/js/editor-panel.js:71
+msgid "Pending"
+msgstr ""
+
+#: assets/js/editor-panel.js:151
+msgid "No channels in Postiz yet."
+msgstr ""
+
+#: assets/js/editor-panel.js:174
+msgid "Use the profile channels"
+msgstr ""
+
+#: assets/js/editor-panel.js:176
+msgid "Channels from the publishing profile."
+msgstr ""
+
+#: assets/js/editor-panel.js:200
+msgid "Empty = profile template. Tags like {title} and {url} work here too."
+msgstr ""
+
+#: assets/js/editor-panel.js:207
+msgid "Text per network"
+msgstr ""
+
+#: assets/js/editor-panel.js:223
+msgid "custom"
+msgstr ""
+
+#: assets/js/editor-panel.js:228
+msgid "Empty = text for all networks"
+msgstr ""
+
+#: assets/js/editor-panel.js:274
+msgid "This post does not match the profile conditions and will not be shared."
+msgstr ""
+
+#. translators: %d: number of parts in a thread.
+#: assets/js/editor-panel.js:316
+#, js-format
+msgid "Thread of %d part."
+msgid_plural "Thread of %d parts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/js/editor-panel.js:333
+msgid "Based on the last saved version."
+msgstr ""
+
+#: assets/js/editor-panel.js:335
+#: assets/js/editor-panel.js:415
+msgid "Refresh"
+msgstr ""
+
+#: assets/js/editor-panel.js:368
+msgid "Nothing sent to Postiz yet."
+msgstr ""
+
+#: assets/js/editor-panel.js:427
+msgid "Postiz is not connected yet."
+msgstr ""
+
+#: assets/js/editor-panel.js:429
+msgid "Connect Postiz"
+msgstr ""
+
+#: assets/js/editor-panel.js:436
+msgid "Sharing is off for this post type."
+msgstr ""
+
+#: assets/js/editor-panel.js:438
+msgid "Set up a publishing profile"
+msgstr ""
+
+#: assets/js/editor-panel.js:460
+msgid "Shared when published"
+msgstr ""
+
+#: assets/js/editor-panel.js:498
+msgid "Preview"
+msgstr ""
+
+#: assets/js/editor-panel.js:520
+#: assets/js/editor-panel.js:554
+msgid "Social networks"
+msgstr ""
+
+#: assets/js/editor-panel.js:522
+msgid "This post will not be shared."
+msgstr ""
+
+#. translators: %d: number of channels.
+#: assets/js/editor-panel.js:531
+#, js-format
+msgid "Will be sent to Postiz for %d channel:"
+msgid_plural "Will be sent to Postiz for %d channels:"
+msgstr[0] ""
+msgstr[1] ""

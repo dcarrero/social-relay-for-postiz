@@ -4,7 +4,7 @@ Tags: postiz, social media, auto post, schedule, self-hosted
 Requires at least: 7.0
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 0.1.0
+Stable tag: 0.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,9 @@ Works with self-hosted Postiz and with Postiz Cloud.
 * Conditions: share only posts in some categories or tags, never posts in others.
 * UTM parameters per network, Postiz link shortener and Postiz tags from your categories.
 * Pending posts are cancelled in Postiz when a post is unpublished or trashed.
+* "Social networks" panel in the block editor: channels, text per network, preview with character counts and the status of each network after publishing. Metabox for the classic editor.
+* Status sync with Postiz (published link, platform errors) through the Postiz webhook or every 15 minutes.
+* Dashboard widget with the latest activity.
 * Publish now, schedule with a delay, use the next free slot in Postiz, or create drafts in Postiz.
 * Featured image upload.
 * One request per post for every channel, to respect the Postiz API rate limit.
@@ -66,6 +69,12 @@ Postiz Cloud terms: https://postiz.com/terms
 Postiz Cloud privacy policy: https://postiz.com/privacy
 
 == Changelog ==
+
+= 0.3.0 =
+* Block editor panel, pre-publish summary and classic editor metabox.
+* Status sync with Postiz and webhook receiver.
+* Dashboard widget.
+* JavaScript translations; Spanish updated.
 
 = 0.2.0 =
 * Per-network templates and settings, term conditions, UTM parameters, Postiz shortener and tags.

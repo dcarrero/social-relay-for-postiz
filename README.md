@@ -3,7 +3,7 @@
 WordPress plugin that auto-publishes and schedules your content on social networks through **your own Postiz instance** (self-hosted or Postiz Cloud). WordPress talks directly to the Postiz public API: no middleman service.
 
 - Requires WordPress 7.0+ and PHP 8.2+.
-- Status: early development, version 0.2 (see [CHANGELOG.md](CHANGELOG.md)).
+- Status: early development, version 0.3 (see [CHANGELOG.md](CHANGELOG.md)).
 
 ## Features
 
@@ -14,6 +14,7 @@ WordPress plugin that auto-publishes and schedules your content on social networ
 - Background sending (Action Scheduler) with retries, duplicate protection and an activity log.
 - Pending posts are cancelled in Postiz when a post is unpublished.
 - Status sync with Postiz (published URL, platform errors), triggered by the Postiz webhook or every 15 minutes.
+- Block editor panel (channels, text per network, preview, status), classic editor metabox and dashboard widget.
 - REST routes for status, channels, a post's shares and a dry-run preview.
 - English base, Spanish (es_ES) translation included.
 
@@ -39,7 +40,8 @@ composer analyse   # PHPStan
 | `src/Connector/` | Settings → Connectors registration (WordPress 7) |
 | `src/Rest/` | `socialrelaycvi/v1` routes and the Postiz webhook |
 | `src/Sync/` | Status sync with Postiz |
-| `src/Admin/` | Settings and log screens |
+| `src/Admin/` | Settings and log screens, editor panel loader, classic metabox, dashboard widget |
+| `assets/js/editor-panel.js` | Block editor panel (no build step: uses the `wp.*` packages loaded by the editor) |
 | `languages/` | `.pot` template and translations |
 
 ### Extending
@@ -63,7 +65,7 @@ All strings are written in English with the `social-relay-for-postiz` text domai
 composer i18n   # regenerate the .pot, update the .po files and compile the .mo files
 ```
 
-When adding strings: use `_x()` when a word has more than one meaning (e.g. "Post"), `_n()` for counts, and a `translators:` comment for every placeholder.
+In JavaScript, write the text domain literally in every call (`__( 'Text', 'social-relay-for-postiz' )`) so the extractor finds it. When adding strings: use `_x()` when a word has more than one meaning (e.g. "Post"), `_n()` for counts, and a `translators:` comment for every placeholder.
 
 ## License
 

@@ -9,6 +9,9 @@ declare( strict_types=1 );
 
 namespace SocialRelayCvi;
 
+use SocialRelayCvi\Admin\ClassicMetabox;
+use SocialRelayCvi\Admin\DashboardWidget;
+use SocialRelayCvi\Admin\EditorPanel;
 use SocialRelayCvi\Admin\LogPage;
 use SocialRelayCvi\Admin\SettingsPage;
 use SocialRelayCvi\Connector\ConnectorRegistration;
@@ -191,6 +194,9 @@ final class Plugin {
 			'status_sync'   => new StatusSync( $this ),
 			'settings_page' => new SettingsPage( $this ),
 			'log_page'      => new LogPage( $this ),
+			'editor_panel'  => new EditorPanel( $this ),
+			'metabox'       => new ClassicMetabox( $this ),
+			'dashboard'     => new DashboardWidget( $this ),
 			'log_cleanup'   => $this->logger,
 			'post_meta'     => new PostMeta(),
 		);

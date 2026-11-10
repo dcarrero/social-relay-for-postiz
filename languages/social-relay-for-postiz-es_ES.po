@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-11-10T10:13:03+00:00\n"
-"PO-Revision-Date: 2026-11-10T10:25:33+00:00\n"
+"PO-Revision-Date: 2026-11-10T10:32:45+00:00\n"
 "Language: es_ES\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -48,9 +48,78 @@ msgstr "Social Relay for Postiz necesita PHP 8.2 o superior."
 msgid "Social Relay for Postiz is missing its dependencies. Run \"composer install\" or install a release build."
 msgstr "A Social Relay for Postiz le faltan dependencias. Ejecuta \"composer install\" o instala una versión publicada."
 
-#: src/Admin/LogPage.php:40 src/Admin/LogPage.php:41 src/Admin/LogPage.php:59
+#: src/Admin/ClassicMetabox.php:57 src/Admin/DashboardWidget.php:42
+msgid "Social networks (Postiz)"
+msgstr "Redes sociales (Postiz)"
+
+#: src/Admin/ClassicMetabox.php:77 assets/js/editor-panel.js:460
+msgid "Share when publishing"
+msgstr "Compartir al publicar"
+
+#: src/Admin/ClassicMetabox.php:79 src/Admin/SettingsPage.php:260
+#: assets/js/editor-panel.js:488
+msgid "Channels"
+msgstr "Canales"
+
+#: src/Admin/ClassicMetabox.php:88 assets/js/editor-panel.js:199
+msgid "Text for all networks"
+msgstr "Texto para todas las redes"
+
+#: src/Admin/ClassicMetabox.php:89
+msgid "Empty = profile template"
+msgstr "Vacío = plantilla del perfil"
+
+#: src/Admin/ClassicMetabox.php:92 assets/js/editor-panel.js:468
+msgid "Share again on the next update"
+msgstr "Volver a compartir en la próxima actualización"
+
+#: src/Admin/ClassicMetabox.php:147 assets/js/editor-panel.js:482
+msgid "Status"
+msgstr "Estado"
+
+#: src/Admin/ClassicMetabox.php:160 assets/js/editor-panel.js:405
+msgid "View post"
+msgstr "Ver publicación"
+
+#: src/Admin/DashboardWidget.php:56
+msgid "Published (7 days)"
+msgstr "Publicadas (7 días)"
+
+#: src/Admin/DashboardWidget.php:57 src/Admin/StatusLabels.php:24
+#: assets/js/editor-panel.js:66
+msgid "Queued"
+msgstr "En cola"
+
+#: src/Admin/DashboardWidget.php:58
+msgid "Errors"
+msgstr "Errores"
+
+#: src/Admin/DashboardWidget.php:71
+msgid "Latest errors"
+msgstr "Últimos errores"
+
+#: src/Admin/DashboardWidget.php:83
+msgid "Next"
+msgstr "Próximas"
+
+#: src/Admin/DashboardWidget.php:85
+msgid "Nothing scheduled."
+msgstr "No hay nada programado."
+
+#: src/Admin/DashboardWidget.php:99 src/Admin/LogPage.php:40
+#: src/Admin/LogPage.php:41 src/Admin/LogPage.php:59
+#: assets/js/editor-panel.js:417
 msgid "Log"
 msgstr "Registro"
+
+#: src/Admin/DashboardWidget.php:100 src/Admin/SettingsPage.php:61
+#: src/Admin/SettingsPage.php:71
+msgid "Settings"
+msgstr "Ajustes"
+
+#: src/Admin/DashboardWidget.php:102
+msgid "Open Postiz"
+msgstr "Abrir Postiz"
 
 #: src/Admin/LogPage.php:63
 msgid "Date (UTC)"
@@ -73,7 +142,7 @@ msgstr "Entrada"
 msgid "Channel"
 msgstr "Canal"
 
-#: src/Admin/LogPage.php:68
+#: src/Admin/LogPage.php:68 assets/js/editor-panel.js:493
 msgid "Message"
 msgstr "Mensaje"
 
@@ -81,13 +150,9 @@ msgstr "Mensaje"
 msgid "Nothing logged yet."
 msgstr "Todavía no hay nada en el registro."
 
-#: src/Admin/SettingsPage.php:53
+#: src/Admin/SettingsPage.php:53 assets/js/editor-panel.js:550
 msgid "Social Relay"
 msgstr "Social Relay"
-
-#: src/Admin/SettingsPage.php:61 src/Admin/SettingsPage.php:71
-msgid "Settings"
-msgstr "Ajustes"
 
 #: src/Admin/SettingsPage.php:170
 msgid "Postiz connection"
@@ -145,7 +210,7 @@ msgstr "Publicar al momento"
 msgid "Schedule with a delay"
 msgstr "Programar con un retraso"
 
-#: src/Admin/SettingsPage.php:245
+#: src/Admin/SettingsPage.php:245 assets/js/editor-panel.js:56
 msgid "Next free slot in Postiz"
 msgstr "Siguiente hueco libre en Postiz"
 
@@ -158,10 +223,6 @@ msgstr "Crear como borrador en Postiz"
 #, php-format
 msgid "Share %s when they are published"
 msgstr "Compartir %s cuando se publiquen"
-
-#: src/Admin/SettingsPage.php:260
-msgid "Channels"
-msgstr "Canales"
 
 #: src/Admin/SettingsPage.php:262
 msgid "No channels in Postiz yet. Add them in Postiz and reload this page."
@@ -302,6 +363,23 @@ msgstr "Perfiles guardados."
 #: src/Admin/SettingsPage.php:535
 msgid "You are not allowed to do this."
 msgstr "No tienes permiso para hacer esto."
+
+#: src/Admin/StatusLabels.php:25 assets/js/editor-panel.js:67
+msgid "Published"
+msgstr "Publicada"
+
+#: src/Admin/StatusLabels.php:26 assets/js/editor-panel.js:68
+msgid "Error"
+msgstr "Error"
+
+#: src/Admin/StatusLabels.php:27 assets/js/editor-panel.js:58
+#: assets/js/editor-panel.js:69
+msgid "Draft in Postiz"
+msgstr "Borrador en Postiz"
+
+#: src/Admin/StatusLabels.php:28 assets/js/editor-panel.js:70
+msgid "Cancelled"
+msgstr "Cancelada"
 
 #: src/Connector/ConnectorRegistration.php:57
 msgid "Publish to social networks through your Postiz instance (self-hosted or Postiz Cloud). Set the instance URL in Social Relay → Settings."
@@ -466,26 +544,26 @@ msgstr "Este mismo contenido ya se envió; se omite para no duplicarlo."
 msgid "This network needs an image and the post has none; skipped."
 msgstr "Esta red necesita una imagen y la entrada no tiene; se omite."
 
-#: src/Sharing/ShareService.php:181
+#: src/Sharing/ShareService.php:185
 msgid "Channel no longer exists in Postiz; skipped."
 msgstr "El canal ya no existe en Postiz; se omite."
 
-#: src/Sharing/ShareService.php:189
+#: src/Sharing/ShareService.php:193
 msgid "Channel is disabled in Postiz; skipped."
 msgstr "El canal está desactivado en Postiz; se omite."
 
 #. translators: %s: list of missing settings.
-#: src/Sharing/ShareService.php:206
+#: src/Sharing/ShareService.php:210
 #, php-format
 msgid "Missing network settings (%s); skipped."
 msgstr "Faltan ajustes de la red (%s); se omite."
 
-#: src/Sharing/ShareService.php:287
+#: src/Sharing/ShareService.php:291
 msgid "Pending posts cancelled in Postiz."
 msgstr "Publicaciones pendientes canceladas en Postiz."
 
 #. translators: 1: number of channels, 2: Postiz post type (now, schedule, draft).
-#: src/Sharing/ShareService.php:360
+#: src/Sharing/ShareService.php:364
 #, php-format
 msgid "Sent to Postiz: %1$d channel, type %2$s."
 msgid_plural "Sent to Postiz: %1$d channels, type %2$s."
@@ -493,17 +571,17 @@ msgstr[0] "Enviado a Postiz: %1$d canal, tipo %2$s."
 msgstr[1] "Enviado a Postiz: %1$d canales, tipo %2$s."
 
 #. translators: 1: error message, 2: attempt number, 3: max attempts.
-#: src/Sharing/ShareService.php:411
+#: src/Sharing/ShareService.php:415
 #, php-format
 msgid "%1$s Retrying (%2$d of %3$d)."
 msgstr "%1$s Reintentando (%2$d de %3$d)."
 
-#: src/Sharing/ShareService.php:572
+#: src/Sharing/ShareService.php:576
 msgid "Unexpected upload response."
 msgstr "Respuesta inesperada al subir el archivo."
 
 #. translators: %s: error message.
-#: src/Sharing/ShareService.php:576
+#: src/Sharing/ShareService.php:580
 #, php-format
 msgid "Postiz could not fetch the featured image (%s). Sent without image."
 msgstr "Postiz no ha podido descargar la imagen destacada (%s). Se envía sin imagen."
@@ -515,3 +593,106 @@ msgstr "Publicado en la red."
 #: src/Sync/StatusSync.php:115
 msgid "Postiz reports an error for this post."
 msgstr "Postiz indica un error en esta publicación."
+
+#. translators: %d: minutes of delay.
+#: assets/js/editor-panel.js:52
+msgid "Scheduled %d minutes after publishing"
+msgstr "Programada %d minutos después de publicar"
+
+#: assets/js/editor-panel.js:60
+msgid "Immediately"
+msgstr "Al momento"
+
+#: assets/js/editor-panel.js:71
+msgid "Pending"
+msgstr "Pendiente"
+
+#: assets/js/editor-panel.js:151
+msgid "No channels in Postiz yet."
+msgstr "Todavía no hay canales en Postiz."
+
+#: assets/js/editor-panel.js:174
+msgid "Use the profile channels"
+msgstr "Usar los canales del perfil"
+
+#: assets/js/editor-panel.js:176
+msgid "Channels from the publishing profile."
+msgstr "Canales del perfil de publicación."
+
+#: assets/js/editor-panel.js:200
+msgid "Empty = profile template. Tags like {title} and {url} work here too."
+msgstr "Vacío = plantilla del perfil. Aquí también funcionan variables como {title} y {url}."
+
+#: assets/js/editor-panel.js:207
+msgid "Text per network"
+msgstr "Texto por red"
+
+#: assets/js/editor-panel.js:223
+msgid "custom"
+msgstr "personalizado"
+
+#: assets/js/editor-panel.js:228
+msgid "Empty = text for all networks"
+msgstr "Vacío = texto para todas las redes"
+
+#: assets/js/editor-panel.js:274
+msgid "This post does not match the profile conditions and will not be shared."
+msgstr "Esta entrada no cumple las condiciones del perfil y no se compartirá."
+
+#. translators: %d: number of parts in a thread.
+#: assets/js/editor-panel.js:316
+msgid "Thread of %d part."
+msgid_plural "Thread of %d parts."
+msgstr[0] "Hilo de %d parte."
+msgstr[1] "Hilo de %d partes."
+
+#: assets/js/editor-panel.js:333
+msgid "Based on the last saved version."
+msgstr "Según la última versión guardada."
+
+#: assets/js/editor-panel.js:335 assets/js/editor-panel.js:415
+msgid "Refresh"
+msgstr "Actualizar"
+
+#: assets/js/editor-panel.js:368
+msgid "Nothing sent to Postiz yet."
+msgstr "Todavía no se ha enviado nada a Postiz."
+
+#: assets/js/editor-panel.js:427
+msgid "Postiz is not connected yet."
+msgstr "Postiz todavía no está conectado."
+
+#: assets/js/editor-panel.js:429
+msgid "Connect Postiz"
+msgstr "Conectar Postiz"
+
+#: assets/js/editor-panel.js:436
+msgid "Sharing is off for this post type."
+msgstr "Compartir está desactivado para este tipo de contenido."
+
+#: assets/js/editor-panel.js:438
+msgid "Set up a publishing profile"
+msgstr "Configurar un perfil de publicación"
+
+#: assets/js/editor-panel.js:460
+msgid "Shared when published"
+msgstr "Se compartió al publicar"
+
+#: assets/js/editor-panel.js:498
+msgid "Preview"
+msgstr "Vista previa"
+
+#: assets/js/editor-panel.js:520 assets/js/editor-panel.js:554
+msgid "Social networks"
+msgstr "Redes sociales"
+
+#: assets/js/editor-panel.js:522
+msgid "This post will not be shared."
+msgstr "Esta entrada no se compartirá."
+
+#. translators: %d: number of channels.
+#: assets/js/editor-panel.js:531
+msgid "Will be sent to Postiz for %d channel:"
+msgid_plural "Will be sent to Postiz for %d channels:"
+msgstr[0] "Se enviará a Postiz para %d canal:"
+msgstr[1] "Se enviará a Postiz para %d canales:"

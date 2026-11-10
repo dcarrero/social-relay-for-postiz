@@ -70,7 +70,7 @@ final class ShareService implements Module {
 		}
 
 		$profile = $this->plugin->profiles->for_post_type( $post->post_type );
-		if ( ! $profile['enabled'] || array() === $profile['channels'] || ! get_post_meta( $post_id, PostMeta::ENABLED, true ) ) {
+		if ( ! $profile['enabled'] || ! get_post_meta( $post_id, PostMeta::ENABLED, true ) ) {
 			return;
 		}
 
@@ -171,7 +171,11 @@ final class ShareService implements Module {
 		$items   = array();
 		$skipped = array();
 
-		foreach ( (array) $profile['channels'] as $channel_id ) {
+		// Channels picked in the editor for this post replace the profile's list.
+		$chosen      = get_post_meta( $post->ID, PostMeta::CHANNELS, true );
+		$channel_ids = is_array( $chosen ) && array() !== $chosen ? $chosen : (array) $profile['channels'];
+
+		foreach ( $channel_ids as $channel_id ) {
 			$channel_id = (string) $channel_id;
 			$channel    = $channels[ $channel_id ] ?? null;
 

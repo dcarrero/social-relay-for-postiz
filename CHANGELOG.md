@@ -4,15 +4,24 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 
 ## [Unreleased]
 
+### Planned for 0.4
+- Evergreen, bulk publishing and calendar (to be built as Pro modules).
+- Settings and log screens rebuilt with DataViews/DataForm.
+
+## [0.3.0] - 2026-11-10
+
 ### Added
+- Block editor sidebar panel ("Social networks"): share on/off, channels for this post, text for all networks and per network, preview with character counts (from the last saved version), "share again", and per-network status after publishing (refreshes every 30 s while something is queued).
+- Pre-publish panel with the channels and timing that will be used.
+- Classic editor metabox: on/off, channels, common text, "share again" and status.
+- Dashboard widget: published, queued and errors in the last 7 days, latest errors and next scheduled posts.
 - Status sync: reads `GET /posts` for queued and draft shares and records published (with the post URL), error (with the platform message) and draft states. Runs every 15 minutes while something is pending and two minutes after each send.
 - Postiz webhook receiver at `/wp-json/socialrelaycvi/v1/webhook/{secret}`: it only triggers the sync, so the payload format does not matter. URL, last call and "Create a new URL" in Settings.
-- `socialrelaycvi_status_changed` action.
+- `_socialrelaycvi_channels` post meta (channels chosen for a post) and `socialrelaycvi_status_changed` action.
+- JavaScript translations (`wp i18n make-json`); Spanish updated (159 strings).
 
-### Planned for 0.3
-- Block editor sidebar panel: channels, per-network text, preview and per-network status after publishing.
-- Classic editor metabox.
-- Dashboard widget.
+### Changed
+- The editor panel uses the packages WordPress already loads (no build step).
 
 ## [0.2.0] - 2026-11-10
 
@@ -43,6 +52,7 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - Shares and log tables, settings and log screens, `socialrelaycvi/v1` status and channels routes.
 - Module registry (`socialrelaycvi_modules` filter) for the Pro add-on.
 
-[Unreleased]: https://github.com/dcarrero/social-relay-for-postiz/compare/5b7908b...HEAD
-[0.2.0]: https://github.com/dcarrero/social-relay-for-postiz/compare/f8cd816...5b7908b
-[0.1.0]: https://github.com/dcarrero/social-relay-for-postiz/commit/f8cd816
+[Unreleased]: https://github.com/dcarrero/social-relay-for-postiz/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/dcarrero/social-relay-for-postiz/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/dcarrero/social-relay-for-postiz/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/dcarrero/social-relay-for-postiz/releases/tag/v0.1.0
