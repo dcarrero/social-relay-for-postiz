@@ -261,6 +261,13 @@ final class ConnectionController implements Module {
 			return new \WP_Error( 'socialrelaycvi_not_shareable', $reason, array( 'status' => 409 ) );
 		}
 
+		// One "share again" per post and minute, so the accounts cannot be flooded.
+		$lock = 'socialrelaycvi_share_lock_' . $post->ID;
+		if ( get_transient( $lock ) ) {
+			return new \WP_Error( 'socialrelaycvi_too_soon', __( 'This post was just sent. Wait a minute before sharing it again.', 'social-relay-for-postiz' ), array( 'status' => 429 ) );
+		}
+		set_transient( $lock, 1, MINUTE_IN_SECONDS );
+
 		$channels = array_values( array_filter( array_map( 'sanitize_text_field', array_map( 'strval', (array) $request->get_param( 'channels' ) ) ) ) );
 		if ( array() !== $channels ) {
 			update_post_meta( $post->ID, PostMeta::ONLY, $channels );
@@ -310,6 +317,14 @@ final class ConnectionController implements Module {
 		if ( ! $post instanceof \WP_Post ) {
 			return new \WP_Error( 'socialrelaycvi_not_found', __( 'Post not found.', 'social-relay-for-postiz' ), array( 'status' => 404 ) );
 		}
+
+		// At most 30 suggestions per user and hour: each one costs the site's AI credits.
+		$quota = 'socialrelaycvi_ai_quota_' . get_current_user_id();
+		$used  = (int) get_transient( $quota );
+		if ( $used >= 30 ) {
+			return new \WP_Error( 'socialrelaycvi_ai_quota', __( 'You have asked for many suggestions in the last hour. Try again later.', 'social-relay-for-postiz' ), array( 'status' => 429 ) );
+		}
+		set_transient( $quota, $used + 1, HOUR_IN_SECONDS );
 
 		$identifier = '';
 		$channel_id = sanitize_text_field( (string) $request->get_param( 'channel' ) );

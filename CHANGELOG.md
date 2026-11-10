@@ -30,6 +30,13 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - `bin/build-release.sh`: builds the installable zip (production Composer dependencies, compiled JavaScript, `.distignore` applied).
 - Release workflow: on a `v*` tag, builds the zip, attaches it to a GitHub release and deploys to wordpress.org SVN once the `SVN_USERNAME`/`SVN_PASSWORD` secrets exist.
 
+### Security
+- Password-protected posts are not shared (their excerpt would leak the protected text); filter `socialrelaycvi_share_protected` to allow it.
+- The plugin's post meta (per-post texts, channels, timing) is only exposed in the REST `edit` context, no longer to anonymous visitors.
+- Users who cannot manage the site only pick among the profile's channels for a post (channels outside it are ignored unless an administrator chose them) and only attach images they can edit. "Share again" is limited to once a minute per post, and "Suggest with AI" to 30 suggestions per user and hour.
+- Changing the Postiz address asks for the API key again so a stored key is never sent to a new server; plain `http://` addresses are refused unless local instances are allowed; on multisite only network administrators change the connection.
+- Requests to Postiz do not follow redirects, so the key cannot be carried to another host. Published links from Postiz are kept only when they are http(s). Webhook-triggered sync jobs are not queued twice for the same posts.
+
 ### Changed
 - Usability review:
   - Profile edits survive switching settings tabs (the tab shows "*"), and the Connection tab offers "Next: set up a publishing profile". The profiles tab explains itself in one line, and a profile turned on with no channel says it will send nothing.

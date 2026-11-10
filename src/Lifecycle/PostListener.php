@@ -12,6 +12,7 @@ namespace SocialRelayCvi\Lifecycle;
 use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
 use SocialRelayCvi\PostMeta;
+use SocialRelayCvi\Sharing\ShareService;
 use WP_Post;
 
 /**
@@ -75,7 +76,7 @@ final class PostListener implements Module {
 	 * @param WP_Post|null $post_before Post before the save, null for new posts.
 	 */
 	public function on_save( int $post_id, WP_Post $post, bool $update, ?WP_Post $post_before ): void {
-		if ( 'publish' !== $post->post_status || wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
+		if ( 'publish' !== $post->post_status || wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) || ! ShareService::may_share_protected( $post ) ) {
 			return;
 		}
 

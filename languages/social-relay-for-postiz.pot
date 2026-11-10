@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-10T21:27:07+00:00\n"
+"POT-Creation-Date: 2026-11-10T21:30:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -121,7 +121,7 @@ msgstr ""
 #: src/Abilities/AbilitiesRegistration.php:360
 #: src/Rest/ConnectionController.php:239
 #: src/Rest/ConnectionController.php:256
-#: src/Rest/ConnectionController.php:311
+#: src/Rest/ConnectionController.php:318
 msgid "Post not found."
 msgstr ""
 
@@ -406,33 +406,33 @@ msgid "Publish to social networks through your Postiz instance (self-hosted or P
 msgstr ""
 
 #: src/Postiz/ChannelRepository.php:52
-#: src/Rest/ConnectionController.php:287
+#: src/Rest/ConnectionController.php:294
 #: src/Sharing/ShareService.php:209
 msgid "Postiz is not configured yet."
 msgstr ""
 
-#: src/Postiz/Client.php:222
+#: src/Postiz/Client.php:224
 msgid "401 · The API key is not valid for this Postiz instance."
 msgstr ""
 
-#: src/Postiz/Client.php:223
+#: src/Postiz/Client.php:225
 msgid "403 · The API key cannot access this resource."
 msgstr ""
 
-#: src/Postiz/Client.php:224
+#: src/Postiz/Client.php:226
 msgid "404 · Endpoint not found. Check the Postiz URL."
 msgstr ""
 
-#: src/Postiz/Client.php:225
+#: src/Postiz/Client.php:227
 msgid "413 · Request too large."
 msgstr ""
 
-#: src/Postiz/Client.php:226
+#: src/Postiz/Client.php:228
 msgid "429 · Postiz API rate limit reached."
 msgstr ""
 
 #. translators: %d: HTTP status code.
-#: src/Postiz/Client.php:228
+#: src/Postiz/Client.php:230
 #, php-format
 msgid "%d · Unexpected response from Postiz."
 msgstr ""
@@ -526,7 +526,15 @@ msgstr ""
 msgid "Sign up"
 msgstr ""
 
-#: src/Rest/AdminController.php:330
+#: src/Rest/AdminController.php:256
+msgid "Use an https:// address: the API key must not travel unencrypted."
+msgstr ""
+
+#: src/Rest/AdminController.php:263
+msgid "The Postiz address changed: type the API key again so it is not sent to a different server."
+msgstr ""
+
+#: src/Rest/AdminController.php:345
 #: build/settings.js:5
 msgid "This file is not an export of Social Relay profiles."
 msgstr ""
@@ -537,6 +545,14 @@ msgstr ""
 
 #: src/Rest/ConnectionController.php:151
 msgid "Channel id to write for; empty for a text for all networks."
+msgstr ""
+
+#: src/Rest/ConnectionController.php:267
+msgid "This post was just sent. Wait a minute before sharing it again."
+msgstr ""
+
+#: src/Rest/ConnectionController.php:325
+msgid "You have asked for many suggestions in the last hour. Try again later."
 msgstr ""
 
 #: src/Settings/ConnectionTester.php:39
@@ -595,56 +611,60 @@ msgstr ""
 msgid "The post is not published yet."
 msgstr ""
 
-#: src/Sharing/ShareService.php:260
+#: src/Sharing/ShareService.php:226
+msgid "The post is password protected; its text is not shared."
+msgstr ""
+
+#: src/Sharing/ShareService.php:289
 msgid "Channel no longer exists in Postiz; skipped."
 msgstr ""
 
-#: src/Sharing/ShareService.php:269
+#: src/Sharing/ShareService.php:298
 msgid "Channel is disabled in Postiz; skipped."
 msgstr ""
 
 #. translators: %s: list of missing settings.
-#: src/Sharing/ShareService.php:287
+#: src/Sharing/ShareService.php:316
 #, php-format
 msgid "Missing network settings (%s); skipped."
 msgstr ""
 
-#: src/Sharing/ShareService.php:385
+#: src/Sharing/ShareService.php:414
 msgid "Pending posts cancelled in Postiz."
 msgstr ""
 
 #. translators: 1: number of channels, 2: how Postiz handles it, e.g. "to publish now".
-#: src/Sharing/ShareService.php:458
+#: src/Sharing/ShareService.php:487
 #, php-format
 msgid "Sent to Postiz: %1$d channel, %2$s."
 msgid_plural "Sent to Postiz: %1$d channels, %2$s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Sharing/ShareService.php:461
+#: src/Sharing/ShareService.php:490
 msgid "scheduled"
 msgstr ""
 
-#: src/Sharing/ShareService.php:462
+#: src/Sharing/ShareService.php:491
 msgid "as a draft"
 msgstr ""
 
-#: src/Sharing/ShareService.php:463
+#: src/Sharing/ShareService.php:492
 msgid "to publish now"
 msgstr ""
 
 #. translators: 1: error message, 2: attempt number, 3: max attempts.
-#: src/Sharing/ShareService.php:513
+#: src/Sharing/ShareService.php:542
 #, php-format
 msgid "%1$s Retrying (%2$d of %3$d)."
 msgstr ""
 
-#: src/Sharing/ShareService.php:740
+#: src/Sharing/ShareService.php:769
 msgid "Unexpected upload response."
 msgstr ""
 
 #. translators: %s: error message.
-#: src/Sharing/ShareService.php:744
+#: src/Sharing/ShareService.php:773
 #, php-format
 msgid "Postiz could not fetch an image (%s). Sent without it."
 msgstr ""

@@ -65,7 +65,7 @@ final class ShareService implements Module {
 	public function handle( int $post_id, int $attempt = 1 ): void {
 		$post = get_post( $post_id );
 
-		if ( ! $post instanceof WP_Post || 'publish' !== $post->post_status ) {
+		if ( ! $post instanceof WP_Post || 'publish' !== $post->post_status || ! self::may_share_protected( $post ) ) {
 			return;
 		}
 
@@ -222,7 +222,30 @@ final class ShareService implements Module {
 			return __( 'The post is not published yet.', 'social-relay-for-postiz' );
 		}
 
+		if ( ! self::may_share_protected( $post ) ) {
+			return __( 'The post is password protected; its text is not shared.', 'social-relay-for-postiz' );
+		}
+
 		return null;
+	}
+
+	/**
+	 * Password-protected posts are not shared: their excerpt would leak the protected text.
+	 *
+	 * @param WP_Post $post Post.
+	 */
+	public static function may_share_protected( WP_Post $post ): bool {
+		if ( '' === (string) $post->post_password ) {
+			return true;
+		}
+
+		/**
+		 * Filters whether a password-protected post may be shared (its excerpt and content go to the networks).
+		 *
+		 * @param bool    $share Default false.
+		 * @param WP_Post $post  Post.
+		 */
+		return (bool) apply_filters( 'socialrelaycvi_share_protected', false, $post );
 	}
 
 	/**
@@ -243,8 +266,14 @@ final class ShareService implements Module {
 		$skipped = array();
 
 		// Channels picked in the editor for this post replace the profile's list.
-		$chosen      = get_post_meta( $post->ID, PostMeta::CHANNELS, true );
-		$channel_ids = array_unique( array_map( 'strval', is_array( $chosen ) && array() !== $chosen ? $chosen : (array) $profile['channels'] ) );
+		$chosen = get_post_meta( $post->ID, PostMeta::CHANNELS, true );
+		$chosen = is_array( $chosen ) ? array_map( 'strval', $chosen ) : array();
+		// Channels outside the profile only count when someone who manages the site chose them.
+		if ( array() !== $chosen && ! get_post_meta( $post->ID, PostMeta::CHANNELS_BY_ADMIN, true ) ) {
+			$chosen = array_values( array_intersect( $chosen, array_merge( array_map( 'strval', (array) $profile['channels'] ), array( PostMeta::NO_CHANNELS ) ) ) );
+			$chosen = array() === $chosen ? array( PostMeta::NO_CHANNELS ) : $chosen;
+		}
+		$channel_ids = array_unique( array() !== $chosen ? $chosen : array_map( 'strval', (array) $profile['channels'] ) );
 
 		foreach ( $channel_ids as $channel_id ) {
 			if ( PostMeta::NO_CHANNELS === $channel_id ) {

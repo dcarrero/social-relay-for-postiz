@@ -130,8 +130,10 @@ final class Queue implements Module {
 	public function enqueue_named_sync( array $postiz_ids ): void {
 		$args = array( array_values( $postiz_ids ) );
 
-		if ( function_exists( 'as_enqueue_async_action' ) ) {
-			as_enqueue_async_action( self::HOOK_SYNC_NAMED, $args, self::GROUP );
+		if ( function_exists( 'as_enqueue_async_action' ) && function_exists( 'as_has_scheduled_action' ) ) {
+			if ( ! as_has_scheduled_action( self::HOOK_SYNC_NAMED, $args, self::GROUP ) ) {
+				as_enqueue_async_action( self::HOOK_SYNC_NAMED, $args, self::GROUP );
+			}
 			return;
 		}
 

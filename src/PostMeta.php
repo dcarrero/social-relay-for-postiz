@@ -53,10 +53,18 @@ final class PostMeta implements Module {
 	public const NO_CHANNELS = '__none';
 
 	/**
+	 * Whether the per-post channels were last chosen by someone who manages the site.
+	 * Others can only pick among the profile's channels. Internal, not in REST.
+	 */
+	public const CHANNELS_BY_ADMIN = '_socialrelaycvi_channels_by_admin';
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
 		add_action( 'init', array( $this, 'register_meta' ) );
+		add_action( 'added_post_meta', array( $this, 'remember_chooser' ), 10, 3 );
+		add_action( 'updated_post_meta', array( $this, 'remember_chooser' ), 10, 3 );
 	}
 
 	/**
@@ -72,7 +80,12 @@ final class PostMeta implements Module {
 				'type'          => 'boolean',
 				'single'        => true,
 				'default'       => true,
-				'show_in_rest'  => true,
+				'show_in_rest'  => array(
+					'schema' => array(
+						'type'    => 'boolean',
+						'context' => array( 'edit' ),
+					),
+				),
 				'auth_callback' => $auth,
 			)
 		);
@@ -84,7 +97,12 @@ final class PostMeta implements Module {
 				'type'              => 'string',
 				'single'            => true,
 				'default'           => '',
-				'show_in_rest'      => true,
+				'show_in_rest'      => array(
+					'schema' => array(
+						'type'    => 'string',
+						'context' => array( 'edit' ),
+					),
+				),
 				'sanitize_callback' => 'sanitize_textarea_field',
 				'auth_callback'     => $auth,
 			)
@@ -101,6 +119,7 @@ final class PostMeta implements Module {
 				'show_in_rest'      => array(
 					'schema' => array(
 						'type'                 => 'object',
+						'context'              => array( 'edit' ),
 						'additionalProperties' => array( 'type' => 'string' ),
 					),
 				),
@@ -119,8 +138,9 @@ final class PostMeta implements Module {
 				'default'           => array(),
 				'show_in_rest'      => array(
 					'schema' => array(
-						'type'  => 'array',
-						'items' => array( 'type' => 'string' ),
+						'type'    => 'array',
+						'context' => array( 'edit' ),
+						'items'   => array( 'type' => 'string' ),
 					),
 				),
 				'sanitize_callback' => static fn ( mixed $value ): array => is_array( $value ) ? array_values( array_unique( array_map( static fn ( mixed $id ): string => sanitize_text_field( (string) $id ), $value ) ) ) : array(),
@@ -137,11 +157,12 @@ final class PostMeta implements Module {
 				'default'           => array(),
 				'show_in_rest'      => array(
 					'schema' => array(
-						'type'  => 'array',
-						'items' => array( 'type' => 'integer' ),
+						'type'    => 'array',
+						'context' => array( 'edit' ),
+						'items'   => array( 'type' => 'integer' ),
 					),
 				),
-				'sanitize_callback' => static fn ( mixed $value ): array => self::sanitize_images( $value ),
+				'sanitize_callback' => static fn ( mixed $value ): array => self::images_for_user( self::sanitize_images( $value ) ),
 				'auth_callback'     => $auth,
 			)
 		);
@@ -155,8 +176,9 @@ final class PostMeta implements Module {
 				'default'           => '',
 				'show_in_rest'      => array(
 					'schema' => array(
-						'type' => 'string',
-						'enum' => array_merge( array( '' ), self::MODES ),
+						'type'    => 'string',
+						'context' => array( 'edit' ),
+						'enum'    => array_merge( array( '' ), self::MODES ),
 					),
 				),
 				'sanitize_callback' => static fn ( mixed $value ): string => in_array( $value, self::MODES, true ) ? (string) $value : '',
@@ -171,7 +193,12 @@ final class PostMeta implements Module {
 				'type'              => 'string',
 				'single'            => true,
 				'default'           => '',
-				'show_in_rest'      => true,
+				'show_in_rest'      => array(
+					'schema' => array(
+						'type'    => 'string',
+						'context' => array( 'edit' ),
+					),
+				),
 				'sanitize_callback' => static fn ( mixed $value ): string => self::sanitize_datetime( (string) $value ),
 				'auth_callback'     => $auth,
 			)
@@ -184,7 +211,12 @@ final class PostMeta implements Module {
 				'type'          => 'boolean',
 				'single'        => true,
 				'default'       => false,
-				'show_in_rest'  => true,
+				'show_in_rest'  => array(
+					'schema' => array(
+						'type'    => 'boolean',
+						'context' => array( 'edit' ),
+					),
+				),
 				'auth_callback' => $auth,
 			)
 		);
@@ -228,5 +260,34 @@ final class PostMeta implements Module {
 		}
 
 		return array_slice( array_values( array_unique( array_filter( $ids, static fn ( int $id ): bool => $id > 0 ) ) ), 0, 10 );
+	}
+
+	/**
+	 * Records who chose the per-post channels (see CHANNELS_BY_ADMIN).
+	 *
+	 * @param int    $meta_id   Meta id.
+	 * @param int    $object_id Post id.
+	 * @param string $meta_key  Meta key.
+	 */
+	public function remember_chooser( int $meta_id, int $object_id, string $meta_key ): void {
+		if ( self::CHANNELS === $meta_key ) {
+			update_post_meta( $object_id, self::CHANNELS_BY_ADMIN, current_user_can( 'manage_options' ) );
+		}
+	}
+
+	/**
+	 * Keeps only images the current user may use: attachments they can edit.
+	 *
+	 * Without a logged-in user (code, WP-CLI) the list is kept as it is.
+	 *
+	 * @param list<int> $ids Attachment ids.
+	 * @return list<int>
+	 */
+	private static function images_for_user( array $ids ): array {
+		if ( array( self::NO_IMAGES ) === $ids || ! is_user_logged_in() ) {
+			return $ids;
+		}
+
+		return array_values( array_filter( $ids, static fn ( int $id ): bool => current_user_can( 'edit_post', $id ) ) );
 	}
 }

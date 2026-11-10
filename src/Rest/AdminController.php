@@ -13,6 +13,7 @@ use SocialRelayCvi\Admin\ErrorAlerts;
 use SocialRelayCvi\Admin\StatusLabels;
 use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
+use SocialRelayCvi\Postiz\Client;
 use SocialRelayCvi\Postiz\EndpointResolver;
 use SocialRelayCvi\Postiz\ProviderRules;
 use SocialRelayCvi\Postiz\RequestCounter;
@@ -75,7 +76,8 @@ final class AdminController implements Module {
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'save_connection' ),
-				'permission_callback' => $admin,
+				// On multisite the key may be shared by the network: only network admins change it.
+				'permission_callback' => static fn (): bool => current_user_can( is_multisite() ? 'manage_network_options' : 'manage_options' ),
 				'args'                => array(
 					'instance_url' => array(
 						'type'     => 'string',
@@ -245,11 +247,24 @@ final class AdminController implements Module {
 	 *
 	 * @param WP_REST_Request<array<string, mixed>> $request Request.
 	 */
-	public function save_connection( WP_REST_Request $request ): WP_REST_Response {
+	public function save_connection( WP_REST_Request $request ): WP_REST_Response|WP_Error {
 		$url = EndpointResolver::normalize( sanitize_text_field( (string) $request['instance_url'] ) );
+		$key = trim( sanitize_text_field( (string) $request['api_key'] ) );
+
+		// Plain http would send the API key unencrypted, except to a local test instance.
+		if ( str_starts_with( strtolower( $url ), 'http://' ) && ! Client::allows_local_instance() ) {
+			return new WP_Error( 'socialrelaycvi_insecure_url', __( 'Use an https:// address: the API key must not travel unencrypted.', 'social-relay-for-postiz' ), array( 'status' => 400 ) );
+		}
+
+		// A new server must not receive the stored key: ask for it again.
+		$old_host = (string) wp_parse_url( $this->plugin->connection->instance_url(), PHP_URL_HOST );
+		$new_host = (string) wp_parse_url( $url, PHP_URL_HOST );
+		if ( '' !== $old_host && strtolower( $old_host ) !== strtolower( $new_host ) && '' === $key && 'database' === $this->plugin->connection->key_source() ) {
+			return new WP_Error( 'socialrelaycvi_key_required', __( 'The Postiz address changed: type the API key again so it is not sent to a different server.', 'social-relay-for-postiz' ), array( 'status' => 400 ) );
+		}
+
 		update_option( Connection::OPTION_URL, esc_url_raw( $url ), false );
 
-		$key = trim( sanitize_text_field( (string) $request['api_key'] ) );
 		if ( '' !== $key && $this->plugin->connection->key_is_editable() ) {
 			update_option( Connection::OPTION_API_KEY, $key, false );
 		}

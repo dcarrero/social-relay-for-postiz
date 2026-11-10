@@ -86,6 +86,10 @@ final class EditorPanel implements Module {
 		$profile    = $this->plugin->profiles->for_post_type( $post_type );
 		$channels   = $connection->is_configured() ? $this->plugin->channels->all() : array();
 		$channels   = is_wp_error( $channels ) ? array() : $channels;
+		// Only people who manage the site can pick channels outside the profile.
+		if ( ! current_user_can( SettingsPage::CAPABILITY ) ) {
+			$channels = array_values( array_filter( $channels, static fn ( array $channel ): bool => in_array( $channel['id'], $profile['channels'], true ) ) );
+		}
 
 		$limits     = array();
 		$max_images = array();

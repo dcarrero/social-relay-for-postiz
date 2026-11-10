@@ -53,6 +53,10 @@ final class StatusMapper {
 		}
 
 		$release_url = (string) ( $postiz_post['releaseURL'] ?? '' );
+		// Only web links: the URL becomes a link in wp-admin.
+		if ( 1 !== preg_match( '#^https?://#i', $release_url ) ) {
+			$release_url = '';
+		}
 		if ( '' !== $release_url && $current_url !== $release_url ) {
 			$changes['release_url'] = $release_url;
 		}

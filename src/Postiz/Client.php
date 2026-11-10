@@ -138,9 +138,11 @@ final class Client implements Gateway {
 		}
 
 		$args = array(
-			'method'  => $method,
-			'timeout' => $this->timeout,
-			'headers' => array(
+			'method'      => $method,
+			'timeout'     => $this->timeout,
+			// The API never redirects; following one could carry the key to another host.
+			'redirection' => 0,
+			'headers'     => array(
 				'Authorization' => $this->api_key,
 				'Accept'        => 'application/json',
 				'User-Agent'    => 'SocialRelayForPostiz/' . SOCIALRELAYCVI_VERSION,
@@ -193,7 +195,7 @@ final class Client implements Gateway {
 	 * Off by default (wp_safe_remote_request blocks them). Self-hosted Postiz on a LAN
 	 * or on the same server needs it: define SOCIALRELAYCVI_ALLOW_LOCAL_INSTANCE as true.
 	 */
-	private static function allows_local_instance(): bool {
+	public static function allows_local_instance(): bool {
 		$allowed = defined( 'SOCIALRELAYCVI_ALLOW_LOCAL_INSTANCE' ) && SOCIALRELAYCVI_ALLOW_LOCAL_INSTANCE;
 
 		/**
