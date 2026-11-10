@@ -13,6 +13,7 @@ use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
 use SocialRelayCvi\Postiz\EndpointResolver;
 use SocialRelayCvi\Postiz\ProviderRules;
+use SocialRelayCvi\Postiz\RequestCounter;
 use SocialRelayCvi\Profiles\ProfileRepository;
 use SocialRelayCvi\Settings\Connection;
 use SocialRelayCvi\Settings\ConnectionTester;
@@ -255,7 +256,8 @@ final class AdminController implements Module {
 				'published' => (int) ( $counts['published'] ?? 0 ),
 				'queued'    => (int) ( $counts['queued'] ?? 0 ),
 				'errors'    => (int) ( $counts['error'] ?? 0 ),
-				'lastHour'  => $this->plugin->shares->batches_since( HOUR_IN_SECONDS ),
+				'lastHour'  => RequestCounter::count( HOUR_IN_SECONDS ),
+				'limit'     => RequestCounter::LIMIT,
 			)
 		);
 	}

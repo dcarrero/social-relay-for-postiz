@@ -104,11 +104,11 @@ In the editor panel of each post, in Social Relay → Log, and in the dashboard 
 
 == Screenshots ==
 
-1. The "Social networks" panel in the block editor: channels for this post and a preview of each message.
-2. Preview per network, with its own template, UTM parameters and character count.
+1. The "Social networks" panel in the block editor: channels for this post and, in one tab per channel, its own text.
+2. Preview drawn like each network: character count against the limit, X thread, link card and per-network text.
 3. Pre-publish summary of the channels and timing.
-4. Publishing profiles: channels, templates, timing, conditions and links for each post type.
-5. Activity log with search and filters.
+4. Publishing profiles: channels, templates and timing for each post type, with a panel to test the profile on a real post.
+5. Activity log with summary cards (published, queued, errors, requests to Postiz in the last hour), search and filters.
 
 == External services ==
 

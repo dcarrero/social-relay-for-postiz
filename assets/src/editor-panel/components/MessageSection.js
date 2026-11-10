@@ -1,8 +1,10 @@
 import { TabPanel, TextareaControl } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 
+import { network } from '../../common/networks';
 import { channelLabel, channelsById, config, META } from '../config';
 import { effectiveChannels } from '../hooks';
+import './message-section.css';
 
 const ALL = '__all';
 
@@ -40,13 +42,23 @@ export default function MessageSection( { meta, setMeta } ) {
 		setMeta( META.overrides, next );
 	};
 
+	// The network is only added when two selected channels share a name.
+	const names = selected.map( ( id ) => channelsById[ id ].name );
+	const tabTitle = ( id ) => {
+		const { name, identifier } = channelsById[ id ];
+		const shared = names.filter( ( other ) => other === name ).length > 1;
+		return (
+			shorten( name ) +
+			( shared ? ' · ' + network( identifier ).label : '' ) +
+			( overrides[ id ] ? ' •' : '' )
+		);
+	};
+
 	const tabs = [
 		{ name: ALL, title: __( 'All', 'social-relay-for-postiz' ) },
 		...selected.map( ( id ) => ( {
 			name: id,
-			title:
-				shorten( channelsById[ id ].name ) +
-				( overrides[ id ] ? ' •' : '' ),
+			title: tabTitle( id ),
 		} ) ),
 	];
 

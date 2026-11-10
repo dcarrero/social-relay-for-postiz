@@ -366,7 +366,7 @@ final class ShareService implements Module {
 				$type
 			),
 			$post->ID,
-			'',
+			isset( $items[1] ) ? '' : (string) $items[0]['integration_id'], // One channel per request in slot mode: name it.
 			array(
 				'batch'   => $batch,
 				'attempt' => $attempt,

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-10T12:37:37+00:00\n"
+"POT-Creation-Date: 2026-11-10T12:55:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -265,28 +265,28 @@ msgstr ""
 msgid "Postiz is not configured yet."
 msgstr ""
 
-#: src/Postiz/Client.php:220
+#: src/Postiz/Client.php:222
 msgid "401 · The API key is not valid for this Postiz instance."
 msgstr ""
 
-#: src/Postiz/Client.php:221
+#: src/Postiz/Client.php:223
 msgid "403 · The API key cannot access this resource."
 msgstr ""
 
-#: src/Postiz/Client.php:222
+#: src/Postiz/Client.php:224
 msgid "404 · Endpoint not found. Check the Postiz URL."
 msgstr ""
 
-#: src/Postiz/Client.php:223
+#: src/Postiz/Client.php:225
 msgid "413 · Request too large."
 msgstr ""
 
-#: src/Postiz/Client.php:224
+#: src/Postiz/Client.php:226
 msgid "429 · Postiz API rate limit reached."
 msgstr ""
 
 #. translators: %d: HTTP status code.
-#: src/Postiz/Client.php:226
+#: src/Postiz/Client.php:228
 #, php-format
 msgid "%d · Unexpected response from Postiz."
 msgstr ""

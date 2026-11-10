@@ -69,6 +69,8 @@ final class Client implements Gateway {
 	 * @return array<mixed>|WP_Error List of { postId, integration }.
 	 */
 	public function create_posts( array $payload ): array|WP_Error {
+		RequestCounter::hit();
+
 		return $this->request( 'POST', 'posts', $payload );
 	}
 

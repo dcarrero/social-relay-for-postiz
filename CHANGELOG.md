@@ -14,7 +14,7 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - Log: cards with published and failed shares (30 days), queued shares and requests to Postiz in the last hour against the 90/hour limit.
 - "Advanced" settings tab: delete all plugin data when the plugin is deleted (also forced by `SOCIALRELAYCVI_DELETE_DATA`).
 - Suggested privacy policy text (Settings → Privacy → Policy Guide).
-- wordpress.org assets in `.wordpress-org/`: icon, banner and five screenshots, plus a Live Preview blueprint.
+- wordpress.org assets in `.wordpress-org/`: icon, banner and five screenshots (taken with demo data against a local Postiz test double), plus a Live Preview blueprint.
 - `bin/build-release.sh`: builds the installable zip (production Composer dependencies, compiled JavaScript, `.distignore` applied).
 - Release workflow: on a `v*` tag, builds the zip, attaches it to a GitHub release and deploys to wordpress.org SVN once the `SVN_USERNAME`/`SVN_PASSWORD` secrets exist.
 
@@ -30,6 +30,10 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - Plugin Check: every query uses `%i` for table names and static SQL (no interpolated clauses); `load_plugin_textdomain()` removed, translations come from translate.wordpress.org language packs.
 - Uninstall also removes the webhook options, the per-post channel and text meta, and the cached channel lists.
 - WP-CLI says what happened instead of failing silently: `share` stops with the reason when Postiz is not configured, the profile is off or the post has sharing turned off; `share --now` reports when nothing was sent and why; `cancel` reports how many pending groups it cancelled or that nothing was pending; `log` and `shares` say when there is nothing to show.
+- "Requests to Postiz in the last hour" counted share batches, not requests: in "next free slot" mode each channel is its own request, and failed attempts and retries count against the 90/hour limit too. Every POST /posts is now counted (`RequestCounter`).
+- Editor panel: with several channels the per-channel tabs ran off the sidebar and two channels with the same name could not be told apart. Tabs now wrap, stay compact and add the network only when two names match.
+- Plugin CSS is versioned by file time as well, so a CSS-only change is not hidden by the browser cache.
+- Log: in "next free slot" mode each "Sent to Postiz" entry shows its channel.
 - Styles imported from shared components are enqueued too (`build/{entry}.css` as well as `build/style-{entry}.css`).
 
 ## [0.3.1] - 2026-11-10

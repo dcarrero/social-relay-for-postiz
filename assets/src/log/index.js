@@ -178,7 +178,7 @@ function LogApp() {
 							'is-error',
 						],
 						[
-							`${ stats.lastHour } / 90`,
+							`${ stats.lastHour } / ${ stats.limit || 90 }`,
 							__(
 								'Requests to Postiz in the last hour',
 								'social-relay-for-postiz'

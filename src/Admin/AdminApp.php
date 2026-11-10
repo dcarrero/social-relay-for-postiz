@@ -81,12 +81,14 @@ final class AdminApp {
 	 */
 	public static function enqueue_styles( string $name, string $handle, string $version ): void {
 		foreach ( array( $name, 'style-' . $name ) as $file ) {
-			if ( ! is_readable( SOCIALRELAYCVI_DIR . 'build/' . $file . '.css' ) ) {
+			$path = SOCIALRELAYCVI_DIR . 'build/' . $file . '.css';
+			if ( ! is_readable( $path ) ) {
 				continue;
 			}
 
+			// The asset version only follows the JavaScript; the file time also catches CSS-only changes.
 			$style = $handle . ( $file === $name ? '' : '-style' );
-			wp_enqueue_style( $style, SOCIALRELAYCVI_URL . 'build/' . $file . '.css', array( 'wp-components' ), $version );
+			wp_enqueue_style( $style, SOCIALRELAYCVI_URL . 'build/' . $file . '.css', array( 'wp-components' ), $version . '.' . (int) filemtime( $path ) );
 			wp_style_add_data( $style, 'rtl', 'replace' );
 		}
 	}

@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-11-10T10:13:03+00:00\n"
-"PO-Revision-Date: 2026-11-10T12:37:37+00:00\n"
+"PO-Revision-Date: 2026-11-10T12:55:57+00:00\n"
 "Language: es_ES\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -265,28 +265,28 @@ msgstr "Publica en redes sociales a través de tu instancia de Postiz (autoaloja
 msgid "Postiz is not configured yet."
 msgstr "Postiz todavía no está configurado."
 
-#: src/Postiz/Client.php:220
+#: src/Postiz/Client.php:222
 msgid "401 · The API key is not valid for this Postiz instance."
 msgstr "401 · La clave de API no es válida para esta instancia de Postiz."
 
-#: src/Postiz/Client.php:221
+#: src/Postiz/Client.php:223
 msgid "403 · The API key cannot access this resource."
 msgstr "403 · La clave de API no tiene acceso a este recurso."
 
-#: src/Postiz/Client.php:222
+#: src/Postiz/Client.php:224
 msgid "404 · Endpoint not found. Check the Postiz URL."
 msgstr "404 · No se encuentra la ruta. Revisa la URL de Postiz."
 
-#: src/Postiz/Client.php:223
+#: src/Postiz/Client.php:225
 msgid "413 · Request too large."
 msgstr "413 · La petición es demasiado grande."
 
-#: src/Postiz/Client.php:224
+#: src/Postiz/Client.php:226
 msgid "429 · Postiz API rate limit reached."
 msgstr "429 · Se ha alcanzado el límite de peticiones de la API de Postiz."
 
 #. translators: %d: HTTP status code.
-#: src/Postiz/Client.php:226
+#: src/Postiz/Client.php:228
 #, php-format
 msgid "%d · Unexpected response from Postiz."
 msgstr "%d · Respuesta inesperada de Postiz."
