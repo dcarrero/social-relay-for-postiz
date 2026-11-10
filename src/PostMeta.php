@@ -24,6 +24,23 @@ final class PostMeta implements Module {
 	public const CHANNELS  = '_socialrelaycvi_channels';
 
 	/**
+	 * Timing for this post: '' follows the profile, otherwise now, schedule, slot or draft.
+	 */
+	public const MODE = '_socialrelaycvi_mode';
+
+	/**
+	 * Date for MODE schedule, site time "Y-m-d\TH:i:s". Empty: the profile delay after publishing.
+	 */
+	public const PUBLISH_AT = '_socialrelaycvi_publish_at';
+
+	/**
+	 * Channel ids for the next share only ("Retry" from the editor). Internal, not in REST.
+	 */
+	public const ONLY = '_socialrelaycvi_only';
+
+	public const MODES = array( 'now', 'schedule', 'slot', 'draft' );
+
+	/**
 	 * Stored alone in CHANNELS when the editor unticks every channel: an empty list means "use the profile".
 	 */
 	public const NO_CHANNELS = '__none';
@@ -106,6 +123,37 @@ final class PostMeta implements Module {
 
 		register_post_meta(
 			'',
+			self::MODE,
+			array(
+				'type'              => 'string',
+				'single'            => true,
+				'default'           => '',
+				'show_in_rest'      => array(
+					'schema' => array(
+						'type' => 'string',
+						'enum' => array_merge( array( '' ), self::MODES ),
+					),
+				),
+				'sanitize_callback' => static fn ( mixed $value ): string => in_array( $value, self::MODES, true ) ? (string) $value : '',
+				'auth_callback'     => $auth,
+			)
+		);
+
+		register_post_meta(
+			'',
+			self::PUBLISH_AT,
+			array(
+				'type'              => 'string',
+				'single'            => true,
+				'default'           => '',
+				'show_in_rest'      => true,
+				'sanitize_callback' => static fn ( mixed $value ): string => self::sanitize_datetime( (string) $value ),
+				'auth_callback'     => $auth,
+			)
+		);
+
+		register_post_meta(
+			'',
 			self::RESHARE,
 			array(
 				'type'          => 'boolean',
@@ -115,5 +163,26 @@ final class PostMeta implements Module {
 				'auth_callback' => $auth,
 			)
 		);
+	}
+
+	/**
+	 * Keeps a local date and time as "Y-m-d\TH:i:s", or '' when it is not one.
+	 *
+	 * @param string $value Date from the editor (DateTimePicker) or the classic metabox (datetime-local).
+	 */
+	public static function sanitize_datetime( string $value ): string {
+		$value = trim( $value );
+		if ( '' === $value ) {
+			return '';
+		}
+
+		foreach ( array( 'Y-m-d\TH:i:s', 'Y-m-d\TH:i', 'Y-m-d H:i:s', 'Y-m-d H:i' ) as $format ) {
+			$date = \DateTimeImmutable::createFromFormat( '!' . $format, $value, wp_timezone() );
+			if ( false !== $date ) {
+				return $date->format( 'Y-m-d\TH:i:s' );
+			}
+		}
+
+		return '';
 	}
 }

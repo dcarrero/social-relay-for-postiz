@@ -84,6 +84,28 @@ final class ClassicMetabox implements Module {
 				</label>
 			<?php endforeach; ?>
 		</p>
+		<?php
+		$mode       = (string) get_post_meta( $post->ID, PostMeta::MODE, true );
+		$publish_at = (string) get_post_meta( $post->ID, PostMeta::PUBLISH_AT, true );
+		$modes      = array(
+			''         => __( 'As in the profile', 'social-relay-for-postiz' ),
+			'now'      => __( 'On publish', 'social-relay-for-postiz' ),
+			'schedule' => __( 'Schedule', 'social-relay-for-postiz' ),
+			'slot'     => __( 'Next free slot', 'social-relay-for-postiz' ),
+			'draft'    => __( 'Draft in Postiz', 'social-relay-for-postiz' ),
+		);
+		?>
+		<p>
+			<label for="socialrelaycvi-mode"><strong><?php esc_html_e( 'When', 'social-relay-for-postiz' ); ?></strong></label><br>
+			<select id="socialrelaycvi-mode" name="socialrelaycvi[mode]" class="widefat">
+				<?php foreach ( $modes as $value => $label ) : ?>
+					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $mode, $value ); ?>><?php echo esc_html( $label ); ?></option>
+				<?php endforeach; ?>
+			</select>
+			<label for="socialrelaycvi-publish-at" class="screen-reader-text"><?php esc_html_e( 'Date and time', 'social-relay-for-postiz' ); ?></label>
+			<input type="datetime-local" id="socialrelaycvi-publish-at" name="socialrelaycvi[publish_at]" class="widefat" value="<?php echo esc_attr( substr( $publish_at, 0, 16 ) ); ?>" style="margin-top:4px">
+			<span class="description"><?php esc_html_e( 'The date is used with "Schedule". Empty: the profile delay after publishing.', 'social-relay-for-postiz' ); ?></span>
+		</p>
 		<p>
 			<label for="socialrelaycvi-message"><strong><?php esc_html_e( 'Text for all networks', 'social-relay-for-postiz' ); ?></strong></label>
 			<textarea id="socialrelaycvi-message" name="socialrelaycvi[message]" rows="4" class="widefat" placeholder="<?php esc_attr_e( 'Empty = profile template', 'social-relay-for-postiz' ); ?>"><?php echo esc_textarea( (string) get_post_meta( $post->ID, PostMeta::MESSAGE, true ) ); ?></textarea>
@@ -114,6 +136,10 @@ final class ClassicMetabox implements Module {
 
 		update_post_meta( $post_id, PostMeta::ENABLED, ! empty( $raw['enabled'] ) );
 		update_post_meta( $post_id, PostMeta::MESSAGE, sanitize_textarea_field( (string) ( $raw['message'] ?? '' ) ) );
+
+		$mode = sanitize_key( (string) ( $raw['mode'] ?? '' ) );
+		update_post_meta( $post_id, PostMeta::MODE, in_array( $mode, PostMeta::MODES, true ) ? $mode : '' );
+		update_post_meta( $post_id, PostMeta::PUBLISH_AT, PostMeta::sanitize_datetime( (string) ( $raw['publish_at'] ?? '' ) ) );
 
 		$profile  = $this->plugin->profiles->for_post_type( $post->post_type );
 		$channels = isset( $raw['channels'] ) && is_array( $raw['channels'] ) ? array_values( array_map( 'sanitize_text_field', array_map( 'strval', $raw['channels'] ) ) ) : array();

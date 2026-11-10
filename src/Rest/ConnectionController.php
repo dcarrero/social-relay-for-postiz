@@ -11,6 +11,7 @@ namespace SocialRelayCvi\Rest;
 
 use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
+use SocialRelayCvi\PostMeta;
 use SocialRelayCvi\Settings\ConnectionTester;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -84,6 +85,46 @@ final class ConnectionController implements Module {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'preview' ),
 				'permission_callback' => static fn ( WP_REST_Request $request ): bool => current_user_can( 'edit_post', (int) $request['id'] ),
+				'args'                => array(
+					'id' => array(
+						'type'     => 'integer',
+						'required' => true,
+					),
+				),
+			)
+		);
+
+		$can_edit = static fn ( WP_REST_Request $request ): bool => current_user_can( 'edit_post', (int) $request['id'] );
+
+		register_rest_route(
+			self::NAMESPACE,
+			'/posts/(?P<id>\d+)/share',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'share' ),
+				'permission_callback' => $can_edit,
+				'args'                => array(
+					'id'       => array(
+						'type'     => 'integer',
+						'required' => true,
+					),
+					'channels' => array(
+						'description' => __( 'Only these channel ids (retry). Empty: every channel of the post.', 'social-relay-for-postiz' ),
+						'type'        => 'array',
+						'items'       => array( 'type' => 'string' ),
+						'default'     => array(),
+					),
+				),
+			)
+		);
+
+		register_rest_route(
+			self::NAMESPACE,
+			'/posts/(?P<id>\d+)/cancel',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'cancel' ),
+				'permission_callback' => $can_edit,
 				'args'                => array(
 					'id' => array(
 						'type'     => 'integer',
@@ -179,6 +220,61 @@ final class ConnectionController implements Module {
 		$preview = $this->plugin->share_service->preview( $post );
 
 		return is_wp_error( $preview ) ? $preview : new WP_REST_Response( $preview );
+	}
+
+	/**
+	 * POST /posts/{id}/share — queues a new share now, even if the same content was sent before.
+	 *
+	 * @param WP_REST_Request<array<string, mixed>> $request Request.
+	 * @return WP_REST_Response|\WP_Error
+	 */
+	public function share( WP_REST_Request $request ): WP_REST_Response|\WP_Error {
+		$post = get_post( (int) $request['id'] );
+		if ( ! $post instanceof \WP_Post ) {
+			return new \WP_Error( 'socialrelaycvi_not_found', __( 'Post not found.', 'social-relay-for-postiz' ), array( 'status' => 404 ) );
+		}
+
+		$reason = $this->plugin->share_service->why_not_shared( $post );
+		if ( null !== $reason ) {
+			return new \WP_Error( 'socialrelaycvi_not_shareable', $reason, array( 'status' => 409 ) );
+		}
+
+		$channels = array_values( array_filter( array_map( 'sanitize_text_field', array_map( 'strval', (array) $request->get_param( 'channels' ) ) ) ) );
+		if ( array() !== $channels ) {
+			update_post_meta( $post->ID, PostMeta::ONLY, $channels );
+		}
+
+		update_post_meta( $post->ID, PostMeta::RESHARE, true );
+		$this->plugin->queue->enqueue_share( $post->ID, 0 );
+
+		return new WP_REST_Response( array( 'queued' => true ) );
+	}
+
+	/**
+	 * POST /posts/{id}/cancel — deletes in Postiz what is still pending for the post.
+	 *
+	 * @param WP_REST_Request<array<string, mixed>> $request Request.
+	 * @return WP_REST_Response|\WP_Error
+	 */
+	public function cancel( WP_REST_Request $request ): WP_REST_Response|\WP_Error {
+		$post_id = (int) $request['id'];
+		$pending = count( $this->plugin->shares->cancellable_batches( $post_id ) );
+
+		if ( $pending > 0 ) {
+			if ( ! $this->plugin->connection->is_configured() ) {
+				return new \WP_Error( 'socialrelaycvi_not_configured', __( 'Postiz is not configured yet.', 'social-relay-for-postiz' ), array( 'status' => 409 ) );
+			}
+			$this->plugin->share_service->cancel( $post_id );
+		}
+
+		$left = count( $this->plugin->shares->cancellable_batches( $post_id ) );
+
+		return new WP_REST_Response(
+			array(
+				'cancelled' => $pending - $left,
+				'left'      => $left,
+			)
+		);
 	}
 
 	/**

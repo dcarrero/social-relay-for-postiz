@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T16:25:53+00:00",
+    "translation-revision-date": "2026-11-10T16:47:21+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/settings.js",
     "domain": "messages",
@@ -15,6 +15,9 @@
             ],
             "Channels": [
                 "Canales"
+            ],
+            "When": [
+                "Cu\u00e1ndo"
             ],
             "Next free slot in Postiz": [
                 "Siguiente hueco libre en Postiz"
@@ -139,9 +142,6 @@
             ],
             "Optional. A network without its own template uses the common one.": [
                 "Opcional. Las redes sin plantilla propia usan la com\u00fan."
-            ],
-            "When": [
-                "Cu\u00e1ndo"
             ],
             "Delay in minutes": [
                 "Retraso en minutos"

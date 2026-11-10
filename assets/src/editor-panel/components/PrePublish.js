@@ -7,7 +7,7 @@ import {
 	config,
 	ICON,
 	META,
-	modeLabel,
+	timingLabel,
 } from '../config';
 import { effectiveChannels, usePostMeta } from '../hooks';
 
@@ -56,9 +56,7 @@ export default function PrePublish() {
 						) }
 					</p>
 					<p style={ { fontWeight: 600 } }>{ names.join( ', ' ) }</p>
-					<p className="description">
-						{ modeLabel( config.profile.mode ) }
-					</p>
+					<p className="description">{ timingLabel( meta ) }</p>
 				</>
 			) }
 		</PluginPrePublishPanel>

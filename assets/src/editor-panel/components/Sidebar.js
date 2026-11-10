@@ -1,12 +1,13 @@
 import { ExternalLink, PanelBody, ToggleControl } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 
-import { channelsById, config, META, modeLabel } from '../config';
+import { channelsById, config, META, timingLabel } from '../config';
 import { effectiveChannels, usePostMeta, usePostState } from '../hooks';
 import ChannelsSection from './ChannelsSection';
 import MessageSection from './MessageSection';
 import PreviewSection from './PreviewSection';
 import StatusSection from './StatusSection';
+import TimingSection from './TimingSection';
 
 /**
  * Shown when Postiz is not connected or the post type has no enabled profile.
@@ -70,7 +71,7 @@ export default function Sidebar() {
 		config.profile.label,
 		count,
 		config.channels.filter( ( channel ) => ! channel.disabled ).length,
-		modeLabel( config.profile.mode )
+		timingLabel( meta )
 	);
 
 	return (
@@ -112,7 +113,11 @@ export default function Sidebar() {
 						<PanelBody
 							title={ __( 'Status', 'social-relay-for-postiz' ) }
 						>
-							<StatusSection postId={ postId } saves={ saves } />
+							<StatusSection
+								postId={ postId }
+								saves={ saves }
+								meta={ meta }
+							/>
 						</PanelBody>
 					) }
 					<PanelBody
@@ -120,6 +125,12 @@ export default function Sidebar() {
 						initialOpen={ ! published }
 					>
 						<ChannelsSection meta={ meta } setMeta={ setMeta } />
+					</PanelBody>
+					<PanelBody
+						title={ __( 'When', 'social-relay-for-postiz' ) }
+						initialOpen={ ! published }
+					>
+						<TimingSection meta={ meta } setMeta={ setMeta } />
 					</PanelBody>
 					<PanelBody
 						title={ __( 'Message', 'social-relay-for-postiz' ) }

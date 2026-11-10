@@ -5,6 +5,9 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 ## [Unreleased]
 
 ### Added
+- Timing per post ("When" in the editor panel and the classic metabox): now, a date, the next free slot or a draft in Postiz, or the profile setting. Stored in `_socialrelaycvi_mode` and `_socialrelaycvi_publish_at` (site time); a past date sends right away and no date uses the profile delay.
+- Actions in the editor status panel: "Share again now" (with a confirmation that names the channels and timing), "Retry" on a failed network (only that channel is sent) and "Cancel pending" (deletes scheduled posts and drafts in Postiz). The panel polls every 5 s for a minute after each action.
+- REST routes `POST socialrelaycvi/v1/posts/{id}/share` (optional `channels` to retry only some) and `POST socialrelaycvi/v1/posts/{id}/cancel`, for users who can edit the post.
 - WP-CLI: `wp social-relay status|test|channels|preview|share|shares|cancel|sync|log`.
 - Abilities API (WordPress 6.9+): `socialrelaycvi/get-status`, `list-channels`, `preview-post`, `share-post`, `get-post-shares` and `cancel-post-shares`, in the `social-media` category, with input/output schemas, behaviour annotations and capability checks. Exposed in REST for AI agents (MCP Adapter) and other tools.
 - Admin REST routes (`socialrelaycvi/v1/admin/settings|connection|profiles|stats|advanced|webhook/regenerate|log`), `manage_options` only; the API key is write-only.
@@ -36,6 +39,7 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - Plugin CSS is versioned by file time as well, so a CSS-only change is not hidden by the browser cache.
 - Log: in "next free slot" mode each "Sent to Postiz" entry shows its channel.
 - Channels removed from Postiz (or reconnected with a new id) produced one warning per channel in the editor preview. Skipped channels are now grouped into one notice per reason, and the editor and the publishing profile say how many saved channels are gone with a "Remove them" button.
+- A "share again" request that ended up sending nothing (conditions not met, no channels, no image for a network that needs one) left the flag on, so the next update of the post shared it.
 - Unticking every channel in the editor or the classic metabox fell back to the profile channels; it now means no channels.
 - Styles imported from shared components are enqueued too (`build/{entry}.css` as well as `build/style-{entry}.css`).
 

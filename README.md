@@ -14,7 +14,7 @@ WordPress plugin that auto-publishes and schedules your content on social networ
 - Background sending (Action Scheduler) with retries, duplicate protection and an activity log with summary cards (published, queued, errors, requests in the last hour against the Postiz limit).
 - Pending posts are cancelled in Postiz when a post is unpublished.
 - Status sync with Postiz (published URL, platform errors), triggered by the Postiz webhook or every 15 minutes.
-- Block editor panel (channels, one tab per network for its own text, preview drawn like each network, status), classic editor metabox and dashboard widget.
+- Block editor panel (channels, timing per post, one tab per network for its own text, preview drawn like each network, status with share again / retry / cancel pending), classic editor metabox and dashboard widget.
 - "Test this profile" panel in the settings: pick a post and see what the saved profile would send.
 - REST routes for status, channels, a post's shares and a dry-run preview.
 - WP-CLI: `wp social-relay status|test|channels|preview|share|shares|cancel|sync|log` (`wp help social-relay` for details).

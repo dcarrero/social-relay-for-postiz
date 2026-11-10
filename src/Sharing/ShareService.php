@@ -78,12 +78,14 @@ final class ShareService implements Module {
 
 		if ( ! $this->passes_conditions( $post, $profile['include_terms'], $profile['exclude_terms'] ) ) {
 			$log->info( 'share', __( 'The post does not match the profile conditions; not shared.', 'social-relay-for-postiz' ), $post_id );
+			delete_post_meta( $post_id, PostMeta::RESHARE );
 			return;
 		}
 
 		$client = $this->plugin->gateway();
 		if ( null === $client ) {
 			$log->error( 'share', __( 'Postiz is not configured; nothing was sent.', 'social-relay-for-postiz' ), $post_id );
+			delete_post_meta( $post_id, PostMeta::RESHARE );
 			return;
 		}
 
@@ -93,13 +95,26 @@ final class ShareService implements Module {
 			return;
 		}
 
+		$timing          = $this->timing( $post, $profile );
+		$profile['mode'] = $timing['mode'];
+
 		$prepared = $this->prepare( $post, $profile, $channels );
 		foreach ( $prepared['skipped'] as $skip ) {
 			$log->error( 'share', $skip['reason'], $post_id, $skip['integration_id'] );
 		}
 		$items = $prepared['items'];
 
+		// "Retry" from the editor: only the channels that failed, once.
+		$only = get_post_meta( $post_id, PostMeta::ONLY, true );
+		if ( is_array( $only ) && array() !== $only ) {
+			delete_post_meta( $post_id, PostMeta::ONLY );
+			$items = array_values( array_filter( $items, static fn ( array $item ): bool => in_array( $item['integration_id'], $only, true ) ) );
+			update_post_meta( $post_id, PostMeta::RESHARE, true );
+		}
+
+		// Nothing to send: drop a pending "share again" so the next update does not send.
 		if ( array() === $items ) {
+			delete_post_meta( $post_id, PostMeta::RESHARE );
 			return;
 		}
 
@@ -125,6 +140,7 @@ final class ShareService implements Module {
 		$items = $sendable;
 
 		if ( array() === $items ) {
+			delete_post_meta( $post_id, PostMeta::RESHARE );
 			return;
 		}
 
@@ -144,7 +160,7 @@ final class ShareService implements Module {
 				'draft'    => PayloadBuilder::TYPE_DRAFT,
 				default    => PayloadBuilder::TYPE_NOW,
 			};
-			$when = 'schedule' === $profile['mode'] ? time() + $profile['delay_minutes'] * MINUTE_IN_SECONDS : time();
+			$when = $timing['at'];
 
 			$this->send( $client, $post, $items, $when, $type, $batch, $hash, $attempt, true, $request );
 		}
@@ -152,6 +168,60 @@ final class ShareService implements Module {
 		if ( $reshare ) {
 			update_post_meta( $post_id, PostMeta::RESHARE, false );
 		}
+	}
+
+	/**
+	 * Timing of the next share: the post's own mode and date win over the profile.
+	 *
+	 * In "schedule" mode the post date is used when set (a past date means now);
+	 * otherwise the profile delay after publishing.
+	 *
+	 * @param WP_Post              $post    Post.
+	 * @param array<string, mixed> $profile Profile (see ProfileRepository).
+	 * @return array{mode: string, at: int} Mode and Unix time for "now", "schedule" and "draft".
+	 */
+	public function timing( WP_Post $post, array $profile ): array {
+		$own  = (string) get_post_meta( $post->ID, PostMeta::MODE, true );
+		$mode = in_array( $own, PostMeta::MODES, true ) ? $own : (string) $profile['mode'];
+		$at   = time();
+
+		if ( 'schedule' === $mode ) {
+			$date = PostMeta::sanitize_datetime( (string) get_post_meta( $post->ID, PostMeta::PUBLISH_AT, true ) );
+			$at   = '' !== $date
+				? max( time(), ( new \DateTimeImmutable( $date, wp_timezone() ) )->getTimestamp() )
+				: time() + (int) $profile['delay_minutes'] * MINUTE_IN_SECONDS;
+		}
+
+		return array(
+			'mode' => $mode,
+			'at'   => $at,
+		);
+	}
+
+	/**
+	 * Why a post would not be shared right now, or null when it would.
+	 *
+	 * @param WP_Post $post Post.
+	 */
+	public function why_not_shared( WP_Post $post ): ?string {
+		if ( ! $this->plugin->connection->is_configured() ) {
+			return __( 'Postiz is not configured yet.', 'social-relay-for-postiz' );
+		}
+
+		if ( ! $this->plugin->profiles->for_post_type( $post->post_type )['enabled'] ) {
+			/* translators: %s: post type name. */
+			return sprintf( __( 'Sharing is turned off in the publishing profile for "%s".', 'social-relay-for-postiz' ), $post->post_type );
+		}
+
+		if ( ! get_post_meta( $post->ID, PostMeta::ENABLED, true ) ) {
+			return __( 'Sharing is turned off for this post.', 'social-relay-for-postiz' );
+		}
+
+		if ( 'publish' !== $post->post_status ) {
+			return __( 'The post is not published yet.', 'social-relay-for-postiz' );
+		}
+
+		return null;
 	}
 
 	/**
@@ -250,12 +320,15 @@ final class ShareService implements Module {
 			return $channels;
 		}
 
-		$prepared = $this->prepare( $post, $profile, $channels );
+		$timing          = $this->timing( $post, $profile );
+		$profile['mode'] = $timing['mode'];
+		$prepared        = $this->prepare( $post, $profile, $channels );
 
 		return array(
 			'enabled'           => $profile['enabled'] && (bool) get_post_meta( $post->ID, PostMeta::ENABLED, true ),
 			'passes_conditions' => $this->passes_conditions( $post, $profile['include_terms'], $profile['exclude_terms'] ),
-			'mode'              => $profile['mode'],
+			'mode'              => $timing['mode'],
+			'publish_at'        => 'schedule' === $timing['mode'] ? gmdate( 'c', $timing['at'] ) : null,
 			'short_link'        => $profile['short_link'],
 			'tags'              => $profile['postiz_tags'] ? $this->category_names( $post ) : array(),
 			'items'             => array_map(

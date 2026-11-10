@@ -30,9 +30,11 @@ Works with self-hosted Postiz and with Postiz Cloud.
 = In the editor =
 
 * A **"Social networks" panel** in the block editor: turn sharing on or off, pick channels for this post, write a text for all networks or one per network (one tab each), and preview every message as it will look on each network, with its character count.
+* **When, per post**: now, on a date, the next free slot or a draft in Postiz, or keep the profile setting.
 * A **pre-publish summary** of the channels and timing that will be used.
 * After publishing, the **status of each network**: queued, published (with a link to the post) or the error reported by the platform.
-* A metabox for the **classic editor**.
+* **Share again now, retry a failed network, or cancel what is still pending** in Postiz, right from the editor.
+* A metabox for the **classic editor**, with the same timing options.
 
 = Reliable =
 

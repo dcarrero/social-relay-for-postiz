@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T16:25:53+00:00",
+    "translation-revision-date": "2026-11-10T16:47:21+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/editor-panel.js",
     "domain": "messages",
@@ -15,6 +15,12 @@
             ],
             "Channels": [
                 "Canales"
+            ],
+            "Draft in Postiz": [
+                "Borrador en Postiz"
+            ],
+            "When": [
+                "Cu\u00e1ndo"
             ],
             "Text for all networks": [
                 "Texto para todas las redes"
@@ -43,14 +49,14 @@
             "Error": [
                 "Error"
             ],
-            "Draft in Postiz": [
-                "Borrador en Postiz"
-            ],
             "Cancelled": [
                 "Cancelada"
             ],
             "None": [
                 "Ninguno"
+            ],
+            "Scheduled for %s": [
+                "Programado para el %s"
             ],
             "Scheduled %d minutes after publishing": [
                 "Programada %d minutos despu\u00e9s de publicar"
@@ -137,8 +143,94 @@
             "Refresh": [
                 "Actualizar"
             ],
+            "Cancel": [
+                "Cancelar"
+            ],
+            "Queued for Postiz. The status updates here in a few seconds.": [
+                "En cola para Postiz. El estado se actualiza aqu\u00ed en unos segundos."
+            ],
             "Nothing sent to Postiz yet.": [
                 "Todav\u00eda no se ha enviado nada a Postiz."
+            ],
+            "Retry": [
+                "Reintentar"
+            ],
+            "Share again now\u2026": [
+                "Compartir de nuevo ahora\u2026"
+            ],
+            "Save your changes first: Postiz gets the saved version.": [
+                "Guarda antes los cambios: a Postiz le llega la versi\u00f3n guardada."
+            ],
+            "Cancel pending": [
+                "Cancelar pendientes"
+            ],
+            "Share again now?": [
+                "\u00bfCompartir de nuevo ahora?"
+            ],
+            "Share again": [
+                "Compartir de nuevo"
+            ],
+            "The saved post is sent to Postiz again for %1$d channel. Timing: %2$s.": [
+                "La entrada guardada se env\u00eda de nuevo a Postiz para %1$d canal. Momento: %2$s.",
+                "La entrada guardada se env\u00eda de nuevo a Postiz para %1$d canales. Momento: %2$s."
+            ],
+            "Cancel what is pending?": [
+                "\u00bfCancelar lo pendiente?"
+            ],
+            "Keep them": [
+                "Mantenerlos"
+            ],
+            "Cancelled %d pending group in Postiz.": [
+                "Cancelado %d grupo pendiente en Postiz.",
+                "Cancelados %d grupos pendientes en Postiz."
+            ],
+            "Nothing pending in Postiz for this post.": [
+                "No hay nada pendiente en Postiz para esta entrada."
+            ],
+            "Scheduled posts and drafts of this post are deleted in Postiz. What is already published stays.": [
+                "Se borran en Postiz las publicaciones programadas y los borradores de esta entrada. Lo ya publicado se queda."
+            ],
+            "Postiz publishes right away when the post is published.": [
+                "Postiz publica en cuanto se publica la entrada."
+            ],
+            "Postiz puts each channel in its next free slot (find-slot).": [
+                "Postiz coloca cada canal en su siguiente hueco libre (find-slot)."
+            ],
+            "Created as a draft in Postiz, to review and publish there.": [
+                "Se crea como borrador en Postiz, para revisarlo y publicarlo all\u00ed."
+            ],
+            "Without a date: right after publishing.": [
+                "Sin fecha: justo despu\u00e9s de publicar."
+            ],
+            "Postiz publishes on this date. A past date means right away.": [
+                "Postiz publica en esta fecha. Una fecha pasada significa en el momento."
+            ],
+            "Without a date: %d minutes after publishing, as in the profile.": [
+                "Sin fecha: %d minutos despu\u00e9s de publicar, como en el perfil."
+            ],
+            "Now": [
+                "Ahora"
+            ],
+            "Date": [
+                "Fecha"
+            ],
+            "Slot": [
+                "Hueco"
+            ],
+            "Draft": [
+                "Borrador"
+            ],
+            "Pick a date": [
+                "Elegir fecha"
+            ],
+            "Clear": [
+                "Quitar"
+            ],
+            "Back to the profile (%s)": [
+                "Volver al perfil (%s)"
+            ],
+            "(Profile setting.)": [
+                "(Ajuste del perfil.)"
             ],
             "Sharing is off for this post type.": [
                 "Compartir est\u00e1 desactivado para este tipo de contenido."

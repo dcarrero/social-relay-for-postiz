@@ -236,7 +236,7 @@ final class Command {
 			WP_CLI::error( 'The post does not exist or is not published.' );
 		}
 
-		$reason = $this->why_not_shared( $post );
+		$reason = $this->plugin->share_service->why_not_shared( $post );
 		if ( null !== $reason ) {
 			WP_CLI::error( $reason );
 		}
@@ -260,28 +260,6 @@ final class Command {
 		}
 
 		$this->shares( array( (string) $post_id ), array() );
-	}
-
-	/**
-	 * Why a post would not be shared before even building the messages, or null.
-	 *
-	 * @param \WP_Post $post Post.
-	 * @return string|null Reason.
-	 */
-	private function why_not_shared( \WP_Post $post ): ?string {
-		if ( ! $this->plugin->connection->is_configured() ) {
-			return 'Postiz is not configured yet.';
-		}
-
-		if ( ! $this->plugin->profiles->for_post_type( $post->post_type )['enabled'] ) {
-			return sprintf( 'Sharing is turned off in the publishing profile for "%s".', $post->post_type );
-		}
-
-		if ( ! get_post_meta( $post->ID, PostMeta::ENABLED, true ) ) {
-			return 'Sharing is turned off for this post (editor panel or metabox).';
-		}
-
-		return null;
 	}
 
 	/**

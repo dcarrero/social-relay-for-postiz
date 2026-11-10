@@ -34,6 +34,9 @@ delete_post_meta_by_key( '_socialrelaycvi_message' );
 delete_post_meta_by_key( '_socialrelaycvi_reshare' );
 delete_post_meta_by_key( '_socialrelaycvi_overrides' );
 delete_post_meta_by_key( '_socialrelaycvi_channels' );
+delete_post_meta_by_key( '_socialrelaycvi_mode' );
+delete_post_meta_by_key( '_socialrelaycvi_publish_at' );
+delete_post_meta_by_key( '_socialrelaycvi_only' );
 
 // Cached channel lists.
 $wpdb->query( $wpdb->prepare( 'DELETE FROM %i WHERE option_name LIKE %s OR option_name LIKE %s', $wpdb->options, $wpdb->esc_like( '_transient_socialrelaycvi_' ) . '%', $wpdb->esc_like( '_transient_timeout_socialrelaycvi_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Removing our own transients.

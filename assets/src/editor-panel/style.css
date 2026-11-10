@@ -75,7 +75,28 @@
 }
 
 .socialrelaycvi-status__detail {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 12px;
 	margin: 4px 0 0 36px;
+	font-size: 12px;
+}
+
+.socialrelaycvi-status__detail .components-button.is-link {
+	font-size: 12px;
+}
+
+.socialrelaycvi-status__actions {
+	margin-top: 12px;
+}
+
+.socialrelaycvi-status__actions .components-button {
+	justify-content: center;
+	width: 100%;
+}
+
+.socialrelaycvi-status__actions .description {
+	margin: 4px 0 0;
 	font-size: 12px;
 }
 
@@ -84,5 +105,27 @@
 }
 
 .socialrelaycvi-status__footer {
-	margin-top: 8px;
+	margin-top: 12px;
+}
+
+/* "When": segmented control, date button and help. */
+.socialrelaycvi-timing__date {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-top: 12px;
+}
+
+.socialrelaycvi-timing__picker {
+	padding: 8px;
+}
+
+.socialrelaycvi-timing__help {
+	margin: 8px 0 0;
+	font-size: 12px;
+}
+
+.socialrelaycvi-timing__help .components-button.is-link {
+	font-size: 12px;
 }
