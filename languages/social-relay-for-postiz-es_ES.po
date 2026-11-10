@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-11-10T10:13:03+00:00\n"
-"PO-Revision-Date: 2026-11-10T19:45:12+00:00\n"
+"PO-Revision-Date: 2026-11-10T19:47:43+00:00\n"
 "Language: es_ES\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -772,12 +772,116 @@ msgid "%1$s gets the first %2$d."
 msgstr "%1$s recibe las %2$d primeras."
 
 #: build/editor-panel.js:7
-msgid "Suggest with AI"
-msgstr "Sugerir con IA"
-
-#: build/editor-panel.js:7
+#: build/settings.js:9
 msgid "Insert tag"
 msgstr "Insertar etiqueta"
+
+#: build/editor-panel.js:7
+#: build/log.js:1
+#: build/settings.js:9
+msgid "Post"
+msgstr "Entrada"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Title"
+msgstr "Título"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Excerpt, up to 180 characters"
+msgstr "Extracto, hasta 180 caracteres"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "First 40 words of the content"
+msgstr "Primeras 40 palabras del contenido"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Link to the post"
+msgstr "Enlace a la entrada"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Short link"
+msgstr "Enlace corto"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Author"
+msgstr "Autor"
+
+#: build/editor-panel.js:7
+#: build/editor-panel.js:13
+#: build/log.js:1
+#: build/settings.js:9
+msgid "Date"
+msgstr "Fecha"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Minutes to read"
+msgstr "Minutos de lectura"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Categories and tags"
+msgstr "Categorías y etiquetas"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Main category (Yoast or Rank Math) or the first one"
+msgstr "Categoría principal (Yoast o Rank Math) o la primera"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "All categories"
+msgstr "Todas las categorías"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Tags as #hashtags"
+msgstr "Etiquetas como #hashtags"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Categories as #hashtags"
+msgstr "Categorías como #hashtags"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Site and SEO"
+msgstr "Sitio y SEO"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Site name"
+msgstr "Nombre del sitio"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "SEO title, or the title"
+msgstr "Título SEO, o el título"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Meta description, or the excerpt"
+msgstr "Meta descripción, o el extracto"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Threads"
+msgstr "Hilos"
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "New part of the thread"
+msgstr "Nueva parte del hilo"
+
+#: build/editor-panel.js:7
+msgid "Suggest with AI"
+msgstr "Sugerir con IA"
 
 #: build/editor-panel.js:7
 msgid "Undo"
@@ -943,11 +1047,6 @@ msgid "Now"
 msgstr "Ahora"
 
 #: build/editor-panel.js:13
-#: build/log.js:1
-msgid "Date"
-msgstr "Fecha"
-
-#: build/editor-panel.js:13
 msgid "Slot"
 msgstr "Hueco"
 
@@ -1024,10 +1123,6 @@ msgstr "Nivel"
 #: build/log.js:1
 msgid "Action"
 msgstr "Acción"
-
-#: build/log.js:1
-msgid "Post"
-msgstr "Entrada"
 
 #: build/log.js:1
 msgid "Channel"
@@ -1263,10 +1358,6 @@ msgstr "Vacío = plantilla común"
 msgid "Default"
 msgstr "Por defecto"
 
-#: build/settings.js:10
-msgid "Tags: {title} {excerpt} {content} {url} {shortlink} {author} {date} {site_name} {categories} {tags} {hashtags:post_tag} {term:taxonomy} {meta:key} {seo_title} {seo_description}. Filters: |upper |lower |strip |hashtag |limit:100. A line with --- starts a new thread part."
-msgstr "Variables: {title} {excerpt} {content} {url} {shortlink} {author} {date} {site_name} {categories} {tags} {hashtags:post_tag} {term:taxonomy} {meta:key} {seo_title} {seo_description}. Filtros: |upper |lower |strip |hashtag |limit:100. Una línea con --- empieza una nueva parte del hilo."
-
 #. translators: %s: post type label, e.g. Posts.
 #: build/settings.js:11
 #, php-format,js-format
@@ -1288,6 +1379,10 @@ msgstr[1] "%d canales de este perfil ya no existen en Postiz y se omiten."
 #: build/settings.js:12
 msgid "Message template"
 msgstr "Plantilla del mensaje"
+
+#: build/settings.js:12
+msgid "Use “Insert tag” for the post data. Filters such as |limit:100, |words:30, |upper, |hashtag or |default:text go inside a tag. A line with --- starts a new thread part."
+msgstr "Usa «Insertar etiqueta» para los datos de la entrada. Los filtros como |limit:100, |words:30, |upper, |hashtag o |default:texto van dentro de una etiqueta. Una línea con --- empieza una nueva parte del hilo."
 
 #: build/settings.js:12
 msgid "Optional. A network without its own template uses the common one."

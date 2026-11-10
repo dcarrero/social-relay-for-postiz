@@ -44,6 +44,8 @@ final class PostContext {
 			'date'            => (string) get_the_date( '', $post ),
 			'site_name'       => $plain( get_bloginfo( 'name' ) ),
 			'categories'      => static fn (): string => $terms( 'category' ),
+			'first_category'  => static fn (): string => self::first_category( $post ),
+			'reading_time'    => static fn (): string => (string) self::reading_minutes( $post->post_content ),
 			'tags'            => static fn (): string => $terms( 'post_tag' ),
 			'term'            => static fn ( string $taxonomy ): string => '' === $taxonomy ? '' : $terms( $taxonomy ),
 			'hashtags'        => static fn ( string $taxonomy ): string => TemplateEngine::hashtags( $terms( '' === $taxonomy ? 'post_tag' : $taxonomy ) ),
@@ -59,6 +61,36 @@ final class PostContext {
 		 * @param WP_Post                                        $post    Post being shared.
 		 */
 		return (array) apply_filters( 'socialrelaycvi_template_context', $context, $post );
+	}
+
+	/**
+	 * Primary category from Yoast SEO or Rank Math, else the first category.
+	 *
+	 * @param WP_Post $post Post.
+	 */
+	private static function first_category( WP_Post $post ): string {
+		foreach ( array( '_yoast_wpseo_primary_category', 'rank_math_primary_category' ) as $key ) {
+			$term = get_term( (int) get_post_meta( $post->ID, $key, true ), 'category' );
+			if ( $term instanceof \WP_Term ) {
+				return $term->name;
+			}
+		}
+
+		$names = wp_get_post_terms( $post->ID, 'category', array( 'fields' => 'names' ) );
+
+		return is_array( $names ) && array() !== $names ? (string) reset( $names ) : '';
+	}
+
+	/**
+	 * Minutes to read the content at 200 words a minute, at least 1.
+	 *
+	 * @param string $content Post content.
+	 */
+	public static function reading_minutes( string $content ): int {
+		$text  = wp_strip_all_tags( strip_shortcodes( $content ) );
+		$words = preg_split( '/\s+/u', trim( $text ), -1, PREG_SPLIT_NO_EMPTY );
+
+		return max( 1, (int) ceil( ( false === $words ? 0 : count( $words ) ) / 200 ) );
 	}
 
 	/**

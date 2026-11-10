@@ -3,9 +3,10 @@ import {
 	PanelBody,
 	SelectControl,
 	TextControl,
-	TextareaControl,
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
+
+import TemplateField from '../../common/TemplateField';
 
 /**
  * Template and network settings for one channel of a profile.
@@ -40,7 +41,7 @@ export default function NetworkOptions( {
 
 	return (
 		<PanelBody title={ title } initialOpen={ false }>
-			<TextareaControl
+			<TemplateField
 				label={
 					limit
 						? sprintf(
@@ -65,7 +66,6 @@ export default function NetworkOptions( {
 				onChange={ ( template ) =>
 					onChange( { ...options, template } )
 				}
-				__nextHasNoMarginBottom
 			/>
 
 			{ Object.entries( fields || {} ).map( ( [ key, field ] ) => {

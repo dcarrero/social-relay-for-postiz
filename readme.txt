@@ -20,7 +20,7 @@ Works with self-hosted Postiz and with Postiz Cloud.
 
 * **One publishing profile per post type**: channels, message template and timing.
 * **Publish now, schedule with a delay, use the next free slot in Postiz, or create drafts in Postiz** to review them there.
-* **Templates with tags** such as `{title}`, `{excerpt}`, `{url}`, `{hashtags:post_tag}`, `{meta:key}` or `{seo_description}`, filters like `|limit:200` or `|upper`, and thread parts separated by `---`.
+* **Templates with tags** such as `{title}`, `{excerpt}`, `{url}`, `{first_category}`, `{hashtags:post_tag}`, `{meta:key}` or `{seo_description}`, filters like `|limit:200`, `|words:30` or `|default:text`, and thread parts separated by `---`. An "Insert tag" menu lists them all.
 * **A template per network** when one message does not fit all, with each network's character limit applied.
 * **Network settings**: who can reply on X, LinkedIn carousels, Instagram post or story, Pinterest board, Google Business button.
 * **Conditions**: share only posts in some categories or tags, never posts in others.
@@ -92,6 +92,12 @@ Every channel you connect in Postiz. The plugin knows the character limits and s
 = Can I write a different text for each network? =
 
 Yes. Each publishing profile has a common template and an optional template per network, and each post can override both from the editor panel.
+
+= Which tags can I use in the message? =
+
+Post: `{title}`, `{excerpt}`, `{content}`, `{url}`, `{shortlink}`, `{slug}`, `{author}`, `{date}`, `{reading_time}` (minutes). Terms: `{categories}`, `{first_category}` (the Yoast SEO or Rank Math primary category), `{tags}`, `{term:taxonomy}`, `{hashtags:post_tag}`. Site and SEO: `{site_name}`, `{seo_title}`, `{seo_description}`. Custom fields: `{meta:key}`.
+
+Filters go inside a tag and can be chained: `|limit:180` (characters), `|words:30`, `|upper`, `|lower`, `|strip`, `|hashtag`, `|default:text` (when the value is empty). For example `{excerpt|words:30}` or `{categories|hashtag}`. A line with only `---` starts a new part of a thread.
 
 = Will my posts be shared twice if I update them? =
 

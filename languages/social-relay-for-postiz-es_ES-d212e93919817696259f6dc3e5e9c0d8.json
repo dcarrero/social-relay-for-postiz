@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T19:45:12+00:00",
+    "translation-revision-date": "2026-11-10T19:47:43+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/log.js",
     "domain": "messages",
@@ -25,11 +25,14 @@
             "Error": [
                 "Error"
             ],
-            "Refresh": [
-                "Actualizar"
+            "Post": [
+                "Entrada"
             ],
             "Date": [
                 "Fecha"
+            ],
+            "Refresh": [
+                "Actualizar"
             ],
             "Message": [
                 "Mensaje"
@@ -45,9 +48,6 @@
             ],
             "Action": [
                 "Acci\u00f3n"
-            ],
-            "Post": [
-                "Entrada"
             ],
             "Channel": [
                 "Canal"

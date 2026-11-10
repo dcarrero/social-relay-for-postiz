@@ -15,7 +15,8 @@ namespace SocialRelayCvi\Templates;
  * Syntax:
  *  - {tag}            value of the tag
  *  - {tag:argument}   tag with an argument, e.g. {meta:price}, {hashtags:post_tag}
- *  - {tag|filter}     filters chain left to right: upper, lower, strip, trim, hashtag, limit:N
+ *  - {tag|filter}     filters chain left to right: upper, lower, strip, trim, hashtag, limit:N,
+ *                     words:N (first N words), default:text (when the value is empty)
  *  - a line containing only --- splits the message into thread parts (see split_thread()).
  *
  * The engine is pure: values come from the context, so it is unit-testable without WordPress.
@@ -92,6 +93,21 @@ final class TemplateEngine {
 	}
 
 	/**
+	 * First words of a text, with an ellipsis when it was cut.
+	 *
+	 * @param string $text  Text.
+	 * @param int    $count Number of words.
+	 */
+	public static function words( string $text, int $count ): string {
+		$words = preg_split( '/\s+/u', trim( $text ), -1, PREG_SPLIT_NO_EMPTY );
+		if ( false === $words || $count <= 0 || count( $words ) <= $count ) {
+			return $text;
+		}
+
+		return rtrim( implode( ' ', array_slice( $words, 0, $count ) ), '.,;:' ) . '…';
+	}
+
+	/**
 	 * Turns "Moda sostenible, Hecho en Valencia" into "#ModaSostenible #HechoEnValencia".
 	 *
 	 * @param string $text Comma-separated terms.
@@ -140,6 +156,8 @@ final class TemplateEngine {
 				'strip'   => trim( (string) preg_replace( '/\s+/u', ' ', html_entity_decode( (string) preg_replace( '/<[^>]*>/', ' ', $value ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ) ) ),
 				'hashtag' => self::hashtags( $value ),
 				'limit'   => self::limit( $value, (int) $arg ),
+				'words'   => self::words( $value, (int) $arg ),
+				'default' => '' === trim( $value ) ? $arg : $value,
 				default   => $value,
 			};
 		}

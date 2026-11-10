@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T19:45:12+00:00",
+    "translation-revision-date": "2026-11-10T19:47:43+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/editor-panel.js",
     "domain": "messages",
@@ -153,11 +153,71 @@
             "%1$s gets the first %2$d.": [
                 "%1$s recibe las %2$d primeras."
             ],
-            "Suggest with AI": [
-                "Sugerir con IA"
-            ],
             "Insert tag": [
                 "Insertar etiqueta"
+            ],
+            "Post": [
+                "Entrada"
+            ],
+            "Title": [
+                "T\u00edtulo"
+            ],
+            "Excerpt, up to 180 characters": [
+                "Extracto, hasta 180 caracteres"
+            ],
+            "First 40 words of the content": [
+                "Primeras 40 palabras del contenido"
+            ],
+            "Link to the post": [
+                "Enlace a la entrada"
+            ],
+            "Short link": [
+                "Enlace corto"
+            ],
+            "Author": [
+                "Autor"
+            ],
+            "Date": [
+                "Fecha"
+            ],
+            "Minutes to read": [
+                "Minutos de lectura"
+            ],
+            "Categories and tags": [
+                "Categor\u00edas y etiquetas"
+            ],
+            "Main category (Yoast or Rank Math) or the first one": [
+                "Categor\u00eda principal (Yoast o Rank Math) o la primera"
+            ],
+            "All categories": [
+                "Todas las categor\u00edas"
+            ],
+            "Tags as #hashtags": [
+                "Etiquetas como #hashtags"
+            ],
+            "Categories as #hashtags": [
+                "Categor\u00edas como #hashtags"
+            ],
+            "Site and SEO": [
+                "Sitio y SEO"
+            ],
+            "Site name": [
+                "Nombre del sitio"
+            ],
+            "SEO title, or the title": [
+                "T\u00edtulo SEO, o el t\u00edtulo"
+            ],
+            "Meta description, or the excerpt": [
+                "Meta descripci\u00f3n, o el extracto"
+            ],
+            "Threads": [
+                "Hilos"
+            ],
+            "New part of the thread": [
+                "Nueva parte del hilo"
+            ],
+            "Suggest with AI": [
+                "Sugerir con IA"
             ],
             "Undo": [
                 "Deshacer"
@@ -264,9 +324,6 @@
             ],
             "Now": [
                 "Ahora"
-            ],
-            "Date": [
-                "Fecha"
             ],
             "Slot": [
                 "Hueco"

@@ -1,12 +1,5 @@
 import apiFetch from '@wordpress/api-fetch';
-import {
-	Button,
-	DropdownMenu,
-	MenuGroup,
-	MenuItem,
-	TabPanel,
-	TextareaControl,
-} from '@wordpress/components';
+import { Button, TabPanel, TextareaControl } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { store as editorStore } from '@wordpress/editor';
 import { useRef, useState } from '@wordpress/element';
@@ -14,23 +7,12 @@ import { __, sprintf } from '@wordpress/i18n';
 import { store as noticesStore } from '@wordpress/notices';
 
 import { network } from '../../common/networks';
+import TagMenu, { insertAtCursor } from '../../common/TagMenu';
 import { channelLabel, channelsById, config, META } from '../config';
 import { effectiveChannels } from '../hooks';
 import './message-section.css';
 
 const ALL = '__all';
-
-const TAGS = [
-	'{title}',
-	'{excerpt}',
-	'{url}',
-	'{shortlink}',
-	'{author}',
-	'{site_name}',
-	'{categories}',
-	'{hashtags:post_tag}',
-	'{excerpt|limit:180}',
-];
 
 /**
  * Keeps tab titles short.
@@ -91,18 +73,7 @@ function MessageEditor( {
 			.finally( () => setThinking( false ) );
 	};
 
-	const insert = ( tag ) => {
-		const field = ref.current;
-		const start = field ? field.selectionStart : value.length;
-		const end = field ? field.selectionEnd : value.length;
-		onChange( value.slice( 0, start ) + tag + value.slice( end ) );
-		window.requestAnimationFrame( () => {
-			if ( field ) {
-				field.focus();
-				field.selectionStart = field.selectionEnd = start + tag.length;
-			}
-		} );
-	};
+	const insert = ( tag ) => insertAtCursor( ref, value, tag, onChange );
 
 	return (
 		<>
@@ -129,30 +100,7 @@ function MessageEditor( {
 						{ __( 'Suggest with AI', 'social-relay-for-postiz' ) }
 					</Button>
 				) }
-				<DropdownMenu
-					icon={ null }
-					text={
-						'{ } ' + __( 'Insert tag', 'social-relay-for-postiz' )
-					}
-					label={ __( 'Insert tag', 'social-relay-for-postiz' ) }
-					toggleProps={ { variant: 'secondary', size: 'compact' } }
-				>
-					{ ( { onClose } ) => (
-						<MenuGroup>
-							{ TAGS.map( ( tag ) => (
-								<MenuItem
-									key={ tag }
-									onClick={ () => {
-										insert( tag );
-										onClose();
-									} }
-								>
-									<code>{ tag }</code>
-								</MenuItem>
-							) ) }
-						</MenuGroup>
-					) }
-				</DropdownMenu>
+				<TagMenu onInsert={ insert } />
 				{ previous !== null && (
 					<Button
 						variant="tertiary"

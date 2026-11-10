@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-10T19:45:11+00:00\n"
+"POT-Creation-Date: 2026-11-10T19:47:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -772,11 +772,115 @@ msgid "%1$s gets the first %2$d."
 msgstr ""
 
 #: build/editor-panel.js:7
-msgid "Suggest with AI"
+#: build/settings.js:9
+msgid "Insert tag"
 msgstr ""
 
 #: build/editor-panel.js:7
-msgid "Insert tag"
+#: build/log.js:1
+#: build/settings.js:9
+msgid "Post"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Title"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Excerpt, up to 180 characters"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "First 40 words of the content"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Link to the post"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Short link"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Author"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/editor-panel.js:13
+#: build/log.js:1
+#: build/settings.js:9
+msgid "Date"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Minutes to read"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Categories and tags"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Main category (Yoast or Rank Math) or the first one"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "All categories"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Tags as #hashtags"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Categories as #hashtags"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Site and SEO"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Site name"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "SEO title, or the title"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Meta description, or the excerpt"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "Threads"
+msgstr ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:9
+msgid "New part of the thread"
+msgstr ""
+
+#: build/editor-panel.js:7
+msgid "Suggest with AI"
 msgstr ""
 
 #: build/editor-panel.js:7
@@ -943,11 +1047,6 @@ msgid "Now"
 msgstr ""
 
 #: build/editor-panel.js:13
-#: build/log.js:1
-msgid "Date"
-msgstr ""
-
-#: build/editor-panel.js:13
 msgid "Slot"
 msgstr ""
 
@@ -1023,10 +1122,6 @@ msgstr ""
 
 #: build/log.js:1
 msgid "Action"
-msgstr ""
-
-#: build/log.js:1
-msgid "Post"
 msgstr ""
 
 #: build/log.js:1
@@ -1263,10 +1358,6 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: build/settings.js:10
-msgid "Tags: {title} {excerpt} {content} {url} {shortlink} {author} {date} {site_name} {categories} {tags} {hashtags:post_tag} {term:taxonomy} {meta:key} {seo_title} {seo_description}. Filters: |upper |lower |strip |hashtag |limit:100. A line with --- starts a new thread part."
-msgstr ""
-
 #. translators: %s: post type label, e.g. Posts.
 #: build/settings.js:11
 #, js-format
@@ -1287,6 +1378,10 @@ msgstr[1] ""
 
 #: build/settings.js:12
 msgid "Message template"
+msgstr ""
+
+#: build/settings.js:12
+msgid "Use “Insert tag” for the post data. Filters such as |limit:100, |words:30, |upper, |hashtag or |default:text go inside a tag. A line with --- starts a new thread part."
 msgstr ""
 
 #: build/settings.js:12

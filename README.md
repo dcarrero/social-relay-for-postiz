@@ -9,7 +9,7 @@ WordPress plugin that auto-publishes and schedules your content on social networ
 
 - Direct connection to your Postiz instance (self-hosted or Postiz Cloud), with automatic API path detection and a card in Settings → Connectors.
 - Publishing profile per post type: channels, common and per-network templates, network settings, timing (now, delay, next free slot, draft).
-- Templates with tags (`{title}`, `{excerpt}`, `{url}`, `{hashtags:post_tag}`, `{meta:key}`…), filters (`|limit:200`, `|upper`…) and thread parts (`---`).
+- Templates with tags (`{title}`, `{excerpt}`, `{url}`, `{first_category}`, `{reading_time}`, `{hashtags:post_tag}`, `{meta:key}`…), filters (`|limit:200`, `|words:30`, `|default:text`, `|upper`…) and thread parts (`---`); an "Insert tag" menu in the editor and the settings. Full list in the readme.txt FAQ.
 - Images: featured, featured plus the images in the post, or picked per post in the editor (up to 10), trimmed to what each network accepts.
 - Conditions on categories and tags, UTM parameters per network, Postiz shortener and tags.
 - Background sending (Action Scheduler) with retries, duplicate protection and an activity log with summary cards (published, queued, errors, requests in the last hour against the Postiz limit).

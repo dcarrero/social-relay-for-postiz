@@ -62,4 +62,22 @@ final class TemplateEngineTest extends TestCase {
 	public function test_split_thread_without_separator_returns_one_part(): void {
 		$this->assertSame( array( 'Solo' ), $this->engine->split_thread( 'Solo' ) );
 	}
+
+	public function test_words_filter_keeps_the_first_words(): void {
+		$context = array( 't' => 'Uno dos tres, cuatro cinco' );
+
+		$this->assertSame( 'Uno dos tres…', $this->engine->render( '{t|words:3}', $context ) );
+		$this->assertSame( 'Uno dos tres, cuatro cinco', $this->engine->render( '{t|words:9}', $context ) );
+	}
+
+	public function test_default_filter_only_when_empty(): void {
+		$context = array(
+			'empty' => '',
+			'full'  => 'Valor',
+		);
+
+		$this->assertSame( 'Sin dato', $this->engine->render( '{empty|default:Sin dato}', $context ) );
+		$this->assertSame( 'Valor', $this->engine->render( '{full|default:Sin dato}', $context ) );
+		$this->assertSame( 'NUEVO', $this->engine->render( '{empty|default:nuevo|upper}', $context ) );
+	}
 }

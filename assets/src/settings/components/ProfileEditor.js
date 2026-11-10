@@ -7,21 +7,16 @@ import {
 	Notice,
 	SelectControl,
 	TextControl,
-	TextareaControl,
 	ToggleControl,
 } from '@wordpress/components';
 import { __, _n, sprintf } from '@wordpress/i18n';
 
 import { ChannelLabel } from '../../common/ChannelAvatar';
+import TemplateField from '../../common/TemplateField';
 
 import { IMAGE_MODES, MODES } from '../config';
 import Conditions from './Conditions';
 import NetworkOptions from './NetworkOptions';
-
-const TAGS_HELP = __(
-	'Tags: {title} {excerpt} {content} {url} {shortlink} {author} {date} {site_name} {categories} {tags} {hashtags:post_tag} {term:taxonomy} {meta:key} {seo_title} {seo_description}. Filters: |upper |lower |strip |hashtag |limit:100. A line with --- starts a new thread part.',
-	'social-relay-for-postiz'
-);
 
 /**
  * Editor of one publishing profile.
@@ -145,17 +140,18 @@ export default function ProfileEditor( {
 					<h3>{ __( 'Message', 'social-relay-for-postiz' ) }</h3>
 				</CardHeader>
 				<CardBody>
-					<TextareaControl
+					<TemplateField
 						label={ __(
 							'Message template',
 							'social-relay-for-postiz'
 						) }
 						value={ profile.template }
 						rows={ 5 }
-						help={ TAGS_HELP }
+						help={ __(
+							'Use “Insert tag” for the post data. Filters such as |limit:100, |words:30, |upper, |hashtag or |default:text go inside a tag. A line with --- starts a new thread part.',
+							'social-relay-for-postiz'
+						) }
 						onChange={ ( template ) => update( { template } ) }
-						className="socialrelaycvi-settings__code"
-						__nextHasNoMarginBottom
 					/>
 				</CardBody>
 				{ selected.length > 0 && (

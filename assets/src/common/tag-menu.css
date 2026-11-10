@@ -1,0 +1,25 @@
+.socialrelaycvi-tag-menu .components-dropdown-menu__menu {
+	min-width: 300px;
+}
+
+.socialrelaycvi-tag-menu .components-menu-item__button {
+	min-height: 40px;
+}
+
+.socialrelaycvi-tag-menu code {
+	padding: 0;
+	background: none;
+	font-size: 12px;
+}
+
+.socialrelaycvi-tag-menu .components-menu-item__info {
+	font-size: 12px;
+}
+
+.socialrelaycvi-template-field {
+	margin-bottom: 12px;
+}
+
+.socialrelaycvi-template-field__tools {
+	margin-top: 8px;
+}
