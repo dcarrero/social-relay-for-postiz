@@ -13,6 +13,7 @@ import { __ } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
 
 import PreviewCard from '../../common/PreviewCard';
+import SkippedNotices from '../../common/SkippedNotices';
 import { config } from '../config';
 
 /**
@@ -137,15 +138,7 @@ export default function TestProfile( { postType, dirty } ) {
 								linkTitle={ title }
 							/>
 						) ) }
-						{ preview.skipped.map( ( skip ) => (
-							<Notice
-								key={ skip.integration_id }
-								status="warning"
-								isDismissible={ false }
-							>
-								{ skip.reason }
-							</Notice>
-						) ) }
+						<SkippedNotices skipped={ preview.skipped } />
 						{ ! preview.items.length &&
 							! preview.skipped.length && (
 								<p>

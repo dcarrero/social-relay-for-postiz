@@ -24,6 +24,11 @@ final class PostMeta implements Module {
 	public const CHANNELS  = '_socialrelaycvi_channels';
 
 	/**
+	 * Stored alone in CHANNELS when the editor unticks every channel: an empty list means "use the profile".
+	 */
+	public const NO_CHANNELS = '__none';
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function register(): void {

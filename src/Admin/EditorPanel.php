@@ -99,6 +99,7 @@ final class EditorPanel implements Module {
 			'canManage'   => current_user_can( SettingsPage::CAPABILITY ),
 			'profile'     => array(
 				'enabled'       => $profile['enabled'],
+				'label'         => (string) ( get_post_type_object( $post_type )?->labels->name ?? $post_type ),
 				'channels'      => $profile['channels'],
 				'mode'          => $profile['mode'],
 				'delayMinutes'  => $profile['delay_minutes'],

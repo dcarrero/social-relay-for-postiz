@@ -1,14 +1,18 @@
 import {
+	Button,
 	Card,
 	CardBody,
 	CardHeader,
 	CheckboxControl,
+	Notice,
 	SelectControl,
 	TextControl,
 	TextareaControl,
 	ToggleControl,
 } from '@wordpress/components';
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
+
+import { ChannelLabel } from '../../common/ChannelAvatar';
 
 import { MODES } from '../config';
 import Conditions from './Conditions';
@@ -43,6 +47,20 @@ export default function ProfileEditor( {
 	const selected = channels.filter( ( channel ) =>
 		profile.channels.includes( channel.id )
 	);
+
+	// Ids saved in the profile that Postiz no longer has (removed or reconnected).
+	const known = settings.channels.map( ( channel ) => channel.id );
+	const gone = known.length
+		? profile.channels.filter( ( id ) => ! known.includes( id ) )
+		: [];
+	const removeGone = () => {
+		const options = { ...profile.channel_options };
+		gone.forEach( ( id ) => delete options[ id ] );
+		update( {
+			channels: profile.channels.filter( ( id ) => known.includes( id ) ),
+			channel_options: options,
+		} );
+	};
 
 	const toggleChannel = ( id, checked ) =>
 		update( {
@@ -88,7 +106,7 @@ export default function ProfileEditor( {
 						{ channels.map( ( channel ) => (
 							<CheckboxControl
 								key={ channel.id }
-								label={ `${ channel.name } · ${ channel.identifier }` }
+								label={ <ChannelLabel channel={ channel } /> }
 								checked={ profile.channels.includes(
 									channel.id
 								) }
@@ -99,6 +117,26 @@ export default function ProfileEditor( {
 							/>
 						) ) }
 					</div>
+					{ gone.length > 0 && (
+						<Notice status="warning" isDismissible={ false }>
+							{ sprintf(
+								/* translators: %d: number of channels. */
+								_n(
+									'%d channel of this profile no longer exists in Postiz and is skipped.',
+									'%d channels of this profile no longer exist in Postiz and are skipped.',
+									gone.length,
+									'social-relay-for-postiz'
+								),
+								gone.length
+							) }{ ' ' }
+							<Button variant="link" onClick={ removeGone }>
+								{ __(
+									'Remove them',
+									'social-relay-for-postiz'
+								) }
+							</Button>
+						</Notice>
+					) }
 				</CardBody>
 			</Card>
 

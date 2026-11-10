@@ -25,6 +25,7 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - readme.txt rewritten for wordpress.org: features, FAQ, screenshots, external services, privacy.
 - Local Docker environment with `@wordpress/env` (`npm run env start`, site on port 8890).
 - CSS linting (`npm run lint:css`, WordPress stylelint rules) added to CI.
+- Editor sidebar closer to the mockups and to core styles: each channel shows its Postiz picture (or its initial on the network colour), name and network on two lines; "All · None" links; the share toggle summarises profile, channels in use and timing; message tabs are pills; the textarea shows the template it falls back to; "Insert tag" and "Reset" buttons; the status panel has a summary, a colour bar and status pills. Publishing profiles and previews use the same channel rows and pictures.
 
 ### Fixed
 - Plugin Check: every query uses `%i` for table names and static SQL (no interpolated clauses); `load_plugin_textdomain()` removed, translations come from translate.wordpress.org language packs.
@@ -34,6 +35,8 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - Editor panel: with several channels the per-channel tabs ran off the sidebar and two channels with the same name could not be told apart. Tabs now wrap, stay compact and add the network only when two names match.
 - Plugin CSS is versioned by file time as well, so a CSS-only change is not hidden by the browser cache.
 - Log: in "next free slot" mode each "Sent to Postiz" entry shows its channel.
+- Channels removed from Postiz (or reconnected with a new id) produced one warning per channel in the editor preview. Skipped channels are now grouped into one notice per reason, and the editor and the publishing profile say how many saved channels are gone with a "Remove them" button.
+- Unticking every channel in the editor or the classic metabox fell back to the profile channels; it now means no channels.
 - Styles imported from shared components are enqueued too (`build/{entry}.css` as well as `build/style-{entry}.css`).
 
 ## [0.3.1] - 2026-11-10

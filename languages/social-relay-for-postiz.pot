@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-10T12:55:56+00:00\n"
+"POT-Creation-Date: 2026-11-10T16:25:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: social-relay-for-postiz.php:3
 #: src/Admin/SettingsPage.php:44
 #: src/Admin/SettingsPage.php:89
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "Social Relay for Postiz"
 msgstr ""
 
@@ -137,18 +137,18 @@ msgid "Social networks (Postiz)"
 msgstr ""
 
 #: src/Admin/ClassicMetabox.php:77
-#: build/editor-panel.js:5
+#: build/editor-panel.js:8
 msgid "Share when publishing"
 msgstr ""
 
 #: src/Admin/ClassicMetabox.php:79
-#: build/editor-panel.js:5
+#: build/editor-panel.js:8
 #: build/settings.js:5
 msgid "Channels"
 msgstr ""
 
 #: src/Admin/ClassicMetabox.php:88
-#: build/editor-panel.js:3
+#: build/editor-panel.js:4
 msgid "Text for all networks"
 msgstr ""
 
@@ -157,17 +157,17 @@ msgid "Empty = profile template"
 msgstr ""
 
 #: src/Admin/ClassicMetabox.php:92
-#: build/editor-panel.js:5
+#: build/editor-panel.js:8
 msgid "Share again on the next update"
 msgstr ""
 
-#: src/Admin/ClassicMetabox.php:147
-#: build/editor-panel.js:5
+#: src/Admin/ClassicMetabox.php:152
+#: build/editor-panel.js:8
 msgid "Status"
 msgstr ""
 
-#: src/Admin/ClassicMetabox.php:160
-#: build/editor-panel.js:5
+#: src/Admin/ClassicMetabox.php:165
+#: build/editor-panel.js:7
 msgid "View post"
 msgstr ""
 
@@ -177,7 +177,7 @@ msgstr ""
 
 #: src/Admin/DashboardWidget.php:57
 #: src/Admin/StatusLabels.php:24
-#: build/editor-panel.js:5
+#: build/editor-panel.js:2
 #: build/log.js:1
 msgid "Queued"
 msgstr ""
@@ -203,7 +203,7 @@ msgstr ""
 #: src/Admin/LogPage.php:49
 #: src/Admin/LogPage.php:50
 #: src/Admin/LogPage.php:84
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 #: build/log.js:1
 msgid "Log"
 msgstr ""
@@ -231,29 +231,28 @@ msgid "If we use Postiz Cloud, that information is processed by Postiz according
 msgstr ""
 
 #: src/Admin/SettingsPage.php:45
-#: build/editor-panel.js:5
+#: build/editor-panel.js:8
 msgid "Social Relay"
 msgstr ""
 
 #: src/Admin/StatusLabels.php:25
-#: build/editor-panel.js:5
+#: build/editor-panel.js:2
 msgid "Published"
 msgstr ""
 
 #: src/Admin/StatusLabels.php:26
-#: build/editor-panel.js:5
+#: build/editor-panel.js:2
 #: build/log.js:1
 msgid "Error"
 msgstr ""
 
 #: src/Admin/StatusLabels.php:27
 #: build/editor-panel.js:2
-#: build/editor-panel.js:5
 msgid "Draft in Postiz"
 msgstr ""
 
 #: src/Admin/StatusLabels.php:28
-#: build/editor-panel.js:5
+#: build/editor-panel.js:2
 msgid "Cancelled"
 msgstr ""
 
@@ -355,6 +354,7 @@ msgid "Button"
 msgstr ""
 
 #: src/Postiz/ProviderRules.php:131
+#: build/editor-panel.js:3
 msgid "None"
 msgstr ""
 
@@ -416,26 +416,26 @@ msgstr ""
 msgid "This network needs an image and the post has none; skipped."
 msgstr ""
 
-#: src/Sharing/ShareService.php:185
+#: src/Sharing/ShareService.php:189
 msgid "Channel no longer exists in Postiz; skipped."
 msgstr ""
 
-#: src/Sharing/ShareService.php:193
+#: src/Sharing/ShareService.php:198
 msgid "Channel is disabled in Postiz; skipped."
 msgstr ""
 
 #. translators: %s: list of missing settings.
-#: src/Sharing/ShareService.php:210
+#: src/Sharing/ShareService.php:216
 #, php-format
 msgid "Missing network settings (%s); skipped."
 msgstr ""
 
-#: src/Sharing/ShareService.php:291
+#: src/Sharing/ShareService.php:298
 msgid "Pending posts cancelled in Postiz."
 msgstr ""
 
 #. translators: 1: number of channels, 2: Postiz post type (now, schedule, draft).
-#: src/Sharing/ShareService.php:364
+#: src/Sharing/ShareService.php:371
 #, php-format
 msgid "Sent to Postiz: %1$d channel, type %2$s."
 msgid_plural "Sent to Postiz: %1$d channels, type %2$s."
@@ -443,17 +443,17 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: error message, 2: attempt number, 3: max attempts.
-#: src/Sharing/ShareService.php:415
+#: src/Sharing/ShareService.php:422
 #, php-format
 msgid "%1$s Retrying (%2$d of %3$d)."
 msgstr ""
 
-#: src/Sharing/ShareService.php:576
+#: src/Sharing/ShareService.php:583
 msgid "Unexpected upload response."
 msgstr ""
 
 #. translators: %s: error message.
-#: src/Sharing/ShareService.php:580
+#: src/Sharing/ShareService.php:587
 #, php-format
 msgid "Postiz could not fetch the featured image (%s). Sent without image."
 msgstr ""
@@ -482,7 +482,11 @@ msgid "Immediately"
 msgstr ""
 
 #: build/editor-panel.js:2
-#: build/editor-panel.js:5
+msgid "Pending"
+msgstr ""
+
+#: build/editor-panel.js:2
+#: build/editor-panel.js:8
 msgid "Social networks"
 msgstr ""
 
@@ -499,98 +503,143 @@ msgid "This post will not be shared."
 msgstr ""
 
 #: build/editor-panel.js:3
-msgid "Use the profile channels"
-msgstr ""
-
-#: build/editor-panel.js:3
-msgid "Channels from the publishing profile."
-msgstr ""
-
-#: build/editor-panel.js:3
 msgid "No channels in Postiz yet."
 msgstr ""
 
 #: build/editor-panel.js:3
+msgid "Chosen for this post"
+msgstr ""
+
+#: build/editor-panel.js:3
+msgid "From the publishing profile"
+msgstr ""
+
+#: build/editor-panel.js:3
+#: build/editor-panel.js:4
 msgid "All"
 msgstr ""
 
 #: build/editor-panel.js:3
-msgid "Empty = profile template. Tags like {title} and {url} work here too."
+msgid "Disconnected in Postiz"
+msgstr ""
+
+#. translators: %d: number of channels.
+#: build/editor-panel.js:4
+#, js-format
+msgid "%d selected channel no longer exists in Postiz and will be skipped."
+msgid_plural "%d selected channels no longer exist in Postiz and will be skipped."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/editor-panel.js:4
+#: build/settings.js:6
+msgid "Remove them"
+msgstr ""
+
+#: build/editor-panel.js:4
+msgid "Review the profile"
+msgstr ""
+
+#: build/editor-panel.js:4
+msgid "Use the profile channels"
+msgstr ""
+
+#: build/editor-panel.js:4
+msgid "Insert tag"
+msgstr ""
+
+#: build/editor-panel.js:4
+msgid "Reset"
+msgstr ""
+
+#: build/editor-panel.js:4
+msgid "Empty = profile template, shown in grey. • marks a custom text."
 msgstr ""
 
 #. translators: %d: character limit of the network.
-#: build/editor-panel.js:4
+#: build/editor-panel.js:5
 #, js-format
 msgid "Empty = text for all networks. Limit: %d characters; check the count in Preview."
 msgstr ""
 
-#: build/editor-panel.js:4
+#: build/editor-panel.js:5
 msgid "Empty = text for all networks."
 msgstr ""
 
 #. translators: %d: number of parts in a thread.
-#: build/editor-panel.js:5
-#: build/settings.js:6
+#: build/editor-panel.js:6
+#: build/settings.js:7
 #, js-format
 msgid "Thread of %d part."
 msgid_plural "Thread of %d parts."
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/editor-panel.js:5
-#: build/settings.js:6
+#: build/editor-panel.js:6
+#: build/settings.js:7
 msgid "Longer than the network allows: it will be shortened."
 msgstr ""
 
-#: build/editor-panel.js:5
-#: build/settings.js:6
+#. translators: 1: reason, 2: number of channels.
+#: build/editor-panel.js:7
+#: build/settings.js:8
+#, js-format
+msgid "%1$s (%2$d channel)"
+msgid_plural "%1$s (%2$d channels)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/editor-panel.js:7
+#: build/settings.js:8
 msgid "This post does not match the profile conditions and will not be shared."
 msgstr ""
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 msgid "Based on the last saved version."
 msgstr ""
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 #: build/log.js:1
 msgid "Refresh"
 msgstr ""
 
-#: build/editor-panel.js:5
-msgid "Pending"
-msgstr ""
-
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 msgid "Nothing sent to Postiz yet."
 msgstr ""
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 msgid "Sharing is off for this post type."
 msgstr ""
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 msgid "Postiz is not connected yet."
 msgstr ""
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 msgid "Set up a publishing profile"
 msgstr ""
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 msgid "Connect Postiz"
 msgstr ""
 
-#: build/editor-panel.js:5
+#. translators: 1: profile name (post type), 2: channels used, 3: channels available, 4: timing.
+#: build/editor-panel.js:8
+#, js-format
+msgid "Profile “%1$s” · %2$d of %3$d channels · %4$s"
+msgstr ""
+
+#: build/editor-panel.js:8
 msgid "Shared when published"
 msgstr ""
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:8
 #: build/log.js:1
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Message"
 msgstr ""
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:8
 msgid "Preview"
 msgstr ""
 
@@ -603,7 +652,7 @@ msgid "Info"
 msgstr ""
 
 #: build/log.js:1
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "(no title)"
 msgstr ""
 
@@ -792,136 +841,144 @@ msgstr ""
 msgid "No channels in Postiz yet. Add them in Postiz and reload this page."
 msgstr ""
 
-#: build/settings.js:5
+#. translators: %d: number of channels.
+#: build/settings.js:6
+#, js-format
+msgid "%d channel of this profile no longer exists in Postiz and is skipped."
+msgid_plural "%d channels of this profile no longer exist in Postiz and are skipped."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/settings.js:6
 msgid "Message template"
 msgstr ""
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Optional. A network without its own template uses the common one."
 msgstr ""
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "When"
 msgstr ""
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Delay in minutes"
 msgstr ""
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Attach the featured image"
 msgstr ""
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Allow sharing again on update (when requested from the editor)"
 msgstr ""
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Conditions"
 msgstr ""
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Links and tags"
 msgstr ""
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Add UTM parameters to {url} (utm_source = network, utm_medium = social)"
 msgstr ""
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Accepts tags, e.g. {slug}."
 msgstr ""
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Shorten links with Postiz"
 msgstr ""
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Tag the posts in Postiz with the post categories"
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Test this profile"
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Pick a post to see the messages the saved profile would send. Nothing is sent."
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Save the profile to test your latest changes."
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "No channels selected."
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Connect Postiz first (Connection tab)."
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Profiles saved."
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Save profiles"
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Unsaved changes"
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Paste this URL in Postiz → Settings → Webhooks to update the status of your posts as soon as they are published. Without it, the plugin checks Postiz every 15 minutes."
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Webhook URL"
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Copied"
 msgstr ""
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Copy"
 msgstr ""
 
 #. translators: %s: time since the last webhook call, e.g. "5 minutes ago".
-#: build/settings.js:7
+#: build/settings.js:9
 #, js-format
 msgid "Last call received %s."
 msgstr ""
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "No call received yet. Use “Send Test” in Postiz to check it."
 msgstr ""
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "New webhook URL created. Update it in Postiz: the old one no longer works."
 msgstr ""
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "Create a new URL"
 msgstr ""
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "The current URL will stop working. Continue?"
 msgstr ""
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "Connection"
 msgstr ""
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "Publishing profiles"
 msgstr ""
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "Webhook"
 msgstr ""
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "Advanced"
 msgstr ""

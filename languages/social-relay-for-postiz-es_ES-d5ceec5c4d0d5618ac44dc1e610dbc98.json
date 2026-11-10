@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T12:55:57+00:00",
+    "translation-revision-date": "2026-11-10T16:25:53+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/editor-panel.js",
     "domain": "messages",
@@ -49,6 +49,9 @@
             "Cancelled": [
                 "Cancelada"
             ],
+            "None": [
+                "Ninguno"
+            ],
             "Scheduled %d minutes after publishing": [
                 "Programada %d minutos despu\u00e9s de publicar"
             ],
@@ -57,6 +60,9 @@
             ],
             "Immediately": [
                 "Al momento"
+            ],
+            "Pending": [
+                "Pendiente"
             ],
             "Social networks": [
                 "Redes sociales"
@@ -68,20 +74,42 @@
             "This post will not be shared.": [
                 "Esta entrada no se compartir\u00e1."
             ],
-            "Use the profile channels": [
-                "Usar los canales del perfil"
-            ],
-            "Channels from the publishing profile.": [
-                "Canales del perfil de publicaci\u00f3n."
-            ],
             "No channels in Postiz yet.": [
                 "Todav\u00eda no hay canales en Postiz."
+            ],
+            "Chosen for this post": [
+                "Elegidos para esta entrada"
+            ],
+            "From the publishing profile": [
+                "Del perfil de publicaci\u00f3n"
             ],
             "All": [
                 "Todas"
             ],
-            "Empty = profile template. Tags like {title} and {url} work here too.": [
-                "Vac\u00edo = plantilla del perfil. Aqu\u00ed tambi\u00e9n funcionan variables como {title} y {url}."
+            "Disconnected in Postiz": [
+                "Desconectado en Postiz"
+            ],
+            "%d selected channel no longer exists in Postiz and will be skipped.": [
+                "%d canal elegido ya no existe en Postiz y se omitir\u00e1.",
+                "%d canales elegidos ya no existen en Postiz y se omitir\u00e1n."
+            ],
+            "Remove them": [
+                "Quitarlos"
+            ],
+            "Review the profile": [
+                "Revisar el perfil"
+            ],
+            "Use the profile channels": [
+                "Usar los canales del perfil"
+            ],
+            "Insert tag": [
+                "Insertar etiqueta"
+            ],
+            "Reset": [
+                "Restablecer"
+            ],
+            "Empty = profile template, shown in grey. \u2022 marks a custom text.": [
+                "Vac\u00edo = plantilla del perfil, en gris. \u2022 indica un texto propio."
             ],
             "Empty = text for all networks. Limit: %d characters; check the count in Preview.": [
                 "Vac\u00edo = texto para todas las redes. L\u00edmite: %d caracteres; comprueba la cuenta en la vista previa."
@@ -96,6 +124,10 @@
             "Longer than the network allows: it will be shortened.": [
                 "M\u00e1s largo de lo que admite la red: se recortar\u00e1."
             ],
+            "%1$s (%2$d channel)": [
+                "%1$s (%2$d canal)",
+                "%1$s (%2$d canales)"
+            ],
             "This post does not match the profile conditions and will not be shared.": [
                 "Esta entrada no cumple las condiciones del perfil y no se compartir\u00e1."
             ],
@@ -104,9 +136,6 @@
             ],
             "Refresh": [
                 "Actualizar"
-            ],
-            "Pending": [
-                "Pendiente"
             ],
             "Nothing sent to Postiz yet.": [
                 "Todav\u00eda no se ha enviado nada a Postiz."
@@ -122,6 +151,9 @@
             ],
             "Connect Postiz": [
                 "Conectar Postiz"
+            ],
+            "Profile \u201c%1$s\u201d \u00b7 %2$d of %3$d channels \u00b7 %4$s": [
+                "Perfil \u00ab%1$s\u00bb \u00b7 %2$d de %3$d canales \u00b7 %4$s"
             ],
             "Shared when published": [
                 "Se comparti\u00f3 al publicar"

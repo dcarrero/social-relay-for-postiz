@@ -1,8 +1,8 @@
 import { ExternalLink, PanelBody, ToggleControl } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
-import { config, META, modeLabel } from '../config';
-import { usePostMeta, usePostState } from '../hooks';
+import { channelsById, config, META, modeLabel } from '../config';
+import { effectiveChannels, usePostMeta, usePostState } from '../hooks';
 import ChannelsSection from './ChannelsSection';
 import MessageSection from './MessageSection';
 import PreviewSection from './PreviewSection';
@@ -58,10 +58,24 @@ export default function Sidebar() {
 
 	const enabled = meta[ META.enabled ] !== false;
 	const published = status === 'publish';
+	const count = effectiveChannels( meta ).filter(
+		( id ) => channelsById[ id ] && ! channelsById[ id ].disabled
+	).length;
+	const summary = sprintf(
+		/* translators: 1: profile name (post type), 2: channels used, 3: channels available, 4: timing. */
+		__(
+			'Profile “%1$s” · %2$d of %3$d channels · %4$s',
+			'social-relay-for-postiz'
+		),
+		config.profile.label,
+		count,
+		config.channels.filter( ( channel ) => ! channel.disabled ).length,
+		modeLabel( config.profile.mode )
+	);
 
 	return (
 		<>
-			<PanelBody>
+			<PanelBody className="socialrelaycvi-sidebar__share">
 				<ToggleControl
 					label={
 						published
@@ -76,7 +90,7 @@ export default function Sidebar() {
 					}
 					checked={ enabled }
 					onChange={ ( value ) => setMeta( META.enabled, value ) }
-					help={ modeLabel( config.profile.mode ) }
+					help={ summary }
 					__nextHasNoMarginBottom
 				/>
 				{ published && config.profile.shareOnUpdate && (

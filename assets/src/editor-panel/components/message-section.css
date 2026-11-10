@@ -1,17 +1,42 @@
-/* Many channels: compact tabs that wrap instead of running off the sidebar. */
+/* Tabs as small pills that wrap. Core forces a 48px height (!important). */
 .socialrelaycvi-message .components-tab-panel__tabs {
 	flex-wrap: wrap;
-	gap: 0 4px;
-	margin-bottom: 8px;
+	gap: 6px;
+	margin-bottom: 12px;
 }
 
 .socialrelaycvi-message .components-tab-panel__tabs .components-tab-panel__tabs-item.components-button {
 	flex: 0 0 auto;
-
-	/* Core sets 48px with !important. */
-	height: 32px !important;
-	min-height: 0;
-	padding: 0 8px;
+	height: 28px !important;
+	padding: 0 10px;
+	border-radius: 14px;
+	background: #f0f0f0;
+	color: #1e1e1e;
 	font-size: 12px;
 	white-space: nowrap;
+}
+
+.socialrelaycvi-message .components-tab-panel__tabs .components-tab-panel__tabs-item.components-button::after {
+	display: none;
+}
+
+.socialrelaycvi-message .components-tab-panel__tabs .components-tab-panel__tabs-item.components-button.is-active {
+	background: #1e1e1e;
+	color: #fff;
+	box-shadow: none;
+}
+
+.socialrelaycvi-message .components-tab-panel__tabs .components-tab-panel__tabs-item.components-button:focus-visible {
+	box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--wp-admin-theme-color, #3858e9);
+}
+
+.socialrelaycvi-message textarea::placeholder {
+	color: #949494;
+}
+
+.socialrelaycvi-message__tools {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 8px;
 }

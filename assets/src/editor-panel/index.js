@@ -11,6 +11,7 @@ import { registerPlugin } from '@wordpress/plugins';
 import PrePublish from './components/PrePublish';
 import Sidebar from './components/Sidebar';
 import { config, ICON } from './config';
+import './style.css';
 
 const SIDEBAR = 'socialrelaycvi-sidebar';
 

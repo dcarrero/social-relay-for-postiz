@@ -160,7 +160,7 @@ final class ShareService implements Module {
 	 * @param WP_Post                             $post     Post.
 	 * @param array<string, mixed>                $profile  Profile (see ProfileRepository).
 	 * @param array<string, array<string, mixed>> $channels Channels by id.
-	 * @return array{items: list<array{integration_id: string, identifier: string, parts: list<string>, settings: array<string, mixed>}>, skipped: list<array{integration_id: string, reason: string}>}
+	 * @return array{items: list<array{integration_id: string, identifier: string, parts: list<string>, settings: array<string, mixed>}>, skipped: list<array{integration_id: string, code: string, reason: string}>}
 	 */
 	public function prepare( WP_Post $post, array $profile, array $channels ): array {
 		$context   = PostContext::for_post( $post );
@@ -173,15 +173,19 @@ final class ShareService implements Module {
 
 		// Channels picked in the editor for this post replace the profile's list.
 		$chosen      = get_post_meta( $post->ID, PostMeta::CHANNELS, true );
-		$channel_ids = is_array( $chosen ) && array() !== $chosen ? $chosen : (array) $profile['channels'];
+		$channel_ids = array_unique( array_map( 'strval', is_array( $chosen ) && array() !== $chosen ? $chosen : (array) $profile['channels'] ) );
 
 		foreach ( $channel_ids as $channel_id ) {
-			$channel_id = (string) $channel_id;
-			$channel    = $channels[ $channel_id ] ?? null;
+			if ( PostMeta::NO_CHANNELS === $channel_id ) {
+				continue;
+			}
+
+			$channel = $channels[ $channel_id ] ?? null;
 
 			if ( null === $channel ) {
 				$skipped[] = array(
 					'integration_id' => $channel_id,
+					'code'           => 'missing',
 					'reason'         => __( 'Channel no longer exists in Postiz; skipped.', 'social-relay-for-postiz' ),
 				);
 				continue;
@@ -190,6 +194,7 @@ final class ShareService implements Module {
 			if ( ! empty( $channel['disabled'] ) ) {
 				$skipped[] = array(
 					'integration_id' => $channel_id,
+					'code'           => 'disabled',
 					'reason'         => __( 'Channel is disabled in Postiz; skipped.', 'social-relay-for-postiz' ),
 				);
 				continue;
@@ -206,6 +211,7 @@ final class ShareService implements Module {
 			if ( array() !== $missing ) {
 				$skipped[] = array(
 					'integration_id' => $channel_id,
+					'code'           => 'settings',
 					/* translators: %s: list of missing settings. */
 					'reason'         => sprintf( __( 'Missing network settings (%s); skipped.', 'social-relay-for-postiz' ), implode( ', ', $missing ) ),
 				);
@@ -254,8 +260,9 @@ final class ShareService implements Module {
 			'tags'              => $profile['postiz_tags'] ? $this->category_names( $post ) : array(),
 			'items'             => array_map(
 				static fn ( array $item ): array => $item + array(
-					'name'  => (string) ( $channels[ $item['integration_id'] ]['name'] ?? '' ),
-					'limit' => ProviderRules::char_limit( $item['identifier'] ),
+					'name'    => (string) ( $channels[ $item['integration_id'] ]['name'] ?? '' ),
+					'picture' => (string) ( $channels[ $item['integration_id'] ]['picture'] ?? '' ),
+					'limit'   => ProviderRules::char_limit( $item['identifier'] ),
 				),
 				$prepared['items']
 			),

@@ -121,8 +121,13 @@ final class ClassicMetabox implements Module {
 		$default = $profile['channels'];
 		sort( $default );
 
-		// Same list as the profile: keep it empty so later profile changes still apply.
-		update_post_meta( $post_id, PostMeta::CHANNELS, $channels === $default ? array() : $channels );
+		// Same list as the profile: keep it empty so later profile changes still apply. Nothing ticked: no channels.
+		if ( $channels === $default ) {
+			$channels = array();
+		} elseif ( array() === $channels ) {
+			$channels = array( PostMeta::NO_CHANNELS );
+		}
+		update_post_meta( $post_id, PostMeta::CHANNELS, $channels );
 
 		if ( ! empty( $raw['reshare'] ) ) {
 			update_post_meta( $post_id, PostMeta::RESHARE, true );

@@ -17,6 +17,9 @@ export const META = {
 	reshare: '_socialrelaycvi_reshare',
 };
 
+// Stored alone in the channels meta when every channel is unticked (empty = use the profile's).
+export const NO_CHANNELS = '__none';
+
 export const channelsById = Object.fromEntries(
 	( config?.channels || [] ).map( ( channel ) => [ channel.id, channel ] )
 );

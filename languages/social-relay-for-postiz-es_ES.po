@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-11-10T10:13:03+00:00\n"
-"PO-Revision-Date: 2026-11-10T12:55:57+00:00\n"
+"PO-Revision-Date: 2026-11-10T16:25:53+00:00\n"
 "Language: es_ES\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: social-relay-for-postiz.php:3
 #: src/Admin/SettingsPage.php:44
 #: src/Admin/SettingsPage.php:89
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "Social Relay for Postiz"
 msgstr "Social Relay for Postiz"
 
@@ -137,18 +137,18 @@ msgid "Social networks (Postiz)"
 msgstr "Redes sociales (Postiz)"
 
 #: src/Admin/ClassicMetabox.php:77
-#: build/editor-panel.js:5
+#: build/editor-panel.js:8
 msgid "Share when publishing"
 msgstr "Compartir al publicar"
 
 #: src/Admin/ClassicMetabox.php:79
-#: build/editor-panel.js:5
+#: build/editor-panel.js:8
 #: build/settings.js:5
 msgid "Channels"
 msgstr "Canales"
 
 #: src/Admin/ClassicMetabox.php:88
-#: build/editor-panel.js:3
+#: build/editor-panel.js:4
 msgid "Text for all networks"
 msgstr "Texto para todas las redes"
 
@@ -157,17 +157,17 @@ msgid "Empty = profile template"
 msgstr "Vacío = plantilla del perfil"
 
 #: src/Admin/ClassicMetabox.php:92
-#: build/editor-panel.js:5
+#: build/editor-panel.js:8
 msgid "Share again on the next update"
 msgstr "Volver a compartir en la próxima actualización"
 
-#: src/Admin/ClassicMetabox.php:147
-#: build/editor-panel.js:5
+#: src/Admin/ClassicMetabox.php:152
+#: build/editor-panel.js:8
 msgid "Status"
 msgstr "Estado"
 
-#: src/Admin/ClassicMetabox.php:160
-#: build/editor-panel.js:5
+#: src/Admin/ClassicMetabox.php:165
+#: build/editor-panel.js:7
 msgid "View post"
 msgstr "Ver publicación"
 
@@ -177,7 +177,7 @@ msgstr "Publicadas (7 días)"
 
 #: src/Admin/DashboardWidget.php:57
 #: src/Admin/StatusLabels.php:24
-#: build/editor-panel.js:5
+#: build/editor-panel.js:2
 #: build/log.js:1
 msgid "Queued"
 msgstr "En cola"
@@ -203,7 +203,7 @@ msgstr "No hay nada programado."
 #: src/Admin/LogPage.php:49
 #: src/Admin/LogPage.php:50
 #: src/Admin/LogPage.php:84
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 #: build/log.js:1
 msgid "Log"
 msgstr "Registro"
@@ -231,29 +231,28 @@ msgid "If we use Postiz Cloud, that information is processed by Postiz according
 msgstr "Si usamos Postiz Cloud, Postiz trata esa información según su política de privacidad: https://postiz.com/privacy"
 
 #: src/Admin/SettingsPage.php:45
-#: build/editor-panel.js:5
+#: build/editor-panel.js:8
 msgid "Social Relay"
 msgstr "Social Relay"
 
 #: src/Admin/StatusLabels.php:25
-#: build/editor-panel.js:5
+#: build/editor-panel.js:2
 msgid "Published"
 msgstr "Publicada"
 
 #: src/Admin/StatusLabels.php:26
-#: build/editor-panel.js:5
+#: build/editor-panel.js:2
 #: build/log.js:1
 msgid "Error"
 msgstr "Error"
 
 #: src/Admin/StatusLabels.php:27
 #: build/editor-panel.js:2
-#: build/editor-panel.js:5
 msgid "Draft in Postiz"
 msgstr "Borrador en Postiz"
 
 #: src/Admin/StatusLabels.php:28
-#: build/editor-panel.js:5
+#: build/editor-panel.js:2
 msgid "Cancelled"
 msgstr "Cancelada"
 
@@ -355,6 +354,7 @@ msgid "Button"
 msgstr "Botón"
 
 #: src/Postiz/ProviderRules.php:131
+#: build/editor-panel.js:3
 msgid "None"
 msgstr "Ninguno"
 
@@ -416,26 +416,26 @@ msgstr "Este mismo contenido ya se envió; se omite para no duplicarlo."
 msgid "This network needs an image and the post has none; skipped."
 msgstr "Esta red necesita una imagen y la entrada no tiene; se omite."
 
-#: src/Sharing/ShareService.php:185
+#: src/Sharing/ShareService.php:189
 msgid "Channel no longer exists in Postiz; skipped."
 msgstr "El canal ya no existe en Postiz; se omite."
 
-#: src/Sharing/ShareService.php:193
+#: src/Sharing/ShareService.php:198
 msgid "Channel is disabled in Postiz; skipped."
 msgstr "El canal está desactivado en Postiz; se omite."
 
 #. translators: %s: list of missing settings.
-#: src/Sharing/ShareService.php:210
+#: src/Sharing/ShareService.php:216
 #, php-format
 msgid "Missing network settings (%s); skipped."
 msgstr "Faltan ajustes de la red (%s); se omite."
 
-#: src/Sharing/ShareService.php:291
+#: src/Sharing/ShareService.php:298
 msgid "Pending posts cancelled in Postiz."
 msgstr "Publicaciones pendientes canceladas en Postiz."
 
 #. translators: 1: number of channels, 2: Postiz post type (now, schedule, draft).
-#: src/Sharing/ShareService.php:364
+#: src/Sharing/ShareService.php:371
 #, php-format
 msgid "Sent to Postiz: %1$d channel, type %2$s."
 msgid_plural "Sent to Postiz: %1$d channels, type %2$s."
@@ -443,17 +443,17 @@ msgstr[0] "Enviado a Postiz: %1$d canal, tipo %2$s."
 msgstr[1] "Enviado a Postiz: %1$d canales, tipo %2$s."
 
 #. translators: 1: error message, 2: attempt number, 3: max attempts.
-#: src/Sharing/ShareService.php:415
+#: src/Sharing/ShareService.php:422
 #, php-format
 msgid "%1$s Retrying (%2$d of %3$d)."
 msgstr "%1$s Reintentando (%2$d de %3$d)."
 
-#: src/Sharing/ShareService.php:576
+#: src/Sharing/ShareService.php:583
 msgid "Unexpected upload response."
 msgstr "Respuesta inesperada al subir el archivo."
 
 #. translators: %s: error message.
-#: src/Sharing/ShareService.php:580
+#: src/Sharing/ShareService.php:587
 #, php-format
 msgid "Postiz could not fetch the featured image (%s). Sent without image."
 msgstr "Postiz no ha podido descargar la imagen destacada (%s). Se envía sin imagen."
@@ -482,7 +482,11 @@ msgid "Immediately"
 msgstr "Al momento"
 
 #: build/editor-panel.js:2
-#: build/editor-panel.js:5
+msgid "Pending"
+msgstr "Pendiente"
+
+#: build/editor-panel.js:2
+#: build/editor-panel.js:8
 msgid "Social networks"
 msgstr "Redes sociales"
 
@@ -499,98 +503,143 @@ msgid "This post will not be shared."
 msgstr "Esta entrada no se compartirá."
 
 #: build/editor-panel.js:3
-msgid "Use the profile channels"
-msgstr "Usar los canales del perfil"
-
-#: build/editor-panel.js:3
-msgid "Channels from the publishing profile."
-msgstr "Canales del perfil de publicación."
-
-#: build/editor-panel.js:3
 msgid "No channels in Postiz yet."
 msgstr "Todavía no hay canales en Postiz."
 
 #: build/editor-panel.js:3
+msgid "Chosen for this post"
+msgstr "Elegidos para esta entrada"
+
+#: build/editor-panel.js:3
+msgid "From the publishing profile"
+msgstr "Del perfil de publicación"
+
+#: build/editor-panel.js:3
+#: build/editor-panel.js:4
 msgid "All"
 msgstr "Todas"
 
 #: build/editor-panel.js:3
-msgid "Empty = profile template. Tags like {title} and {url} work here too."
-msgstr "Vacío = plantilla del perfil. Aquí también funcionan variables como {title} y {url}."
+msgid "Disconnected in Postiz"
+msgstr "Desconectado en Postiz"
+
+#. translators: %d: number of channels.
+#: build/editor-panel.js:4
+#, js-format
+msgid "%d selected channel no longer exists in Postiz and will be skipped."
+msgid_plural "%d selected channels no longer exist in Postiz and will be skipped."
+msgstr[0] "%d canal elegido ya no existe en Postiz y se omitirá."
+msgstr[1] "%d canales elegidos ya no existen en Postiz y se omitirán."
+
+#: build/editor-panel.js:4
+#: build/settings.js:6
+msgid "Remove them"
+msgstr "Quitarlos"
+
+#: build/editor-panel.js:4
+msgid "Review the profile"
+msgstr "Revisar el perfil"
+
+#: build/editor-panel.js:4
+msgid "Use the profile channels"
+msgstr "Usar los canales del perfil"
+
+#: build/editor-panel.js:4
+msgid "Insert tag"
+msgstr "Insertar etiqueta"
+
+#: build/editor-panel.js:4
+msgid "Reset"
+msgstr "Restablecer"
+
+#: build/editor-panel.js:4
+msgid "Empty = profile template, shown in grey. • marks a custom text."
+msgstr "Vacío = plantilla del perfil, en gris. • indica un texto propio."
 
 #. translators: %d: character limit of the network.
-#: build/editor-panel.js:4
+#: build/editor-panel.js:5
 #, js-format
 msgid "Empty = text for all networks. Limit: %d characters; check the count in Preview."
 msgstr "Vacío = texto para todas las redes. Límite: %d caracteres; comprueba la cuenta en la vista previa."
 
-#: build/editor-panel.js:4
+#: build/editor-panel.js:5
 msgid "Empty = text for all networks."
 msgstr "Vacío = texto para todas las redes."
 
 #. translators: %d: number of parts in a thread.
-#: build/editor-panel.js:5
-#: build/settings.js:6
+#: build/editor-panel.js:6
+#: build/settings.js:7
 #, js-format
 msgid "Thread of %d part."
 msgid_plural "Thread of %d parts."
 msgstr[0] "Hilo de %d parte."
 msgstr[1] "Hilo de %d partes."
 
-#: build/editor-panel.js:5
-#: build/settings.js:6
+#: build/editor-panel.js:6
+#: build/settings.js:7
 msgid "Longer than the network allows: it will be shortened."
 msgstr "Más largo de lo que admite la red: se recortará."
 
-#: build/editor-panel.js:5
-#: build/settings.js:6
+#. translators: 1: reason, 2: number of channels.
+#: build/editor-panel.js:7
+#: build/settings.js:8
+#, js-format
+msgid "%1$s (%2$d channel)"
+msgid_plural "%1$s (%2$d channels)"
+msgstr[0] "%1$s (%2$d canal)"
+msgstr[1] "%1$s (%2$d canales)"
+
+#: build/editor-panel.js:7
+#: build/settings.js:8
 msgid "This post does not match the profile conditions and will not be shared."
 msgstr "Esta entrada no cumple las condiciones del perfil y no se compartirá."
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 msgid "Based on the last saved version."
 msgstr "Según la última versión guardada."
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 #: build/log.js:1
 msgid "Refresh"
 msgstr "Actualizar"
 
-#: build/editor-panel.js:5
-msgid "Pending"
-msgstr "Pendiente"
-
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 msgid "Nothing sent to Postiz yet."
 msgstr "Todavía no se ha enviado nada a Postiz."
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 msgid "Sharing is off for this post type."
 msgstr "Compartir está desactivado para este tipo de contenido."
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 msgid "Postiz is not connected yet."
 msgstr "Postiz todavía no está conectado."
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 msgid "Set up a publishing profile"
 msgstr "Configurar un perfil de publicación"
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:7
 msgid "Connect Postiz"
 msgstr "Conectar Postiz"
 
-#: build/editor-panel.js:5
+#. translators: 1: profile name (post type), 2: channels used, 3: channels available, 4: timing.
+#: build/editor-panel.js:8
+#, js-format
+msgid "Profile “%1$s” · %2$d of %3$d channels · %4$s"
+msgstr "Perfil «%1$s» · %2$d de %3$d canales · %4$s"
+
+#: build/editor-panel.js:8
 msgid "Shared when published"
 msgstr "Se compartió al publicar"
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:8
 #: build/log.js:1
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Message"
 msgstr "Mensaje"
 
-#: build/editor-panel.js:5
+#: build/editor-panel.js:8
 msgid "Preview"
 msgstr "Vista previa"
 
@@ -603,7 +652,7 @@ msgid "Info"
 msgstr "Info"
 
 #: build/log.js:1
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "(no title)"
 msgstr "(sin título)"
 
@@ -792,136 +841,144 @@ msgstr "Compartir %s cuando se publiquen"
 msgid "No channels in Postiz yet. Add them in Postiz and reload this page."
 msgstr "Todavía no hay canales en Postiz. Añádelos en Postiz y recarga esta página."
 
-#: build/settings.js:5
+#. translators: %d: number of channels.
+#: build/settings.js:6
+#, js-format
+msgid "%d channel of this profile no longer exists in Postiz and is skipped."
+msgid_plural "%d channels of this profile no longer exist in Postiz and are skipped."
+msgstr[0] "%d canal de este perfil ya no existe en Postiz y se omite."
+msgstr[1] "%d canales de este perfil ya no existen en Postiz y se omiten."
+
+#: build/settings.js:6
 msgid "Message template"
 msgstr "Plantilla del mensaje"
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Optional. A network without its own template uses the common one."
 msgstr "Opcional. Las redes sin plantilla propia usan la común."
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "When"
 msgstr "Cuándo"
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Delay in minutes"
 msgstr "Retraso en minutos"
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Attach the featured image"
 msgstr "Adjuntar la imagen destacada"
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Allow sharing again on update (when requested from the editor)"
 msgstr "Permitir volver a compartir al actualizar (cuando se pida desde el editor)"
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Conditions"
 msgstr "Condiciones"
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Links and tags"
 msgstr "Enlaces y etiquetas"
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Add UTM parameters to {url} (utm_source = network, utm_medium = social)"
 msgstr "Añadir parámetros UTM a {url} (utm_source = red, utm_medium = social)"
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Accepts tags, e.g. {slug}."
 msgstr "Admite variables, por ejemplo {slug}."
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Shorten links with Postiz"
 msgstr "Acortar los enlaces con Postiz"
 
-#: build/settings.js:5
+#: build/settings.js:6
 msgid "Tag the posts in Postiz with the post categories"
 msgstr "Etiquetar las publicaciones en Postiz con las categorías de la entrada"
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Test this profile"
 msgstr "Probar este perfil"
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Pick a post to see the messages the saved profile would send. Nothing is sent."
 msgstr "Elige una entrada para ver los mensajes que enviaría el perfil guardado. No se envía nada."
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Save the profile to test your latest changes."
 msgstr "Guarda el perfil para probar tus últimos cambios."
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "No channels selected."
 msgstr "No hay canales seleccionados."
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Connect Postiz first (Connection tab)."
 msgstr "Primero conecta Postiz (pestaña Conexión)."
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Profiles saved."
 msgstr "Perfiles guardados."
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Save profiles"
 msgstr "Guardar perfiles"
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Unsaved changes"
 msgstr "Cambios sin guardar"
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Paste this URL in Postiz → Settings → Webhooks to update the status of your posts as soon as they are published. Without it, the plugin checks Postiz every 15 minutes."
 msgstr "Pega esta URL en Postiz → Settings → Webhooks para actualizar el estado de tus publicaciones en cuanto salgan. Sin ella, el plugin consulta Postiz cada 15 minutos."
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Webhook URL"
 msgstr "URL del webhook"
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Copied"
 msgstr "Copiada"
 
-#: build/settings.js:6
+#: build/settings.js:8
 msgid "Copy"
 msgstr "Copiar"
 
 #. translators: %s: time since the last webhook call, e.g. "5 minutes ago".
-#: build/settings.js:7
+#: build/settings.js:9
 #, js-format
 msgid "Last call received %s."
 msgstr "Último aviso recibido %s."
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "No call received yet. Use “Send Test” in Postiz to check it."
 msgstr "Todavía no ha llegado ningún aviso. Usa «Send Test» en Postiz para comprobarlo."
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "New webhook URL created. Update it in Postiz: the old one no longer works."
 msgstr "Se ha creado una URL nueva para el webhook. Cámbiala en Postiz: la anterior ya no funciona."
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "Create a new URL"
 msgstr "Crear una URL nueva"
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "The current URL will stop working. Continue?"
 msgstr "La URL actual dejará de funcionar. ¿Continuar?"
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "Connection"
 msgstr "Conexión"
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "Publishing profiles"
 msgstr "Perfiles de publicación"
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "Webhook"
 msgstr "Webhook"
 
-#: build/settings.js:7
+#: build/settings.js:9
 msgid "Advanced"
 msgstr "Avanzado"

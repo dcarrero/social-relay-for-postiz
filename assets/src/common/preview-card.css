@@ -14,19 +14,6 @@
 	margin-bottom: 8px;
 }
 
-.socialrelaycvi-card__avatar {
-	display: inline-flex;
-	flex: 0 0 28px;
-	align-items: center;
-	justify-content: center;
-	width: 28px;
-	height: 28px;
-	border-radius: 50%;
-	color: #fff;
-	font-size: 12px;
-	font-weight: 700;
-}
-
 .socialrelaycvi-card__who {
 	display: flex;
 	flex: 1;

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import { channelsById, config, statusLabel, STATUS_COLORS } from '../config';
-import ChannelBadge from './ChannelBadge';
+import { ChannelLabel } from '../../common/ChannelAvatar';
 
 /**
  * Latest row per channel; rows arrive newest first.
@@ -70,56 +70,72 @@ export default function StatusSection( { postId, saves } ) {
 		);
 	}
 
+	const latest = latestPerChannel( rows );
+	const counts = {};
+	latest.forEach( ( row ) => {
+		counts[ row.status ] = ( counts[ row.status ] || 0 ) + 1;
+	} );
+	const summary = Object.entries( counts )
+		.map(
+			( [ status, count ] ) =>
+				`${ count } ${ statusLabel( status ).toLowerCase() }`
+		)
+		.join( ' · ' );
+
 	return (
 		<>
-			{ latestPerChannel( rows ).map( ( row ) => (
-				<div
-					key={ row.id }
-					style={ {
-						borderTop: '1px solid #f0f0f1',
-						padding: '8px 0',
-					} }
-				>
-					<div
+			<p className="socialrelaycvi-status__summary">{ summary }</p>
+			<div className="socialrelaycvi-status__bar" aria-hidden="true">
+				{ Object.entries( counts ).map( ( [ status, count ] ) => (
+					<span
+						key={ status }
 						style={ {
-							display: 'flex',
-							justifyContent: 'space-between',
-							alignItems: 'center',
-							gap: '8px',
+							flex: count,
+							background: STATUS_COLORS[ status ] || '#949494',
 						} }
-					>
-						<ChannelBadge
-							channel={ channelsById[ row.integration_id ] }
-						/>
-						<span
-							style={ {
-								fontSize: '11px',
-								fontWeight: 600,
-								color: STATUS_COLORS[ row.status ] || '#1e1e1e',
-							} }
-						>
-							{ statusLabel( row.status ) }
-						</span>
+					/>
+				) ) }
+			</div>
+			{ latest.map( ( row ) => {
+				const channel = channelsById[ row.integration_id ] || {
+					name: row.integration_id,
+					identifier: '',
+				};
+				const color = STATUS_COLORS[ row.status ] || '#1e1e1e';
+				return (
+					<div key={ row.id } className="socialrelaycvi-status__row">
+						<div className="socialrelaycvi-status__head">
+							<ChannelLabel channel={ channel } />
+							<span
+								className="socialrelaycvi-status__pill"
+								style={ {
+									color,
+									background: color + '14',
+									border: `1px solid ${ color }33`,
+								} }
+							>
+								{ statusLabel( row.status ) }
+							</span>
+						</div>
+						{ row.error && (
+							<p className="socialrelaycvi-status__detail is-error">
+								{ row.error }
+							</p>
+						) }
+						{ row.release_url && (
+							<p className="socialrelaycvi-status__detail">
+								<ExternalLink href={ row.release_url }>
+									{ __(
+										'View post',
+										'social-relay-for-postiz'
+									) }
+								</ExternalLink>
+							</p>
+						) }
 					</div>
-					{ row.release_url && (
-						<ExternalLink href={ row.release_url }>
-							{ __( 'View post', 'social-relay-for-postiz' ) }
-						</ExternalLink>
-					) }
-					{ row.error && (
-						<p
-							style={ {
-								color: '#cc1818',
-								fontSize: '12px',
-								margin: '4px 0 0',
-							} }
-						>
-							{ row.error }
-						</p>
-					) }
-				</div>
-			) ) }
-			<p className="description">
+				);
+			} ) }
+			<p className="description socialrelaycvi-status__footer">
 				<Button variant="link" onClick={ load }>
 					{ __( 'Refresh', 'social-relay-for-postiz' ) }
 				</Button>

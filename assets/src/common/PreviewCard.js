@@ -1,5 +1,6 @@
 import { __, _n, sprintf } from '@wordpress/i18n';
 
+import ChannelAvatar from './ChannelAvatar';
 import { network } from './networks';
 import './preview-card.css';
 
@@ -41,13 +42,7 @@ export default function PreviewCard( { item, linkTitle } ) {
 	return (
 		<div className="socialrelaycvi-card">
 			<div className="socialrelaycvi-card__head">
-				<span
-					className="socialrelaycvi-card__avatar"
-					style={ { background: net.color } }
-					aria-hidden="true"
-				>
-					{ ( item.name || '?' ).charAt( 0 ).toUpperCase() }
-				</span>
+				<ChannelAvatar channel={ item } size={ 32 } />
 				<span className="socialrelaycvi-card__who">
 					<strong>{ item.name }</strong>
 					<span>{ net.label }</span>

@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T12:55:57+00:00",
+    "translation-revision-date": "2026-11-10T16:25:53+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/settings.js",
     "domain": "messages",
@@ -19,12 +19,19 @@
             "Next free slot in Postiz": [
                 "Siguiente hueco libre en Postiz"
             ],
+            "Remove them": [
+                "Quitarlos"
+            ],
             "Thread of %d part.": [
                 "Hilo de %d parte.",
                 "Hilo de %d partes."
             ],
             "Longer than the network allows: it will be shortened.": [
                 "M\u00e1s largo de lo que admite la red: se recortar\u00e1."
+            ],
+            "%1$s (%2$d channel)": [
+                "%1$s (%2$d canal)",
+                "%1$s (%2$d canales)"
             ],
             "This post does not match the profile conditions and will not be shared.": [
                 "Esta entrada no cumple las condiciones del perfil y no se compartir\u00e1."
@@ -122,6 +129,10 @@
             ],
             "No channels in Postiz yet. Add them in Postiz and reload this page.": [
                 "Todav\u00eda no hay canales en Postiz. A\u00f1\u00e1delos en Postiz y recarga esta p\u00e1gina."
+            ],
+            "%d channel of this profile no longer exists in Postiz and is skipped.": [
+                "%d canal de este perfil ya no existe en Postiz y se omite.",
+                "%d canales de este perfil ya no existen en Postiz y se omiten."
             ],
             "Message template": [
                 "Plantilla del mensaje"

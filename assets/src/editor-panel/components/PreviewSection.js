@@ -6,6 +6,7 @@ import { store as editorStore } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 
 import PreviewCard from '../../common/PreviewCard';
+import SkippedNotices from '../../common/SkippedNotices';
 import { config } from '../config';
 
 /**
@@ -70,15 +71,15 @@ export default function PreviewSection( { postId, saves } ) {
 					linkTitle={ title }
 				/>
 			) ) }
-			{ data.skipped.map( ( skip ) => (
-				<Notice
-					key={ skip.integration_id }
-					status="warning"
-					isDismissible={ false }
-				>
-					{ skip.reason }
-				</Notice>
-			) ) }
+			<SkippedNotices
+				skipped={ data.skipped }
+				names={ Object.fromEntries(
+					config.channels.map( ( channel ) => [
+						channel.id,
+						channel.name,
+					] )
+				) }
+			/>
 			<p className="description">
 				{ __(
 					'Based on the last saved version.',
