@@ -3,6 +3,7 @@ import {
 	Button,
 	Card,
 	CardBody,
+	CardHeader,
 	TextControl,
 	__experimentalConfirmDialog as ConfirmDialog, // eslint-disable-line @wordpress/no-unsafe-wp-apis
 } from '@wordpress/components';
@@ -45,6 +46,9 @@ export default function WebhookTab( { settings, setSettings } ) {
 
 	return (
 		<Card>
+			<CardHeader>
+				<h3>{ __( 'Postiz webhook', 'social-relay-for-postiz' ) }</h3>
+			</CardHeader>
 			<CardBody>
 				<p>
 					{ __(

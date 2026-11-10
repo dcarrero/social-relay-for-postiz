@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T19:50:37+00:00",
+    "translation-revision-date": "2026-11-10T20:19:41+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/settings.js",
     "domain": "messages",
@@ -202,6 +202,19 @@
             "Defined in wp-config.php (SOCIALRELAYCVI_POSTIZ_API_KEY).": [
                 "Definida en wp-config.php (SOCIALRELAYCVI_POSTIZ_API_KEY)."
             ],
+            "Not connected": [
+                "Sin conectar"
+            ],
+            "Cannot reach Postiz": [
+                "No se puede contactar con Postiz"
+            ],
+            "Connected \u00b7 %d channel": [
+                "Conectado \u00b7 %d canal",
+                "Conectado \u00b7 %d canales"
+            ],
+            "Postiz instance": [
+                "Instancia de Postiz"
+            ],
             "Connected to Postiz. %d channel available.": [
                 "Conectado a Postiz. %d canal disponible.",
                 "Conectado a Postiz. %d canales disponibles."
@@ -312,20 +325,26 @@
             "Save the profile to test your latest changes.": [
                 "Guarda el perfil para probar tus \u00faltimos cambios."
             ],
+            "Type to search a post\u2026": [
+                "Escribe para buscar una entrada\u2026"
+            ],
             "No channels selected.": [
                 "No hay canales seleccionados."
             ],
             "Connect Postiz first (Connection tab).": [
                 "Primero conecta Postiz (pesta\u00f1a Conexi\u00f3n)."
             ],
-            "Profiles saved.": [
-                "Perfiles guardados."
-            ],
             "Save profiles": [
                 "Guardar perfiles"
             ],
             "Unsaved changes": [
                 "Cambios sin guardar"
+            ],
+            "Profiles saved.": [
+                "Perfiles guardados."
+            ],
+            "Postiz webhook": [
+                "Webhook de Postiz"
             ],
             "Paste this URL in Postiz \u2192 Settings \u2192 Webhooks to update the status of your posts as soon as they are published. Without it, the plugin checks Postiz every 15 minutes.": [
                 "Pega esta URL en Postiz \u2192 Settings \u2192 Webhooks para actualizar el estado de tus publicaciones en cuanto salgan. Sin ella, el plugin consulta Postiz cada 15 minutos."

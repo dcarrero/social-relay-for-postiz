@@ -13,6 +13,7 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { store as noticesStore } from '@wordpress/notices';
 
 import { ChannelLabel } from '../../common/ChannelAvatar';
+import { network } from '../../common/networks';
 import {
 	channelsById,
 	config,
@@ -27,13 +28,67 @@ const FAST_POLL = 5000;
 const FAST_POLL_FOR = 60000;
 
 /**
- * "Draft in Postiz" → "draft in Postiz": only the first letter, names keep their case.
+ * "3 published", "1 error"… with the right plural.
  *
- * @param {string} text Text.
+ * @param {string} status Share status.
+ * @param {number} count  Number of channels.
  * @return {string} Text.
  */
-function lowerFirst( text ) {
-	return text.charAt( 0 ).toLowerCase() + text.slice( 1 );
+function statusCount( status, count ) {
+	switch ( status ) {
+		case 'queued':
+			return sprintf(
+				/* translators: %d: number of channels. */
+				_n(
+					'%d queued',
+					'%d queued',
+					count,
+					'social-relay-for-postiz'
+				),
+				count
+			);
+		case 'published':
+			return sprintf(
+				/* translators: %d: number of channels. */
+				_n(
+					'%d published',
+					'%d published',
+					count,
+					'social-relay-for-postiz'
+				),
+				count
+			);
+		case 'error':
+			return sprintf(
+				/* translators: %d: number of channels. */
+				_n( '%d error', '%d errors', count, 'social-relay-for-postiz' ),
+				count
+			);
+		case 'draft':
+			return sprintf(
+				/* translators: %d: number of channels. */
+				_n(
+					'%d draft in Postiz',
+					'%d drafts in Postiz',
+					count,
+					'social-relay-for-postiz'
+				),
+				count
+			);
+		case 'cancelled':
+			return sprintf(
+				/* translators: %d: number of channels. */
+				_n(
+					'%d cancelled',
+					'%d cancelled',
+					count,
+					'social-relay-for-postiz'
+				),
+				count
+			);
+		default:
+			return `${ count } ${ status }`;
+	}
 }
 
 /**
@@ -209,10 +264,7 @@ export default function StatusSection( { postId, saves, meta } ) {
 		counts[ row.status ] = ( counts[ row.status ] || 0 ) + 1;
 	} );
 	const summary = Object.entries( counts )
-		.map(
-			( [ status, count ] ) =>
-				`${ count } ${ lowerFirst( statusLabel( status ) ) }`
-		)
+		.map( ( [ status, count ] ) => statusCount( status, count ) )
 		.join( ' · ' );
 	const cancellable = latest.some(
 		( row ) => row.status === 'queued' || row.status === 'draft'
@@ -259,15 +311,27 @@ export default function StatusSection( { postId, saves, meta } ) {
 			) }
 
 			{ latest.map( ( row ) => {
-				const channel = channelsById[ row.integration_id ] || {
-					name: row.integration_id,
-					identifier: '',
+				const known = channelsById[ row.integration_id ];
+				// Channels removed in Postiz: their network, flagged as gone.
+				const channel = known || {
+					name: network( row.identifier ).label,
+					identifier: row.identifier,
 				};
 				const color = STATUS_COLORS[ row.status ] || '#1e1e1e';
 				return (
 					<div key={ row.id } className="socialrelaycvi-status__row">
 						<div className="socialrelaycvi-status__head">
-							<ChannelLabel channel={ channel } />
+							<ChannelLabel
+								channel={ channel }
+								note={
+									known
+										? undefined
+										: __(
+												'Channel not in Postiz',
+												'social-relay-for-postiz'
+										  )
+								}
+							/>
 							<span
 								className="socialrelaycvi-status__pill"
 								style={ {
@@ -329,6 +393,14 @@ export default function StatusSection( { postId, saves, meta } ) {
 				>
 					{ __( 'Share again now…', 'social-relay-for-postiz' ) }
 				</Button>
+				{ ! channelCount && ! dirty && (
+					<p className="description">
+						{ __(
+							'No channels to share to: pick some under Channels.',
+							'social-relay-for-postiz'
+						) }
+					</p>
+				) }
 				{ dirty && (
 					<p className="description">
 						{ __(

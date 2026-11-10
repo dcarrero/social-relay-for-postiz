@@ -3,6 +3,7 @@ import {
 	Button,
 	Card,
 	CardBody,
+	CardHeader,
 	ExternalLink,
 	Notice,
 	TextControl,
@@ -60,9 +61,50 @@ export default function ConnectionTab( { settings, setSettings } ) {
 			.finally( () => setBusy( false ) );
 	};
 
+	const active = settings.channels.filter(
+		( channel ) => ! channel.disabled
+	);
+	let status = {
+		kind: 'off',
+		text: __( 'Not connected', 'social-relay-for-postiz' ),
+	};
+	if ( connection.configured && settings.channelsError ) {
+		status = {
+			kind: 'error',
+			text: __( 'Cannot reach Postiz', 'social-relay-for-postiz' ),
+		};
+	} else if ( connection.configured ) {
+		status = {
+			kind: 'ok',
+			text: sprintf(
+				/* translators: %d: number of channels. */
+				_n(
+					'Connected · %d channel',
+					'Connected · %d channels',
+					active.length,
+					'social-relay-for-postiz'
+				),
+				active.length
+			),
+		};
+	}
+
 	return (
-		<Card>
+		<Card className="socialrelaycvi-connection">
+			<CardHeader>
+				<h3>{ __( 'Postiz instance', 'social-relay-for-postiz' ) }</h3>
+				<span
+					className={ `socialrelaycvi-connection__status is-${ status.kind }` }
+				>
+					{ status.text }
+				</span>
+			</CardHeader>
 			<CardBody>
+				{ connection.configured && settings.channelsError && (
+					<Notice status="error" isDismissible={ false }>
+						{ settings.channelsError }
+					</Notice>
+				) }
 				{ result && (
 					<Notice
 						status={ result.ok ? 'success' : 'error' }

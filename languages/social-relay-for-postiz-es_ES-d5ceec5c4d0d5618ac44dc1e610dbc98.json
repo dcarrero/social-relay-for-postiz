@@ -1,5 +1,5 @@
 {
-    "translation-revision-date": "2026-11-10T19:50:37+00:00",
+    "translation-revision-date": "2026-11-10T20:19:41+00:00",
     "generator": "WP-CLI\/2.12.0",
     "source": "build\/editor-panel.js",
     "domain": "messages",
@@ -75,9 +75,6 @@
             ],
             "Immediately": [
                 "Al momento"
-            ],
-            "Pending": [
-                "Pendiente"
             ],
             "Will be sent to Postiz for %d channel:": [
                 "Se enviar\u00e1 a Postiz para %d canal:",
@@ -263,14 +260,43 @@
             "Queued for Postiz. The status updates here in a few seconds.": [
                 "En cola para Postiz. El estado se actualiza aqu\u00ed en unos segundos."
             ],
+            "%d queued": [
+                "%d en cola",
+                "%d en cola"
+            ],
+            "%d published": [
+                "%d publicado",
+                "%d publicados"
+            ],
+            "%d error": [
+                "%d error",
+                "%d errores"
+            ],
+            "%d draft in Postiz": [
+                "%d borrador en Postiz",
+                "%d borradores en Postiz"
+            ],
+            "%d cancelled": [
+                "%d cancelado",
+                "%d cancelados"
+            ],
             "Nothing sent to Postiz yet.": [
                 "Todav\u00eda no se ha enviado nada a Postiz."
+            ],
+            "Channel not in Postiz": [
+                "Canal que ya no est\u00e1 en Postiz"
+            ],
+            "Pending": [
+                "Pendiente"
             ],
             "Retry": [
                 "Reintentar"
             ],
             "Share again now\u2026": [
                 "Compartir de nuevo ahora\u2026"
+            ],
+            "No channels to share to: pick some under Channels.": [
+                "No hay canales a los que compartir: elige alguno en Canales."
             ],
             "Save your changes first: Postiz gets the saved version.": [
                 "Guarda antes los cambios: a Postiz le llega la versi\u00f3n guardada."

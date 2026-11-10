@@ -1,6 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
 import { Button, Notice, TabPanel } from '@wordpress/components';
-import { useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import { config } from '../config';
@@ -20,6 +20,20 @@ export default function ProfilesTab( { settings, setSettings } ) {
 	const [ busy, setBusy ] = useState( false );
 	const [ notice, setNotice ] = useState( null );
 	const [ dirty, setDirty ] = useState( false );
+	const [ saved, setSaved ] = useState( false );
+
+	// Ask before leaving the page with unsaved profiles.
+	useEffect( () => {
+		if ( ! dirty ) {
+			return;
+		}
+		const warn = ( event ) => {
+			event.preventDefault();
+			event.returnValue = '';
+		};
+		window.addEventListener( 'beforeunload', warn );
+		return () => window.removeEventListener( 'beforeunload', warn );
+	}, [ dirty ] );
 
 	if ( ! settings.connection.configured ) {
 		return (
@@ -43,10 +57,9 @@ export default function ProfilesTab( { settings, setSettings } ) {
 				setSettings( response );
 				setProfiles( response.profiles );
 				setDirty( false );
-				setNotice( {
-					status: 'success',
-					text: __( 'Profiles saved.', 'social-relay-for-postiz' ),
-				} );
+				setNotice( null );
+				setSaved( true );
+				setTimeout( () => setSaved( false ), 4000 );
 			} )
 			.catch( ( err ) =>
 				setNotice( {
@@ -92,6 +105,7 @@ export default function ProfilesTab( { settings, setSettings } ) {
 								profile={ profiles[ tab.name ] }
 								settings={ settings }
 								onChange={ ( profile ) => {
+									setSaved( false );
 									setProfiles( {
 										...profiles,
 										[ tab.name ]: profile,
@@ -110,7 +124,11 @@ export default function ProfilesTab( { settings, setSettings } ) {
 				) }
 			</TabPanel>
 
-			<div className="socialrelaycvi-settings__save">
+			<div
+				className={ `socialrelaycvi-settings__save${
+					dirty ? ' is-dirty' : ''
+				}` }
+			>
 				<Button
 					variant="primary"
 					onClick={ save }
@@ -123,6 +141,11 @@ export default function ProfilesTab( { settings, setSettings } ) {
 				{ dirty && (
 					<span className="description">
 						{ __( 'Unsaved changes', 'social-relay-for-postiz' ) }
+					</span>
+				) }
+				{ saved && ! dirty && (
+					<span className="socialrelaycvi-settings__saved">
+						{ __( 'Profiles saved.', 'social-relay-for-postiz' ) }
 					</span>
 				) }
 			</div>

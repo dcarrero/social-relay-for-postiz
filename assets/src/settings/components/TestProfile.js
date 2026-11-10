@@ -111,6 +111,10 @@ export default function TestProfile( { postType, dirty } ) {
 					options={ options }
 					onChange={ setPostId }
 					onFilterValueChange={ setSearch }
+					placeholder={ __(
+						'Type to search a post…',
+						'social-relay-for-postiz'
+					) }
 					__nextHasNoMarginBottom
 					__next40pxDefaultSize
 				/>

@@ -114,3 +114,37 @@
 	color: #646970;
 	font-style: italic;
 }
+
+/* Small screens: each entry as a block (date, level and action on top). */
+@media (max-width: 782px) {
+
+	.socialrelaycvi-log__table thead {
+		display: none;
+	}
+
+	.socialrelaycvi-log__table,
+	.socialrelaycvi-log__table tbody {
+		display: block;
+	}
+
+	.socialrelaycvi-log__table tbody tr {
+		display: grid;
+		grid-template-columns: auto auto 1fr;
+		gap: 6px 10px;
+		align-items: center;
+		padding: 12px;
+	}
+
+	.socialrelaycvi-log__table tbody td {
+		display: block;
+		padding: 0;
+	}
+
+	.socialrelaycvi-log__table tbody td:nth-child(n + 4) {
+		grid-column: 1 / -1;
+	}
+
+	.socialrelaycvi-log__table tbody td:empty {
+		display: none;
+	}
+}
