@@ -78,6 +78,11 @@ final class ShareService implements Module {
 		} catch ( \Throwable $e ) {
 			$this->record_error( $post_id, $this->target_items( $post_id ), '', '', '', time(), new WP_Error( 'socialrelaycvi_exception', $e->getMessage() ) );
 		}
+
+		// Whatever ended this attempt for good, a stale "Retry" or "share again" must not narrow or force a later share.
+		if ( ! $this->retry_queued ) {
+			$this->finish( $post_id );
+		}
 	}
 
 	/**
@@ -102,14 +107,12 @@ final class ShareService implements Module {
 
 		if ( ! $this->passes_conditions( $post, $profile['include_terms'], $profile['exclude_terms'] ) ) {
 			$log->info( 'share', __( 'The post does not match the profile conditions; not shared.', 'social-relay-for-postiz' ), $post_id );
-			delete_post_meta( $post_id, PostMeta::RESHARE );
 			return;
 		}
 
 		$client = $this->plugin->gateway();
 		if ( null === $client ) {
 			$log->error( 'share', __( 'Postiz is not configured; nothing was sent.', 'social-relay-for-postiz' ), $post_id );
-			delete_post_meta( $post_id, PostMeta::RESHARE );
 			return;
 		}
 
@@ -135,9 +138,8 @@ final class ShareService implements Module {
 			update_post_meta( $post_id, PostMeta::RESHARE, true );
 		}
 
-		// Nothing to send: drop a pending "share again" so the next update does not send.
+		// Nothing to send (handle() drops a pending "share again" so the next update does not send).
 		if ( array() === $items ) {
-			$this->finish( $post_id );
 			return;
 		}
 
@@ -179,7 +181,6 @@ final class ShareService implements Module {
 		$items = $sendable;
 
 		if ( array() === $items ) {
-			$this->finish( $post_id );
 			return;
 		}
 
@@ -202,10 +203,6 @@ final class ShareService implements Module {
 			$when = $timing['at'];
 
 			$this->send( $client, $post, $items, $when, $type, $batch, $hash, $attempt, true, $request );
-		}
-
-		if ( ! $this->retry_queued ) {
-			$this->finish( $post_id );
 		}
 	}
 
@@ -309,22 +306,25 @@ final class ShareService implements Module {
 	/**
 	 * Takes the one-a-minute "share again" slot of a post, so the accounts cannot be flooded.
 	 *
-	 * Atomic: add_option() only succeeds once while the slot is held, even with parallel requests.
+	 * Atomic: an expired slot is removed with a conditional DELETE, then INSERT IGNORE on the
+	 * unique option name succeeds for one request only (add_option() is not atomic: it upserts).
 	 *
 	 * @param int $post_id Post id.
 	 * @return bool False when the post was shared again less than a minute ago.
 	 */
 	public static function claim_reshare_slot( int $post_id ): bool {
-		$key   = 'socialrelaycvi_share_lock_' . $post_id;
-		$until = (int) get_option( $key, 0 );
-		if ( $until > time() ) {
-			return false;
-		}
-		if ( $until > 0 ) {
-			delete_option( $key );
-		}
+		global $wpdb;
 
-		return add_option( $key, time() + MINUTE_IN_SECONDS, '', false );
+		$key = 'socialrelaycvi_share_lock_' . $post_id;
+		$now = time();
+
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery -- Atomic lock on our own option row; the cache must not be used.
+		$wpdb->query( $wpdb->prepare( 'DELETE FROM %i WHERE option_name = %s AND CAST(option_value AS UNSIGNED) <= %d', $wpdb->options, $key, $now ) );
+		$taken = (int) $wpdb->query( $wpdb->prepare( 'INSERT IGNORE INTO %i (option_name, option_value, autoload) VALUES (%s, %s, %s)', $wpdb->options, $key, (string) ( $now + MINUTE_IN_SECONDS ), 'off' ) );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery
+		wp_cache_delete( $key, 'options' );
+
+		return 1 === $taken;
 	}
 
 	/**
@@ -555,7 +555,14 @@ final class ShareService implements Module {
 		 * @param array<string, mixed> $payload Request body.
 		 * @param WP_Post              $post    Post being shared.
 		 */
-		$payload  = (array) apply_filters( 'socialrelaycvi_payload', $payload, $post );
+		$payload = (array) apply_filters( 'socialrelaycvi_payload', $payload, $post );
+
+		// Image uploads take time: an unpublish meanwhile may have run the cancel job before any row existed.
+		if ( ! self::still_published( $post->ID ) ) {
+			$log->info( 'share', __( 'The post is no longer published; nothing was sent.', 'social-relay-for-postiz' ), $post->ID );
+			return;
+		}
+
 		$response = $client->create_posts( $payload );
 
 		if ( is_wp_error( $response ) ) {
@@ -592,6 +599,11 @@ final class ShareService implements Module {
 			);
 		}
 
+		// Unpublished while the request was in flight: the cancel job found no rows, so queue it again.
+		if ( ! self::still_published( $post->ID ) ) {
+			$this->plugin->queue->enqueue_cancel( $post->ID );
+		}
+
 		$log->info(
 			'share',
 			sprintf(
@@ -620,6 +632,18 @@ final class ShareService implements Module {
 		 * @param array<string, string> $postiz_ids Postiz post id per channel id.
 		 */
 		do_action( 'socialrelaycvi_shared', $post->ID, $batch, $postiz_ids );
+	}
+
+	/**
+	 * Whether the post is published right now, read from the database and not from the post cache.
+	 *
+	 * @phpstan-impure
+	 * @param int $post_id Post id.
+	 */
+	private static function still_published( int $post_id ): bool {
+		clean_post_cache( $post_id );
+
+		return 'publish' === get_post_status( $post_id );
 	}
 
 	/**

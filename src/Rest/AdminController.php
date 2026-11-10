@@ -79,13 +79,17 @@ final class AdminController implements Module {
 				// On multisite the key may be shared by the network: only network admins change it.
 				'permission_callback' => static fn (): bool => current_user_can( is_multisite() ? 'manage_network_options' : 'manage_options' ),
 				'args'                => array(
-					'instance_url' => array(
+					'instance_url'        => array(
 						'type'     => 'string',
 						'required' => true,
 					),
-					'api_key'      => array(
+					'api_key'             => array(
 						'type'    => 'string',
 						'default' => '',
+					),
+					'confirm_host_change' => array(
+						'type'    => 'boolean',
+						'default' => false,
 					),
 				),
 			)
@@ -251,16 +255,35 @@ final class AdminController implements Module {
 		$url = EndpointResolver::normalize( sanitize_text_field( (string) $request['instance_url'] ) );
 		$key = trim( sanitize_text_field( (string) $request['api_key'] ) );
 
-		// Plain http would send the API key unencrypted, except to a local test instance.
-		if ( str_starts_with( strtolower( $url ), 'http://' ) && ! Client::allows_local_instance() ) {
+		$new_host = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
+
+		// Plain http would send the API key unencrypted: only allowed for a local test instance.
+		if ( str_starts_with( strtolower( $url ), 'http://' ) && ( '' === $new_host || ! Client::allows_local_instance() || ! WebhookPayload::is_local_url( $url ) ) ) {
 			return new WP_Error( 'socialrelaycvi_insecure_url', __( 'Use an https:// address: the API key must not travel unencrypted.', 'social-relay-for-postiz' ), array( 'status' => 400 ) );
 		}
 
+		$old_host = strtolower( (string) wp_parse_url( $this->plugin->connection->instance_url(), PHP_URL_HOST ) );
+		$source   = $this->plugin->connection->key_source();
+
 		// A new server must not receive the stored key: ask for it again.
-		$old_host = (string) wp_parse_url( $this->plugin->connection->instance_url(), PHP_URL_HOST );
-		$new_host = (string) wp_parse_url( $url, PHP_URL_HOST );
-		if ( '' !== $old_host && strtolower( $old_host ) !== strtolower( $new_host ) && '' === $key && 'database' === $this->plugin->connection->key_source() ) {
+		if ( '' !== $old_host && $old_host !== $new_host && '' === $key && 'database' === $source ) {
 			return new WP_Error( 'socialrelaycvi_key_required', __( 'The Postiz address changed: type the API key again so it is not sent to a different server.', 'social-relay-for-postiz' ), array( 'status' => 400 ) );
+		}
+
+		// A key from the server configuration goes to a new host only after explicit confirmation.
+		if ( in_array( $source, array( 'env', 'constant' ), true ) && $old_host !== $new_host && ! (bool) $request['confirm_host_change'] ) {
+			return new WP_Error(
+				'socialrelaycvi_confirm_host_change',
+				sprintf(
+					/* translators: %s: Postiz host name. */
+					__( 'The API key from the server configuration will be sent to %s. Use this address only if that Postiz instance is yours.', 'social-relay-for-postiz' ),
+					$new_host
+				),
+				array(
+					'status' => 409,
+					'host'   => $new_host,
+				)
+			);
 		}
 
 		update_option( Connection::OPTION_URL, esc_url_raw( $url ), false );

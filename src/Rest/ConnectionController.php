@@ -12,6 +12,7 @@ namespace SocialRelayCvi\Rest;
 use SocialRelayCvi\Module;
 use SocialRelayCvi\Plugin;
 use SocialRelayCvi\PostMeta;
+use SocialRelayCvi\Postiz\RequestCounter;
 use SocialRelayCvi\Settings\ConnectionTester;
 use SocialRelayCvi\Sharing\AiSuggester;
 use SocialRelayCvi\Sharing\ShareService;
@@ -316,13 +317,9 @@ final class ConnectionController implements Module {
 			return new \WP_Error( 'socialrelaycvi_not_found', __( 'Post not found.', 'social-relay-for-postiz' ), array( 'status' => 404 ) );
 		}
 
-		// At most 30 suggestions per user and hour: each one costs the site's AI credits.
-		$quota = 'socialrelaycvi_ai_quota_' . get_current_user_id();
-		$used  = (int) get_transient( $quota );
-		if ( $used >= 30 ) {
+		if ( ! self::take_ai_quota( get_current_user_id() ) ) {
 			return new \WP_Error( 'socialrelaycvi_ai_quota', __( 'You have asked for many suggestions in the last hour. Try again later.', 'social-relay-for-postiz' ), array( 'status' => 429 ) );
 		}
-		set_transient( $quota, $used + 1, HOUR_IN_SECONDS );
 
 		$identifier = '';
 		$channel_id = sanitize_text_field( (string) $request->get_param( 'channel' ) );
@@ -334,6 +331,58 @@ final class ConnectionController implements Module {
 		$text = ( new AiSuggester() )->suggest( $post, $identifier );
 
 		return is_wp_error( $text ) ? $text : new WP_REST_Response( array( 'text' => $text ) );
+	}
+
+	/**
+	 * Counts one AI suggestion: at most 30 per user in a fixed one-hour window from the first one.
+	 *
+	 * Each suggestion costs the site's AI credits, so the count must hold under parallel requests:
+	 * an atomic increment in a persistent object cache, otherwise a read-modify-write under a mutex.
+	 *
+	 * @param int $user_id User id.
+	 * @return bool False when the quota is used up.
+	 */
+	private static function take_ai_quota( int $user_id ): bool {
+		$limit = 30;
+		$key   = 'socialrelaycvi_ai_quota_' . $user_id;
+
+		if ( wp_using_ext_object_cache() ) {
+			// add() sets the expiry only once, so the window does not move with each request.
+			wp_cache_add( $key, 0, 'socialrelaycvi', HOUR_IN_SECONDS );
+			$used = wp_cache_incr( $key, 1, 'socialrelaycvi' );
+
+			return false !== $used && $used <= $limit;
+		}
+
+		return (bool) RequestCounter::with_lock(
+			'ai_quota_' . $user_id,
+			static function () use ( $key, $limit ): bool {
+				$now   = time();
+				$state = get_transient( $key );
+				// Older versions stored a bare count: start a new window.
+				$start = is_array( $state ) ? (int) ( $state['start'] ?? 0 ) : 0;
+				$used  = is_array( $state ) ? (int) ( $state['used'] ?? 0 ) : 0;
+
+				if ( $start + HOUR_IN_SECONDS <= $now ) {
+					$start = $now;
+					$used  = 0;
+				}
+				if ( $used >= $limit ) {
+					return false;
+				}
+
+				set_transient(
+					$key,
+					array(
+						'start' => $start,
+						'used'  => $used + 1,
+					),
+					max( 1, $start + HOUR_IN_SECONDS - $now )
+				);
+
+				return true;
+			}
+		);
 	}
 
 	/**

@@ -98,12 +98,13 @@ final class WebhookController implements Module {
 		update_option( self::OPTION_LAST, time(), false );
 		$this->remember( $payload['posts'], array_map( static fn ( array $row ): int => (int) $row['id'], $rows ) );
 
-		// Ask Postiz about the shares this call named; the status itself comes from the API.
-		if ( array() !== $rows ) {
-			$this->plugin->queue->enqueue_named_sync( array_values( array_unique( array_map( 'strval', array_column( $rows, 'postiz_post_id' ) ) ) ) );
-		} else {
-			$this->plugin->queue->enqueue_sync( 0 );
-		}
+		// Ask Postiz about the shares this call named (all pending ones when it named none we
+		// know); the status itself comes from the API. Calls share one spaced job, so repeating
+		// them does not spend the Postiz quota.
+		$this->plugin->queue->enqueue_named_sync(
+			array_values( array_unique( array_map( 'strval', array_column( $rows, 'postiz_post_id' ) ) ) ),
+			array() === $rows
+		);
 
 		return new WP_REST_Response( array( 'queued' => true ), 202 );
 	}

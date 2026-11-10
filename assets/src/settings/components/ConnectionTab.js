@@ -7,6 +7,7 @@ import {
 	ExternalLink,
 	Notice,
 	TextControl,
+	__experimentalConfirmDialog as ConfirmDialog, // eslint-disable-line @wordpress/no-unsafe-wp-apis
 } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { __, _n, sprintf } from '@wordpress/i18n';
@@ -29,6 +30,7 @@ export default function ConnectionTab( { settings, setSettings, goTo } ) {
 	const [ key, setKey ] = useState( '' );
 	const [ busy, setBusy ] = useState( false );
 	const [ result, setResult ] = useState( null );
+	const [ hostWarning, setHostWarning ] = useState( '' );
 
 	const keyHelp = {
 		env: __(
@@ -41,25 +43,35 @@ export default function ConnectionTab( { settings, setSettings, goTo } ) {
 		),
 	}[ connection.key_source ];
 
-	const save = () => {
+	const save = ( confirmHostChange = false ) => {
 		setBusy( true );
 		setResult( null );
+		setHostWarning( '' );
 		apiFetch( {
 			path: `/${ config.namespace }/admin/connection`,
 			method: 'POST',
-			data: { instance_url: url, api_key: key },
+			data: {
+				instance_url: url,
+				api_key: key,
+				confirm_host_change: confirmHostChange,
+			},
 		} )
 			.then( ( response ) => {
 				setResult( response );
 				setSettings( response.settings );
 				setKey( '' );
 			} )
-			.catch( ( err ) =>
+			.catch( ( err ) => {
+				// A key from the server configuration needs consent before going to a new host.
+				if ( err.code === 'socialrelaycvi_confirm_host_change' ) {
+					setHostWarning( err.message );
+					return;
+				}
 				setResult( {
 					ok: false,
 					message: err.message || String( err ),
-				} )
-			)
+				} );
+			} )
 			.finally( () => setBusy( false ) );
 	};
 
@@ -204,7 +216,7 @@ export default function ConnectionTab( { settings, setSettings, goTo } ) {
 				<div className="socialrelaycvi-settings__buttons">
 					<Button
 						variant="primary"
-						onClick={ save }
+						onClick={ () => save() }
 						isBusy={ busy }
 						disabled={ busy || ! url }
 						__next40pxDefaultSize
@@ -236,6 +248,17 @@ export default function ConnectionTab( { settings, setSettings, goTo } ) {
 						) }
 					</ExternalLink>
 				</div>
+				<ConfirmDialog
+					isOpen={ !! hostWarning }
+					onConfirm={ () => save( true ) }
+					onCancel={ () => setHostWarning( '' ) }
+					confirmButtonText={ __(
+						'Use this address',
+						'social-relay-for-postiz'
+					) }
+				>
+					{ hostWarning }
+				</ConfirmDialog>
 				{ connection.key_editable && (
 					<p className="description">
 						{ __(

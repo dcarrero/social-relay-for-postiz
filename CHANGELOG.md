@@ -43,6 +43,12 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
   - New indexes on the shares table (database version 2), one query for the whole posts list, the recurring jobs checked once an hour instead of on every page view, a 15-minute status sync also without Action Scheduler, and a stale "share again" flag is dropped when the profile does not allow it.
 
 ### Security
+- Audit hardening, second round:
+  - Uninstall deletes the plugin data of every site of a multisite network, deciding per site whether deletion was requested.
+  - When the API key comes from the environment or a constant, pointing the plugin at a different Postiz host asks for an explicit confirmation ("Use this address"), so the operator's key is never sent to a new server by mistake. Plain `http://` is accepted only for local or private hosts, and only when local instances are allowed.
+  - Webhook calls are coalesced: one pending status sync at a time carrying the ids of every call (up to 50), at least 30 seconds apart, so a leaked webhook URL cannot spend the Postiz request quota.
+  - The share job checks again that the post is still published right before calling Postiz, and cancels what it just created if the post was unpublished meanwhile. "Retry only these channels" state is cleared on every final outcome.
+  - The hourly request counter, the AI suggestion quota (now a fixed one-hour window) and the once-a-minute "share again" slot use atomic database locks instead of non-atomic option updates.
 - Security audit fixes:
   - The release zip is built only from files tracked by git (minus `.distignore`), and the build fails if any hidden file reaches the package, so local tool output can never be shipped.
   - Images taken from the post content or set as the featured image are used only when they belong to the post, its author can edit them, they are unattached library images and the author can browse the library, or they are attached to a published post. This keeps images of other people's drafts out of previews and social posts.

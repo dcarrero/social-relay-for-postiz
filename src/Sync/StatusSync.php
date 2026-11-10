@@ -60,23 +60,43 @@ final class StatusSync implements Module {
 	}
 
 	/**
-	 * Sync job for the Postiz posts a webhook call named: a narrower request to Postiz.
+	 * Coalesced sync job for the Postiz posts webhook calls named: a narrower request to Postiz.
 	 *
-	 * Falls back to a full sync when the request cannot be made.
+	 * The stored ids are dropped only after Postiz answered; on failure they stay and a
+	 * full sync is queued.
 	 *
-	 * @param mixed $postiz_ids Postiz post ids.
+	 * @param mixed $legacy Ids of a job queued by an older version (one job per call).
 	 */
-	public function run_named( mixed $postiz_ids ): void {
-		$rows = array_values(
-			array_filter(
-				$this->plugin->shares->by_postiz_ids( array_map( 'strval', (array) $postiz_ids ) ),
-				static fn ( array $row ): bool => in_array( (string) $row['status'], array( 'queued', 'draft' ), true )
-			)
-		);
+	public function run_named( mixed $legacy = null ): void {
+		if ( is_array( $legacy ) && array() !== $legacy ) {
+			$this->plugin->queue->enqueue_named_sync( array_values( array_map( 'strval', $legacy ) ) );
+			return;
+		}
+
+		$snapshot = $this->plugin->queue->begin_named_sync();
+		if ( null === $snapshot ) {
+			return;
+		}
+
+		if ( 0 !== $snapshot['full'] ) {
+			// A call named no share we know: check every pending one.
+			$this->plugin->shares->expire_stale();
+			$rows = $this->plugin->shares->syncable();
+		} else {
+			$rows = array_values(
+				array_filter(
+					$this->plugin->shares->by_postiz_ids( array_map( 'strval', array_keys( $snapshot['ids'] ) ) ),
+					static fn ( array $row ): bool => in_array( (string) $row['status'], array( 'queued', 'draft' ), true )
+				)
+			);
+		}
 
 		if ( array() !== $rows && ! $this->sync_rows( $rows ) ) {
 			$this->plugin->queue->enqueue_sync( MINUTE_IN_SECONDS );
+			return;
 		}
+
+		$this->plugin->queue->finish_named_sync( $snapshot );
 	}
 
 	/**
