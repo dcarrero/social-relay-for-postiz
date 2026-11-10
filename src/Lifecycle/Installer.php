@@ -16,7 +16,7 @@ use SocialRelayCvi\Queue\Queue;
  */
 final class Installer {
 
-	public const DB_VERSION        = 1;
+	public const DB_VERSION        = 2;
 	public const OPTION_DB_VERSION = 'socialrelaycvi_db_version';
 
 	/**
@@ -85,10 +85,11 @@ final class Installer {
 				created_at datetime NOT NULL,
 				updated_at datetime NOT NULL,
 				PRIMARY KEY  (id),
-				KEY post_id (post_id),
+				KEY post_integration (post_id,integration_id,id),
 				KEY batch (batch),
 				KEY postiz_post_id (postiz_post_id),
-				KEY status (status)
+				KEY status_publish (status,publish_at),
+				KEY created_at (created_at)
 			) {$charset};"
 		);
 
@@ -109,6 +110,6 @@ final class Installer {
 			) {$charset};"
 		);
 
-		update_option( self::OPTION_DB_VERSION, self::DB_VERSION, false );
+		update_option( self::OPTION_DB_VERSION, self::DB_VERSION, true );
 	}
 }

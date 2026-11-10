@@ -71,7 +71,21 @@ final class Client implements Gateway {
 	public function create_posts( array $payload ): array|WP_Error {
 		RequestCounter::hit();
 
-		return $this->request( 'POST', 'posts', $payload );
+		$response = $this->request( 'POST', 'posts', $payload );
+
+		// A timeout may come after Postiz already created the posts: retrying would publish twice.
+		if ( is_wp_error( $response ) && 'socialrelaycvi_http' === $response->get_error_code() && 1 === preg_match( '/timed? ?out|cURL error 28/i', $response->get_error_message() ) ) {
+			return new WP_Error(
+				'socialrelaycvi_timeout',
+				__( 'Postiz took too long to answer and may have created the post anyway. Check Postiz before sharing again.', 'social-relay-for-postiz' ),
+				array(
+					'status'    => 0,
+					'retryable' => false,
+				)
+			);
+		}
+
+		return $response;
 	}
 
 	/**

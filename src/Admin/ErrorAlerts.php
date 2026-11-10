@@ -220,9 +220,8 @@ final class ErrorAlerts implements Module {
 	 * @param array<string, mixed> $row Share row.
 	 */
 	private function channel_name( array $row ): string {
-		$channels = $this->plugin->channels->by_id();
-		$channel  = is_wp_error( $channels ) ? null : ( $channels[ (string) $row['integration_id'] ] ?? null );
-		$network  = ProviderRules::network( (string) $row['identifier'] )['label'];
+		$channel = $this->plugin->channels->known()[ (string) $row['integration_id'] ] ?? null;
+		$network = ProviderRules::network( (string) $row['identifier'] )['label'];
 
 		return null === $channel ? $network : $channel['name'] . ' (' . $network . ')';
 	}

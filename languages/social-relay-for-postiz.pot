@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-10T21:30:21+00:00\n"
+"POT-Creation-Date: 2026-11-10T21:35:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: social-relay-for-postiz\n"
@@ -235,35 +235,35 @@ msgstr ""
 msgid "View post"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:59
+#: src/Admin/DashboardWidget.php:58
 msgid "Published (7 days)"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:60
+#: src/Admin/DashboardWidget.php:59
 #: src/Admin/StatusLabels.php:24
 #: build/editor-panel.js:15
 #: build/log.js:1
 msgid "Queued"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:61
+#: src/Admin/DashboardWidget.php:60
 msgid "Errors"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:74
+#: src/Admin/DashboardWidget.php:73
 msgid "Latest errors"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:86
+#: src/Admin/DashboardWidget.php:85
 #: build/log.js:2
 msgid "Next"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:88
+#: src/Admin/DashboardWidget.php:87
 msgid "Nothing scheduled."
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:102
+#: src/Admin/DashboardWidget.php:101
 #: src/Admin/ErrorAlerts.php:103
 #: src/Admin/LogPage.php:49
 #: src/Admin/LogPage.php:50
@@ -273,19 +273,19 @@ msgstr ""
 msgid "Log"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:103
+#: src/Admin/DashboardWidget.php:102
 #: src/Admin/SettingsPage.php:53
 #: src/Admin/SettingsPage.php:79
 msgid "Settings"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:105
+#: src/Admin/DashboardWidget.php:104
 msgid "Open Postiz"
 msgstr ""
 
-#: src/Admin/DashboardWidget.php:119
+#: src/Admin/DashboardWidget.php:118
 #: src/Admin/ErrorAlerts.php:206
-#: src/Admin/ErrorAlerts.php:240
+#: src/Admin/ErrorAlerts.php:239
 #: build/log.js:1
 #: build/settings.js:9
 #: build/settings.js:21
@@ -337,36 +337,36 @@ msgid "You get this email because failure emails are on in Social Relay → Sett
 msgstr ""
 
 #: src/Admin/ErrorAlerts.php:202
-#: src/Admin/ErrorAlerts.php:241
+#: src/Admin/ErrorAlerts.php:240
 #: src/Admin/StatusLabels.php:26
 #: build/editor-panel.js:15
 #: build/log.js:1
 msgid "Error"
 msgstr ""
 
-#: src/Admin/PostsColumn.php:92
+#: src/Admin/PostsColumn.php:99
 #: build/editor-panel.js:3
 #: build/editor-panel.js:20
 msgid "Social networks"
 msgstr ""
 
-#: src/Admin/PostsColumn.php:129
+#: src/Admin/PostsColumn.php:144
 msgid "Sharing off"
 msgstr ""
 
-#: src/Admin/PostsColumn.php:175
+#: src/Admin/PostsColumn.php:190
 msgid "All social statuses"
 msgstr ""
 
-#: src/Admin/PostsColumn.php:176
+#: src/Admin/PostsColumn.php:191
 msgid "Social: with errors"
 msgstr ""
 
-#: src/Admin/PostsColumn.php:177
+#: src/Admin/PostsColumn.php:192
 msgid "Social: queued or draft"
 msgstr ""
 
-#: src/Admin/PostsColumn.php:180
+#: src/Admin/PostsColumn.php:195
 msgid "Filter by social network status"
 msgstr ""
 
@@ -405,34 +405,38 @@ msgstr ""
 msgid "Publish to social networks through your Postiz instance (self-hosted or Postiz Cloud). Set the instance URL in Social Relay → Settings."
 msgstr ""
 
-#: src/Postiz/ChannelRepository.php:52
+#: src/Postiz/ChannelRepository.php:79
 #: src/Rest/ConnectionController.php:294
-#: src/Sharing/ShareService.php:209
+#: src/Sharing/ShareService.php:286
 msgid "Postiz is not configured yet."
 msgstr ""
 
-#: src/Postiz/Client.php:224
+#: src/Postiz/Client.php:80
+msgid "Postiz took too long to answer and may have created the post anyway. Check Postiz before sharing again."
+msgstr ""
+
+#: src/Postiz/Client.php:238
 msgid "401 · The API key is not valid for this Postiz instance."
 msgstr ""
 
-#: src/Postiz/Client.php:225
+#: src/Postiz/Client.php:239
 msgid "403 · The API key cannot access this resource."
 msgstr ""
 
-#: src/Postiz/Client.php:226
+#: src/Postiz/Client.php:240
 msgid "404 · Endpoint not found. Check the Postiz URL."
 msgstr ""
 
-#: src/Postiz/Client.php:227
+#: src/Postiz/Client.php:241
 msgid "413 · Request too large."
 msgstr ""
 
-#: src/Postiz/Client.php:228
+#: src/Postiz/Client.php:242
 msgid "429 · Postiz API rate limit reached."
 msgstr ""
 
 #. translators: %d: HTTP status code.
-#: src/Postiz/Client.php:230
+#: src/Postiz/Client.php:244
 #, php-format
 msgid "%d · Unexpected response from Postiz."
 msgstr ""
@@ -526,6 +530,10 @@ msgstr ""
 msgid "Sign up"
 msgstr ""
 
+#: src/Queue/Queue.php:148
+msgid "Every 15 minutes"
+msgstr ""
+
 #: src/Rest/AdminController.php:256
 msgid "Use an https:// address: the API key must not travel unencrypted."
 msgstr ""
@@ -581,99 +589,115 @@ msgstr ""
 msgid "No AI provider is set up. Add one in Settings → Connectors."
 msgstr ""
 
-#: src/Sharing/ShareService.php:80
+#: src/Sharing/ShareRepository.php:234
+msgid "Postiz never reported this post as published. Check it in Postiz."
+msgstr ""
+
+#: src/Sharing/ShareService.php:104
 msgid "The post does not match the profile conditions; not shared."
 msgstr ""
 
-#: src/Sharing/ShareService.php:87
+#: src/Sharing/ShareService.php:111
 msgid "Postiz is not configured; nothing was sent."
 msgstr ""
 
-#: src/Sharing/ShareService.php:126
+#: src/Sharing/ShareService.php:149
 msgid "Same content was already sent; skipped to avoid a duplicate."
 msgstr ""
 
-#: src/Sharing/ShareService.php:135
+#: src/Sharing/ShareService.php:159
+msgid "The hourly limit of the Postiz API is almost used up; sending in 10 minutes."
+msgstr ""
+
+#: src/Sharing/ShareService.php:173
 msgid "This network needs an image and the post has none; skipped."
 msgstr ""
 
 #. translators: %s: post type name.
-#: src/Sharing/ShareService.php:214
+#: src/Sharing/ShareService.php:291
 #, php-format
 msgid "Sharing is turned off in the publishing profile for \"%s\"."
 msgstr ""
 
-#: src/Sharing/ShareService.php:218
+#: src/Sharing/ShareService.php:295
 msgid "Sharing is turned off for this post."
 msgstr ""
 
-#: src/Sharing/ShareService.php:222
+#: src/Sharing/ShareService.php:299
 msgid "The post is not published yet."
 msgstr ""
 
-#: src/Sharing/ShareService.php:226
+#: src/Sharing/ShareService.php:303
 msgid "The post is password protected; its text is not shared."
 msgstr ""
 
-#: src/Sharing/ShareService.php:289
+#: src/Sharing/ShareService.php:366
 msgid "Channel no longer exists in Postiz; skipped."
 msgstr ""
 
-#: src/Sharing/ShareService.php:298
+#: src/Sharing/ShareService.php:375
 msgid "Channel is disabled in Postiz; skipped."
 msgstr ""
 
 #. translators: %s: list of missing settings.
-#: src/Sharing/ShareService.php:316
+#: src/Sharing/ShareService.php:393
 #, php-format
 msgid "Missing network settings (%s); skipped."
 msgstr ""
 
-#: src/Sharing/ShareService.php:414
+#: src/Sharing/ShareService.php:491
 msgid "Pending posts cancelled in Postiz."
 msgstr ""
 
+#: src/Sharing/ShareService.php:555
+msgid "Postiz accepted the request but did not return the post; check it in Postiz."
+msgstr ""
+
 #. translators: 1: number of channels, 2: how Postiz handles it, e.g. "to publish now".
-#: src/Sharing/ShareService.php:487
+#: src/Sharing/ShareService.php:566
 #, php-format
 msgid "Sent to Postiz: %1$d channel, %2$s."
 msgid_plural "Sent to Postiz: %1$d channels, %2$s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Sharing/ShareService.php:490
+#: src/Sharing/ShareService.php:569
 msgid "scheduled"
 msgstr ""
 
-#: src/Sharing/ShareService.php:491
+#: src/Sharing/ShareService.php:570
 msgid "as a draft"
 msgstr ""
 
-#: src/Sharing/ShareService.php:492
+#: src/Sharing/ShareService.php:571
 msgid "to publish now"
 msgstr ""
 
 #. translators: 1: error message, 2: attempt number, 3: max attempts.
-#: src/Sharing/ShareService.php:542
+#: src/Sharing/ShareService.php:622
 #, php-format
 msgid "%1$s Retrying (%2$d of %3$d)."
 msgstr ""
 
-#: src/Sharing/ShareService.php:769
+#: src/Sharing/ShareService.php:849
 msgid "Unexpected upload response."
 msgstr ""
 
 #. translators: %s: error message.
-#: src/Sharing/ShareService.php:773
+#: src/Sharing/ShareService.php:853
 #, php-format
 msgid "Postiz could not fetch an image (%s). Sent without it."
 msgstr ""
 
-#: src/Sync/StatusSync.php:146
+#: src/Sync/StatusSync.php:119
+msgid "No longer in Postiz."
+msgstr ""
+
+#: src/Sync/StatusSync.php:158
 msgid "Published on the network."
 msgstr ""
 
-#: src/Sync/StatusSync.php:148
+#: src/Sync/StatusSync.php:160
 msgid "Postiz reports an error for this post."
 msgstr ""
 

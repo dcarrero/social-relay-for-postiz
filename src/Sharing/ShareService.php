@@ -14,6 +14,7 @@ use SocialRelayCvi\Plugin;
 use SocialRelayCvi\PostMeta;
 use SocialRelayCvi\Postiz\Gateway;
 use SocialRelayCvi\Postiz\ProviderRules;
+use SocialRelayCvi\Postiz\RequestCounter;
 use SocialRelayCvi\Queue\Queue;
 use SocialRelayCvi\Templates\PostContext;
 use SocialRelayCvi\Templates\TemplateEngine;
@@ -57,12 +58,35 @@ final class ShareService implements Module {
 	}
 
 	/**
-	 * Job handler.
+	 * Whether the current job queued a retry (so "share again" and "Retry" state must stay).
+	 *
+	 * @var bool
+	 */
+	private bool $retry_queued = false;
+
+	/**
+	 * Job handler. Any unexpected error is recorded on the post's channels, never lost.
 	 *
 	 * @param int $post_id Post id.
 	 * @param int $attempt Attempt number.
 	 */
 	public function handle( int $post_id, int $attempt = 1 ): void {
+		$this->retry_queued = false;
+
+		try {
+			$this->run_share( $post_id, $attempt );
+		} catch ( \Throwable $e ) {
+			$this->record_error( $post_id, $this->target_items( $post_id ), '', '', '', time(), new WP_Error( 'socialrelaycvi_exception', $e->getMessage() ) );
+		}
+	}
+
+	/**
+	 * Shares a post: builds the messages, uploads the images and sends one request to Postiz.
+	 *
+	 * @param int $post_id Post id.
+	 * @param int $attempt Attempt number.
+	 */
+	private function run_share( int $post_id, int $attempt ): void {
 		$post = get_post( $post_id );
 
 		if ( ! $post instanceof WP_Post || 'publish' !== $post->post_status || ! self::may_share_protected( $post ) ) {
@@ -107,14 +131,13 @@ final class ShareService implements Module {
 		// "Retry" from the editor: only the channels that failed, once.
 		$only = get_post_meta( $post_id, PostMeta::ONLY, true );
 		if ( is_array( $only ) && array() !== $only ) {
-			delete_post_meta( $post_id, PostMeta::ONLY );
 			$items = array_values( array_filter( $items, static fn ( array $item ): bool => in_array( $item['integration_id'], $only, true ) ) );
 			update_post_meta( $post_id, PostMeta::RESHARE, true );
 		}
 
 		// Nothing to send: drop a pending "share again" so the next update does not send.
 		if ( array() === $items ) {
-			delete_post_meta( $post_id, PostMeta::RESHARE );
+			$this->finish( $post_id );
 			return;
 		}
 
@@ -127,7 +150,22 @@ final class ShareService implements Module {
 			return;
 		}
 
-		$images = $this->upload_images( $client, $post, $image_ids );
+		// The Postiz API allows 90 requests an hour: wait for room instead of failing.
+		// The counter tracks post creations: one request, or one per channel in slot mode.
+		$needed = 'slot' === $profile['mode'] ? count( $items ) : 1;
+		if ( RequestCounter::count() + $needed > RequestCounter::LIMIT ) {
+			$this->plugin->queue->enqueue_share( $post_id, 10 * MINUTE_IN_SECONDS, $attempt );
+			$this->retry_queued = true;
+			$log->info( 'share', __( 'The hourly limit of the Postiz API is almost used up; sending in 10 minutes.', 'social-relay-for-postiz' ), $post_id );
+			return;
+		}
+
+		$images = $this->upload_images( $client, $post, $image_ids, $attempt < self::MAX_ATTEMPTS );
+		if ( is_wp_error( $images ) ) {
+			// Postiz could not fetch an image for a passing reason: try the whole share again later.
+			$this->fail( $post_id, $attempt, $images, $items );
+			return;
+		}
 
 		$sendable = array();
 		foreach ( $items as $item ) {
@@ -141,7 +179,7 @@ final class ShareService implements Module {
 		$items = $sendable;
 
 		if ( array() === $items ) {
-			delete_post_meta( $post_id, PostMeta::RESHARE );
+			$this->finish( $post_id );
 			return;
 		}
 
@@ -166,9 +204,48 @@ final class ShareService implements Module {
 			$this->send( $client, $post, $items, $when, $type, $batch, $hash, $attempt, true, $request );
 		}
 
-		if ( $reshare ) {
-			update_post_meta( $post_id, PostMeta::RESHARE, false );
+		if ( ! $this->retry_queued ) {
+			$this->finish( $post_id );
 		}
+	}
+
+	/**
+	 * Clears the one-off "share again" and "Retry" state once a share has a final outcome.
+	 *
+	 * @param int $post_id Post id.
+	 */
+	private function finish( int $post_id ): void {
+		delete_post_meta( $post_id, PostMeta::ONLY );
+		delete_post_meta( $post_id, PostMeta::RESHARE );
+	}
+
+	/**
+	 * Channels the post would go to, for recording an error before the messages exist.
+	 *
+	 * @param int $post_id Post id.
+	 * @return list<array{integration_id: string, identifier: string}>
+	 */
+	private function target_items( int $post_id ): array {
+		$post = get_post( $post_id );
+		if ( ! $post instanceof WP_Post ) {
+			return array();
+		}
+
+		$chosen = get_post_meta( $post_id, PostMeta::CHANNELS, true );
+		$ids    = is_array( $chosen ) && array() !== $chosen ? $chosen : $this->plugin->profiles->for_post_type( $post->post_type )['channels'];
+		$known  = $this->plugin->channels->known();
+		$items  = array();
+
+		foreach ( array_map( 'strval', (array) $ids ) as $id ) {
+			if ( PostMeta::NO_CHANNELS !== $id ) {
+				$items[] = array(
+					'integration_id' => $id,
+					'identifier'     => (string) ( $known[ $id ]['identifier'] ?? '' ),
+				);
+			}
+		}
+
+		return $items;
 	}
 
 	/**
@@ -435,7 +512,7 @@ final class ShareService implements Module {
 		try {
 			$payload = PayloadBuilder::build( $items, $type, $when, $batch, $request['short_link'], $request['tags'] );
 		} catch ( \InvalidArgumentException $e ) {
-			$log->error( 'share', $e->getMessage(), $post->ID );
+			$this->record_error( $post->ID, $items, $batch, $hash, $type, $when, new WP_Error( 'socialrelaycvi_payload', $e->getMessage() ) );
 			return;
 		}
 
@@ -473,7 +550,9 @@ final class ShareService implements Module {
 					'batch'          => $batch,
 					'postiz_post_id' => $postiz_ids[ $item['integration_id'] ] ?? '',
 					'type'           => $type,
-					'status'         => PayloadBuilder::TYPE_DRAFT === $type ? 'draft' : 'queued',
+					// Without the Postiz id the status can never be followed: say so instead of "queued" forever.
+					'status'         => ! isset( $postiz_ids[ $item['integration_id'] ] ) ? 'error' : ( PayloadBuilder::TYPE_DRAFT === $type ? 'draft' : 'queued' ),
+					'error'          => isset( $postiz_ids[ $item['integration_id'] ] ) ? '' : __( 'Postiz accepted the request but did not return the post; check it in Postiz.', 'social-relay-for-postiz' ),
 					'publish_at'     => gmdate( 'Y-m-d H:i:s', $when ),
 					'content_hash'   => $hash,
 				)
@@ -535,6 +614,7 @@ final class ShareService implements Module {
 				)[ $attempt ] * MINUTE_IN_SECONDS
 			);
 			$this->plugin->queue->enqueue_share( $post_id, $delay, $attempt + 1 );
+			$this->retry_queued = true;
 
 			$this->plugin->logger->error(
 				'share',
@@ -545,12 +625,8 @@ final class ShareService implements Module {
 			return;
 		}
 
-		if ( array() !== $items ) {
-			$this->record_error( $post_id, $items, $batch, $hash, $type, $when, $error );
-			return;
-		}
-
-		$this->plugin->logger->error( 'share', $error->get_error_message(), $post_id );
+		// Final: record it on each channel so the editor, the posts list and the alerts see it.
+		$this->record_error( $post_id, array() !== $items ? $items : $this->target_items( $post_id ), $batch, $hash, $type, 0 !== $when ? $when : time(), $error );
 	}
 
 	/**
@@ -753,9 +829,10 @@ final class ShareService implements Module {
 	 * @param Gateway   $client Gateway to Postiz.
 	 * @param WP_Post   $post   Post.
 	 * @param list<int> $ids    Attachment ids.
-	 * @return list<array{id: string, path: string}>
+	 * @param bool      $can_retry Whether a passing failure may stop the share for a later retry.
+	 * @return list<array{id: string, path: string}>|WP_Error WP_Error only for a passing failure when $can_retry.
 	 */
-	private function upload_images( Gateway $client, WP_Post $post, array $ids ): array {
+	private function upload_images( Gateway $client, WP_Post $post, array $ids, bool $can_retry = false ): array|WP_Error {
 		$images = array();
 
 		foreach ( $ids as $id ) {
@@ -765,6 +842,9 @@ final class ShareService implements Module {
 			}
 
 			$upload = $client->upload_from_url( $url, true );
+			if ( $can_retry && is_wp_error( $upload ) && ! empty( ( (array) $upload->get_error_data() )['retryable'] ) ) {
+				return $upload;
+			}
 			if ( is_wp_error( $upload ) || empty( $upload['id'] ) || empty( $upload['path'] ) ) {
 				$message = is_wp_error( $upload ) ? $upload->get_error_message() : __( 'Unexpected upload response.', 'social-relay-for-postiz' );
 				$this->plugin->logger->error(

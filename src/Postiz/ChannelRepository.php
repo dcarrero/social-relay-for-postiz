@@ -21,6 +21,23 @@ final class ChannelRepository {
 	private const TRANSIENT = 'socialrelaycvi_channels';
 
 	/**
+	 * Last good list, kept without expiry, for screens that only need names.
+	 */
+	private const LAST_GOOD = 'socialrelaycvi_channels_last';
+
+	/**
+	 * After a failure, Postiz is not asked again for this long.
+	 */
+	private const FAILURE_TTL = 3 * MINUTE_IN_SECONDS;
+
+	/**
+	 * Result of this request, so a page never asks Postiz twice.
+	 *
+	 * @var list<array{id: string, name: string, identifier: string, picture: string, profile: string, disabled: bool}>|WP_Error|null
+	 */
+	private array|WP_Error|null $memo = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param Connection                $connection     Connection settings.
@@ -38,12 +55,22 @@ final class ChannelRepository {
 	 * @return list<array{id: string, name: string, identifier: string, picture: string, profile: string, disabled: bool}>|WP_Error
 	 */
 	public function all( bool $refresh = false ): array|WP_Error {
-		$cache_key = self::TRANSIENT . '_' . md5( $this->connection->api_base() );
+		$cache_key = $this->cache_key();
 
 		if ( ! $refresh ) {
+			if ( null !== $this->memo ) {
+				return $this->memo;
+			}
 			$cached = get_transient( $cache_key );
 			if ( is_array( $cached ) ) {
+				$this->memo = $cached;
 				return $cached;
+			}
+			// Postiz failed a moment ago: do not make every admin page wait for it again.
+			$failed = get_transient( $cache_key . '_fail' );
+			if ( is_string( $failed ) ) {
+				$this->memo = new WP_Error( 'socialrelaycvi_postiz_unavailable', $failed );
+				return $this->memo;
 			}
 		}
 
@@ -54,6 +81,8 @@ final class ChannelRepository {
 
 		$response = $client->integrations();
 		if ( is_wp_error( $response ) ) {
+			set_transient( $cache_key . '_fail', $response->get_error_message(), self::FAILURE_TTL );
+			$this->memo = $response;
 			return $response;
 		}
 
@@ -74,6 +103,9 @@ final class ChannelRepository {
 		}
 
 		set_transient( $cache_key, $channels, 15 * MINUTE_IN_SECONDS );
+		delete_transient( $cache_key . '_fail' );
+		update_option( self::LAST_GOOD, $channels, false );
+		$this->memo = $channels;
 
 		return $channels;
 	}
@@ -93,9 +125,32 @@ final class ChannelRepository {
 	}
 
 	/**
+	 * Channels by id from the cache or the last good list, without ever calling Postiz.
+	 *
+	 * For screens that only show names (notices, posts list, dashboard, log).
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	public function known(): array {
+		$cached = get_transient( $this->cache_key() );
+		$list   = is_array( $cached ) ? $cached : get_option( self::LAST_GOOD, array() );
+
+		return is_array( $list ) ? array_column( $list, null, 'id' ) : array();
+	}
+
+	/**
 	 * Drops the cache.
 	 */
 	public function flush(): void {
-		delete_transient( self::TRANSIENT . '_' . md5( $this->connection->api_base() ) );
+		delete_transient( $this->cache_key() );
+		delete_transient( $this->cache_key() . '_fail' );
+		$this->memo = null;
+	}
+
+	/**
+	 * Cache key for the current instance.
+	 */
+	private function cache_key(): string {
+		return self::TRANSIENT . '_' . md5( $this->connection->api_base() );
 	}
 }

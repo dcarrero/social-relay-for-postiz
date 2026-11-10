@@ -62,13 +62,13 @@ final class LogPage implements Module {
 	 * Enqueues the app on this screen only.
 	 */
 	public function enqueue(): void {
-		$channels = $this->plugin->connection->is_configured() ? $this->plugin->channels->all() : array();
+		$channels = array_values( $this->plugin->channels->known() );
 
 		$this->loaded = AdminApp::enqueue(
 			'log',
 			array(
 				'namespace' => 'socialrelaycvi/v1',
-				'channels'  => is_wp_error( $channels ) ? array() : array_combine(
+				'channels'  => array_combine(
 					array_column( $channels, 'id' ),
 					array_map(
 						static fn ( array $channel ): array => array(

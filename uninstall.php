@@ -25,7 +25,7 @@ $wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $wpdb->prefix . 'social
 $wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $wpdb->prefix . 'socialrelaycvi_log' ) );
 // phpcs:enable
 
-foreach ( array( 'socialrelaycvi_instance_url', 'socialrelaycvi_api_base', 'socialrelaycvi_api_key', 'socialrelaycvi_profiles', 'socialrelaycvi_db_version', 'socialrelaycvi_delete_data_on_uninstall', 'socialrelaycvi_webhook_secret', 'socialrelaycvi_webhook_last', 'socialrelaycvi_webhook_history', 'socialrelaycvi_post_requests', 'socialrelaycvi_error_email', 'socialrelaycvi_error_email_sent', 'socialrelaycvi_error_email_checked' ) as $socialrelaycvi_option ) {
+foreach ( array( 'socialrelaycvi_instance_url', 'socialrelaycvi_api_base', 'socialrelaycvi_api_key', 'socialrelaycvi_profiles', 'socialrelaycvi_db_version', 'socialrelaycvi_delete_data_on_uninstall', 'socialrelaycvi_webhook_secret', 'socialrelaycvi_webhook_last', 'socialrelaycvi_webhook_history', 'socialrelaycvi_channels_last', 'socialrelaycvi_recurring_checked', 'socialrelaycvi_post_requests', 'socialrelaycvi_error_email', 'socialrelaycvi_error_email_sent', 'socialrelaycvi_error_email_checked' ) as $socialrelaycvi_option ) {
 	delete_option( $socialrelaycvi_option );
 }
 

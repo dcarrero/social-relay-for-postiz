@@ -49,6 +49,8 @@ final class StatusSync implements Module {
 	 * Sync job.
 	 */
 	public function run(): void {
+		$this->plugin->shares->expire_stale();
+
 		$rows = $this->plugin->shares->syncable();
 		if ( array() === $rows ) {
 			return;
@@ -108,6 +110,16 @@ final class StatusSync implements Module {
 		foreach ( $rows as $row ) {
 			$postiz_post = $by_id[ (string) $row['postiz_post_id'] ] ?? null;
 			if ( null === $postiz_post ) {
+				// Gone from Postiz a day after its date: deleted there. Stop showing it as pending.
+				if ( strtotime( (string) $row['publish_at'] . ' UTC' ) < time() - DAY_IN_SECONDS ) {
+					$this->plugin->shares->update_row(
+						(int) $row['id'],
+						array(
+							'status' => 'cancelled',
+							'error'  => __( 'No longer in Postiz.', 'social-relay-for-postiz' ),
+						)
+					);
+				}
 				continue;
 			}
 

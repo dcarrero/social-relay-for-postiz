@@ -50,8 +50,7 @@ final class DashboardWidget implements Module {
 		$counts   = $this->plugin->shares->counts( 7 );
 		$errors   = $this->plugin->shares->latest( 'error', 3 );
 		$upcoming = $this->plugin->shares->latest( 'queued', 5, 'upcoming' );
-		$channels = $this->plugin->channels->all();
-		$names    = is_wp_error( $channels ) ? array() : array_column( $channels, 'name', 'id' );
+		$names    = array_map( static fn ( array $channel ): string => (string) $channel['name'], $this->plugin->channels->known() );
 		// Channels Postiz no longer has show their network instead of an id.
 		$name = static fn ( array $row ): string => (string) ( $names[ $row['integration_id'] ] ?? ProviderRules::network( (string) $row['identifier'] )['label'] );
 

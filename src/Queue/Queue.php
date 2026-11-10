@@ -30,10 +30,18 @@ final class Queue implements Module {
 	public const HOOK_SYNC_NAMED = 'socialrelaycvi_sync_named';
 
 	/**
+	 * When the recurring jobs were last checked.
+	 */
+	public const OPTION_CHECKED = 'socialrelaycvi_recurring_checked';
+
+	private const SCHEDULE_15 = 'socialrelaycvi_15min';
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
 		add_action( 'init', array( $this, 'schedule_recurring' ) );
+		add_filter( 'cron_schedules', array( $this, 'cron_schedules' ) ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval -- 15 minutes, only without Action Scheduler.
 	}
 
 	/**
@@ -102,6 +110,13 @@ final class Queue implements Module {
 	 * Schedules the daily cleanup once.
 	 */
 	public function schedule_recurring(): void {
+		// Checked at most once an hour (autoloaded option): not on every page view.
+		$checked = (int) get_option( self::OPTION_CHECKED, 0 );
+		if ( $checked > time() - HOUR_IN_SECONDS ) {
+			return;
+		}
+		update_option( self::OPTION_CHECKED, time(), true );
+
 		if ( function_exists( 'as_has_scheduled_action' ) && function_exists( 'as_schedule_recurring_action' ) ) {
 			if ( ! as_has_scheduled_action( self::HOOK_CLEANUP, array(), self::GROUP ) ) {
 				as_schedule_recurring_action( time() + HOUR_IN_SECONDS, DAY_IN_SECONDS, self::HOOK_CLEANUP, array(), self::GROUP, true );
@@ -116,6 +131,24 @@ final class Queue implements Module {
 		if ( ! wp_next_scheduled( self::HOOK_CLEANUP ) ) {
 			wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', self::HOOK_CLEANUP );
 		}
+		if ( ! wp_next_scheduled( self::HOOK_SYNC ) ) {
+			wp_schedule_event( time() + 15 * MINUTE_IN_SECONDS, self::SCHEDULE_15, self::HOOK_SYNC );
+		}
+	}
+
+	/**
+	 * Adds a 15-minute WP-Cron schedule, used when Action Scheduler is not available.
+	 *
+	 * @param array<string, array{interval: int, display: string}> $schedules Schedules.
+	 * @return array<string, array{interval: int, display: string}>
+	 */
+	public function cron_schedules( array $schedules ): array {
+		$schedules[ self::SCHEDULE_15 ] = array(
+			'interval' => 15 * MINUTE_IN_SECONDS,
+			'display'  => __( 'Every 15 minutes', 'social-relay-for-postiz' ),
+		);
+
+		return $schedules;
 	}
 
 	/**
@@ -149,6 +182,7 @@ final class Queue implements Module {
 		}
 
 		wp_clear_scheduled_hook( self::HOOK_CLEANUP );
+		delete_option( self::OPTION_CHECKED );
 		wp_unschedule_hook( self::HOOK_SHARE );
 		wp_unschedule_hook( self::HOOK_CANCEL );
 		wp_unschedule_hook( self::HOOK_SYNC );

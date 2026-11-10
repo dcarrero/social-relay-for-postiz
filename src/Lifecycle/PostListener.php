@@ -88,17 +88,27 @@ final class PostListener implements Module {
 		$was_published = $post_before instanceof WP_Post && 'publish' === $post_before->post_status;
 
 		if ( $was_published && ! ( $profile['share_on_update'] && get_post_meta( $post_id, PostMeta::RESHARE, true ) ) ) {
+			// A "share again" flag left while the profile did not allow it must not fire later.
+			delete_post_meta( $post_id, PostMeta::RESHARE );
 			return;
 		}
 
+		// Imports, migrations and posts created by code with an old date are not news:
+		// sharing them would flood the networks (and the 90 requests/hour of Postiz).
+		$importing = defined( 'WP_IMPORTING' ) && WP_IMPORTING;
+		$old_new   = ! $post_before instanceof WP_Post && strtotime( $post->post_date_gmt . ' UTC' ) < time() - DAY_IN_SECONDS;
+
 		/**
 		 * Filters whether a post should be shared on this save.
+		 *
+		 * Default false for imports (WP_IMPORTING) and for posts created already published
+		 * with a date older than a day; true otherwise.
 		 *
 		 * @param bool    $should  Default decision.
 		 * @param WP_Post $post    Post.
 		 * @param bool    $update  Whether this is an update.
 		 */
-		if ( ! apply_filters( 'socialrelaycvi_should_share', true, $post, $update ) ) {
+		if ( ! apply_filters( 'socialrelaycvi_should_share', ! $importing && ! $old_new, $post, $update ) ) {
 			return;
 		}
 

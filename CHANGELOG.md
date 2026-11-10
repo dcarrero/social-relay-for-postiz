@@ -30,6 +30,18 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - `bin/build-release.sh`: builds the installable zip (production Composer dependencies, compiled JavaScript, `.distignore` applied).
 - Release workflow: on a `v*` tag, builds the zip, attaches it to a GitHub release and deploys to wordpress.org SVN once the `SVN_USERNAME`/`SVN_PASSWORD` secrets exist.
 
+### Fixed
+- Stability review:
+  - When Postiz is down, admin screens no longer wait for it on every page: a failed channel request is remembered for 3 minutes and answered once per request, and screens that only show names (failure notice, posts list, dashboard widget, log) use the cached or last good list and never call Postiz.
+  - Imports (`WP_IMPORTING`) and posts created already published with a date older than a day are not shared (the `socialrelaycvi_should_share` filter can change it).
+  - "Share again" and "Retry" keep their state until the share has a final outcome, so a retried job neither stops as "already sent" nor resends the channels that worked.
+  - Failures before the request (Postiz unreachable for good, a bad payload, an unexpected PHP error) are recorded on each target channel, so the editor, the posts list and the alerts show them.
+  - A post creation that times out is not retried blindly (Postiz may have created it): it is reported so you can check Postiz.
+  - A passing image upload failure retries the whole share instead of sending without the image.
+  - When the 90 requests/hour of the Postiz API are almost used up, the share waits 10 minutes instead of failing.
+  - Shares without a Postiz id are marked as errors, shares Postiz never reports on are given up after 14 days, and posts deleted in Postiz are marked "No longer in Postiz", so nothing stays "queued" forever. A cancelled share no longer blocks sharing the same content again.
+  - New indexes on the shares table (database version 2), one query for the whole posts list, the recurring jobs checked once an hour instead of on every page view, a 15-minute status sync also without Action Scheduler, and a stale "share again" flag is dropped when the profile does not allow it.
+
 ### Security
 - Password-protected posts are not shared (their excerpt would leak the protected text); filter `socialrelaycvi_share_protected` to allow it.
 - The plugin's post meta (per-post texts, channels, timing) is only exposed in the REST `edit` context, no longer to anonymous visitors.

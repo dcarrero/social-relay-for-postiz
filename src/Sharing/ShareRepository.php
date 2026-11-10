@@ -63,7 +63,7 @@ final class ShareRepository {
 
 		return (bool) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT 1 FROM %i WHERE post_id = %d AND content_hash = %s AND status <> 'error' LIMIT 1",
+				"SELECT 1 FROM %i WHERE post_id = %d AND content_hash = %s AND status NOT IN ( 'error', 'cancelled' ) LIMIT 1",
 				$table,
 				$post_id,
 				$content_hash
@@ -110,6 +110,40 @@ final class ShareRepository {
 		);
 
 		return is_array( $rows ) ? array_values( $rows ) : array();
+	}
+
+	/**
+	 * Rows of several posts in one query, grouped by post id, newest first.
+	 *
+	 * @param list<int> $post_ids Post ids.
+	 * @return array<int, list<array<string, mixed>>>
+	 */
+	public function for_posts( array $post_ids ): array {
+		global $wpdb;
+
+		$post_ids = array_values( array_filter( array_map( 'intval', $post_ids ) ) );
+		if ( array() === $post_ids ) {
+			return array();
+		}
+
+		$table = Installer::tables()['shares'];
+		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- One %d placeholder per id.
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT id, post_id, integration_id, identifier, status, error FROM %i WHERE post_id IN (' . implode( ',', array_fill( 0, count( $post_ids ), '%d' ) ) . ') ORDER BY id DESC',
+				$table,
+				...$post_ids
+			),
+			ARRAY_A
+		);
+		// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+		$grouped = array_fill_keys( $post_ids, array() );
+		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+			$grouped[ (int) $row['post_id'] ][] = $row;
+		}
+
+		return $grouped;
 	}
 
 	/**
@@ -182,6 +216,26 @@ final class ShareRepository {
 		);
 
 		return is_array( $rows ) ? array_values( $rows ) : array();
+	}
+
+	/**
+	 * Gives up on shares Postiz never reported on: queued for longer than the sync window.
+	 *
+	 * @param int $days Days after the publish date.
+	 * @return int Rows changed.
+	 */
+	public function expire_stale( int $days = 14 ): int {
+		global $wpdb;
+
+		return (int) $wpdb->query(
+			$wpdb->prepare(
+				"UPDATE %i SET status = 'error', error = %s, updated_at = %s WHERE status = 'queued' AND publish_at < %s",
+				Installer::tables()['shares'],
+				__( 'Postiz never reported this post as published. Check it in Postiz.', 'social-relay-for-postiz' ),
+				current_time( 'mysql', true ),
+				gmdate( 'Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS )
+			)
+		);
 	}
 
 	/**

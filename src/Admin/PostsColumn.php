@@ -53,6 +53,13 @@ final class PostsColumn implements Module {
 	private ?array $channels = null;
 
 	/**
+	 * Share rows of the posts on this page, by post id.
+	 *
+	 * @var array<int, list<array<string, mixed>>>|null
+	 */
+	private ?array $rows = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param Plugin $plugin Plugin.
@@ -117,8 +124,16 @@ final class PostsColumn implements Module {
 			return;
 		}
 
+		// One query for every post of the page, on the first row.
+		if ( null === $this->rows ) {
+			global $wp_query;
+			$ids        = $wp_query instanceof WP_Query ? array_map( static fn ( mixed $post ): int => (int) ( $post->ID ?? $post ), (array) $wp_query->posts ) : array();
+			$this->rows = $this->plugin->shares->for_posts( array_merge( $ids, array( $post_id ) ) );
+		}
+		$rows = $this->rows[ $post_id ] ?? $this->plugin->shares->for_post( $post_id );
+
 		$latest = array();
-		foreach ( $this->plugin->shares->for_post( $post_id ) as $row ) {
+		foreach ( $rows as $row ) {
 			$latest[ (string) $row['integration_id'] ] ??= $row; // Newest first.
 		}
 
@@ -248,8 +263,7 @@ final class PostsColumn implements Module {
 	 */
 	private function channels(): array {
 		if ( null === $this->channels ) {
-			$channels       = $this->plugin->channels->by_id();
-			$this->channels = is_wp_error( $channels ) ? array() : $channels;
+			$this->channels = $this->plugin->channels->known();
 		}
 
 		return $this->channels;
