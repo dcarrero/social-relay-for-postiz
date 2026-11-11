@@ -3,7 +3,13 @@
  */
 import apiFetch from '@wordpress/api-fetch';
 import { Notice, Spinner, TabPanel } from '@wordpress/components';
-import { createRoot, useEffect, useState } from '@wordpress/element';
+import {
+	createRoot,
+	useEffect,
+	useReducer,
+	useState,
+} from '@wordpress/element';
+import { addAction, applyFilters, removeAction } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 
 import AdvancedTab from './components/AdvancedTab';
@@ -13,6 +19,39 @@ import WebhookTab from './components/WebhookTab';
 import { config } from './config';
 import './style.css';
 
+// Add-ons (such as the Pro add-on) add tabs with this filter: a list of
+// { name, title, render( props ) }, shown before "Advanced". `props` holds settings,
+// setSettings and goTo, like the built-in tabs.
+const TABS_FILTER = 'socialrelaycvi.settingsTabs';
+
+/**
+ * Tabs added by add-ons, read again when one adds its filter after the app started.
+ *
+ * @return {Array<Object>} Extra tabs.
+ */
+function useExtraTabs() {
+	const [ version, bump ] = useReducer( ( value ) => value + 1, 0 );
+
+	useEffect( () => {
+		addAction( 'hookAdded', 'socialrelaycvi/settings', ( name ) => {
+			if ( name === TABS_FILTER ) {
+				bump();
+			}
+		} );
+		return () => removeAction( 'hookAdded', 'socialrelaycvi/settings' );
+	}, [] );
+
+	const tabs = applyFilters( TABS_FILTER, [], version );
+	return Array.isArray( tabs )
+		? tabs.filter(
+				( tab ) =>
+					tab &&
+					typeof tab.name === 'string' &&
+					typeof tab.render === 'function'
+		  )
+		: [];
+}
+
 function SettingsApp() {
 	const [ settings, setSettings ] = useState( null );
 	const [ error, setError ] = useState( '' );
@@ -21,6 +60,7 @@ function SettingsApp() {
 	const [ dirty, setDirty ] = useState( false );
 	// The tab panel is remounted to switch tabs from inside a tab (e.g. "Next: …").
 	const [ tab, setTab ] = useState( { name: '', key: 0 } );
+	const extraTabs = useExtraTabs();
 
 	// Ask before leaving the page with unsaved profiles.
 	useEffect( () => {
@@ -65,6 +105,10 @@ function SettingsApp() {
 				( dirty ? ' *' : '' ),
 		},
 		{ name: 'webhook', title: __( 'Webhook', 'social-relay-for-postiz' ) },
+		...extraTabs.map( ( extra ) => ( {
+			name: extra.name,
+			title: extra.title,
+		} ) ),
 		{
 			name: 'advanced',
 			title: __( 'Advanced', 'social-relay-for-postiz' ),
@@ -101,6 +145,12 @@ function SettingsApp() {
 					}
 					if ( current.name === 'advanced' ) {
 						return <AdvancedTab { ...props } />;
+					}
+					const extra = extraTabs.find(
+						( item ) => item.name === current.name
+					);
+					if ( extra ) {
+						return extra.render( props );
 					}
 					return (
 						<ProfilesTab

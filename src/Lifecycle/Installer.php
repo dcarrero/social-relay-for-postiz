@@ -16,7 +16,7 @@ use SocialRelayCvi\Queue\Queue;
  */
 final class Installer {
 
-	public const DB_VERSION        = 2;
+	public const DB_VERSION        = 3;
 	public const OPTION_DB_VERSION = 'socialrelaycvi_db_version';
 
 	/**
@@ -82,6 +82,7 @@ final class Installer {
 				release_url text NULL,
 				error text NULL,
 				content_hash char(40) NOT NULL DEFAULT '',
+				source varchar(20) NOT NULL DEFAULT '',
 				created_at datetime NOT NULL,
 				updated_at datetime NOT NULL,
 				PRIMARY KEY  (id),

@@ -15,6 +15,7 @@ use SocialRelayCvi\PostMeta;
 use SocialRelayCvi\Postiz\Gateway;
 use SocialRelayCvi\Postiz\ProviderRules;
 use SocialRelayCvi\Postiz\RequestCounter;
+use SocialRelayCvi\Profiles\ProfileRepository;
 use SocialRelayCvi\Queue\Queue;
 use SocialRelayCvi\Templates\PostContext;
 use SocialRelayCvi\Templates\TemplateEngine;
@@ -53,7 +54,7 @@ final class ShareService implements Module {
 	 * {@inheritDoc}
 	 */
 	public function register(): void {
-		add_action( Queue::HOOK_SHARE, array( $this, 'handle' ), 10, 2 );
+		add_action( Queue::HOOK_SHARE, array( $this, 'handle' ), 10, 3 );
 		add_action( Queue::HOOK_CANCEL, array( $this, 'cancel' ) );
 	}
 
@@ -65,13 +66,28 @@ final class ShareService implements Module {
 	private bool $retry_queued = false;
 
 	/**
+	 * Source of the share being run: empty for the normal share, or an add-on's source.
+	 *
+	 * @var string
+	 */
+	private string $source = '';
+
+	/**
 	 * Job handler. Any unexpected error is recorded on the post's channels, never lost.
 	 *
-	 * @param int $post_id Post id.
-	 * @param int $attempt Attempt number.
+	 * A share with a source (for example "evergreen" from the Pro add-on) is a separate,
+	 * add-on driven share of an already published post: it ignores the post's own
+	 * settings from the editor (on/off, text, channels, images, timing, "Retry"), never
+	 * counts as a duplicate of an earlier share, and the add-on shapes it with the
+	 * `socialrelaycvi_share_profile` filter. The rows it creates carry the source.
+	 *
+	 * @param int    $post_id Post id.
+	 * @param int    $attempt Attempt number.
+	 * @param string $source  Source, empty for the normal share.
 	 */
-	public function handle( int $post_id, int $attempt = 1 ): void {
+	public function handle( int $post_id, int $attempt = 1, string $source = '' ): void {
 		$this->retry_queued = false;
+		$this->source       = sanitize_key( $source );
 
 		try {
 			$this->run_share( $post_id, $attempt );
@@ -80,7 +96,8 @@ final class ShareService implements Module {
 		}
 
 		// Whatever ended this attempt for good, a stale "Retry" or "share again" must not narrow or force a later share.
-		if ( ! $this->retry_queued ) {
+		// A share with a source never used them, so it leaves them for the next normal share.
+		if ( ! $this->retry_queued && '' === $this->source ) {
 			$this->finish( $post_id );
 		}
 	}
@@ -98,8 +115,9 @@ final class ShareService implements Module {
 			return;
 		}
 
-		$profile = $this->plugin->profiles->for_post_type( $post->post_type );
-		if ( ! $profile['enabled'] || ! get_post_meta( $post_id, PostMeta::ENABLED, true ) ) {
+		$own     = '' === $this->source;
+		$profile = $this->share_profile( $post );
+		if ( ! $profile['enabled'] || ( $own && ! get_post_meta( $post_id, PostMeta::ENABLED, true ) ) ) {
 			return;
 		}
 
@@ -122,17 +140,17 @@ final class ShareService implements Module {
 			return;
 		}
 
-		$timing          = $this->timing( $post, $profile );
+		$timing          = $own ? $this->timing( $post, $profile ) : $this->profile_timing( $profile );
 		$profile['mode'] = $timing['mode'];
 
-		$prepared = $this->prepare( $post, $profile, $channels );
+		$prepared = $this->prepare( $post, $profile, $channels, $own );
 		foreach ( $prepared['skipped'] as $skip ) {
 			$log->error( 'share', $skip['reason'], $post_id, $skip['integration_id'] );
 		}
 		$items = $prepared['items'];
 
 		// "Retry" from the editor: only the channels that failed, once.
-		$only = get_post_meta( $post_id, PostMeta::ONLY, true );
+		$only = $own ? get_post_meta( $post_id, PostMeta::ONLY, true ) : array();
 		if ( is_array( $only ) && array() !== $only ) {
 			$items = array_values( array_filter( $items, static fn ( array $item ): bool => in_array( $item['integration_id'], $only, true ) ) );
 			update_post_meta( $post_id, PostMeta::RESHARE, true );
@@ -143,8 +161,8 @@ final class ShareService implements Module {
 			return;
 		}
 
-		$image_ids = $this->image_ids( $post, $profile );
-		$reshare   = (bool) get_post_meta( $post_id, PostMeta::RESHARE, true );
+		$image_ids = $this->image_ids( $post, $profile, $own );
+		$reshare   = ! $own || (bool) get_post_meta( $post_id, PostMeta::RESHARE, true );
 		$hash      = sha1( (string) wp_json_encode( array( $items, $profile['mode'], $image_ids ) ) );
 
 		if ( ! $reshare && $this->plugin->shares->was_sent( $post_id, $hash ) ) {
@@ -156,7 +174,7 @@ final class ShareService implements Module {
 		// The counter tracks post creations: one request, or one per channel in slot mode.
 		$needed = 'slot' === $profile['mode'] ? count( $items ) : 1;
 		if ( RequestCounter::count() + $needed > RequestCounter::LIMIT ) {
-			$this->plugin->queue->enqueue_share( $post_id, 10 * MINUTE_IN_SECONDS, $attempt );
+			$this->plugin->queue->enqueue_share( $post_id, 10 * MINUTE_IN_SECONDS, $attempt, $this->source );
 			$this->retry_queued = true;
 			$log->info( 'share', __( 'The hourly limit of the Postiz API is almost used up; sending in 10 minutes.', 'social-relay-for-postiz' ), $post_id );
 			return;
@@ -243,6 +261,51 @@ final class ShareService implements Module {
 		}
 
 		return $items;
+	}
+
+	/**
+	 * Profile for the share being run, after add-ons had their say.
+	 *
+	 * @param WP_Post $post Post.
+	 * @return array<string, mixed>
+	 */
+	private function share_profile( WP_Post $post ): array {
+		$profile = $this->plugin->profiles->for_post_type( $post->post_type );
+
+		/**
+		 * Filters the publishing profile used for one share.
+		 *
+		 * An add-on that queues shares with a source (Queue::enqueue_share()) shapes them here:
+		 * channels, templates, mode, images. Return the profile unchanged for other sources.
+		 * A changed profile goes through the same sanitising as a saved one.
+		 *
+		 * @param array<string, mixed> $profile Profile (see ProfileRepository).
+		 * @param WP_Post              $post    Post.
+		 * @param string               $source  Source of the share, empty for the normal share.
+		 */
+		$filtered = apply_filters( 'socialrelaycvi_share_profile', $profile, $post, $this->source );
+		if ( ! is_array( $filtered ) || $filtered === $profile ) {
+			return $profile;
+		}
+
+		$identifiers = array_map( static fn ( array $channel ): string => (string) ( $channel['identifier'] ?? '' ), $this->plugin->channels->known() );
+
+		return ProfileRepository::sanitize( $filtered, $identifiers );
+	}
+
+	/**
+	 * Timing from the profile alone, for a share with a source.
+	 *
+	 * @param array<string, mixed> $profile Profile.
+	 * @return array{mode: string, at: int}
+	 */
+	private function profile_timing( array $profile ): array {
+		$mode = (string) $profile['mode'];
+
+		return array(
+			'mode' => $mode,
+			'at'   => 'schedule' === $mode ? time() + (int) $profile['delay_minutes'] * MINUTE_IN_SECONDS : time(),
+		);
 	}
 
 	/**
@@ -352,19 +415,21 @@ final class ShareService implements Module {
 	 * @param WP_Post                             $post     Post.
 	 * @param array<string, mixed>                $profile  Profile (see ProfileRepository).
 	 * @param array<string, array<string, mixed>> $channels Channels by id.
+	 * @param bool                                $own      Whether the post's own text and channels from the editor apply
+	 *                                                      (false for a share with a source: the profile alone decides).
 	 * @return array{items: list<array{integration_id: string, identifier: string, parts: list<string>, settings: array<string, mixed>}>, skipped: list<array{integration_id: string, code: string, reason: string}>}
 	 */
-	public function prepare( WP_Post $post, array $profile, array $channels ): array {
+	public function prepare( WP_Post $post, array $profile, array $channels, bool $own = true ): array {
 		$context   = PostContext::for_post( $post );
-		$post_text = (string) get_post_meta( $post->ID, PostMeta::MESSAGE, true );
-		$overrides = get_post_meta( $post->ID, PostMeta::OVERRIDES, true );
+		$post_text = $own ? (string) get_post_meta( $post->ID, PostMeta::MESSAGE, true ) : '';
+		$overrides = $own ? get_post_meta( $post->ID, PostMeta::OVERRIDES, true ) : array();
 		$overrides = is_array( $overrides ) ? $overrides : array();
 
 		$items   = array();
 		$skipped = array();
 
 		// Channels picked in the editor for this post replace the profile's list.
-		$chosen = get_post_meta( $post->ID, PostMeta::CHANNELS, true );
+		$chosen = $own ? get_post_meta( $post->ID, PostMeta::CHANNELS, true ) : array();
 		$chosen = is_array( $chosen ) ? array_map( 'strval', $chosen ) : array();
 		// Channels outside the profile only count when someone who manages the site chose them.
 		if ( array() !== $chosen && ! get_post_meta( $post->ID, PostMeta::CHANNELS_BY_ADMIN, true ) ) {
@@ -595,6 +660,7 @@ final class ShareService implements Module {
 					'error'          => isset( $postiz_ids[ $item['integration_id'] ] ) ? '' : __( 'Postiz accepted the request but did not return the post; check it in Postiz.', 'social-relay-for-postiz' ),
 					'publish_at'     => gmdate( 'Y-m-d H:i:s', $when ),
 					'content_hash'   => $hash,
+					'source'         => $this->source,
 				)
 			);
 		}
@@ -630,8 +696,9 @@ final class ShareService implements Module {
 		 * @param int                   $post_id    Post id.
 		 * @param string                $batch      Group id sent to Postiz.
 		 * @param array<string, string> $postiz_ids Postiz post id per channel id.
+		 * @param string                $source     Source of the share, empty for the normal share.
 		 */
-		do_action( 'socialrelaycvi_shared', $post->ID, $batch, $postiz_ids );
+		do_action( 'socialrelaycvi_shared', $post->ID, $batch, $postiz_ids, $this->source );
 	}
 
 	/**
@@ -670,7 +737,7 @@ final class ShareService implements Module {
 					2 => 15,
 				)[ $attempt ] * MINUTE_IN_SECONDS
 			);
-			$this->plugin->queue->enqueue_share( $post_id, $delay, $attempt + 1 );
+			$this->plugin->queue->enqueue_share( $post_id, $delay, $attempt + 1, $this->source );
 			$this->retry_queued = true;
 
 			$this->plugin->logger->error(
@@ -711,6 +778,7 @@ final class ShareService implements Module {
 					'publish_at'     => gmdate( 'Y-m-d H:i:s', $when ),
 					'content_hash'   => $hash,
 					'error'          => $error->get_error_message(),
+					'source'         => $this->source,
 				)
 			);
 
@@ -818,10 +886,11 @@ final class ShareService implements Module {
 	 *
 	 * @param WP_Post              $post    Post.
 	 * @param array<string, mixed> $profile Profile (see ProfileRepository).
+	 * @param bool                 $own     Whether the images picked in the editor apply (false for a share with a source).
 	 * @return list<int> At most 10 image attachments.
 	 */
-	public function image_ids( WP_Post $post, array $profile ): array {
-		$chosen = PostMeta::sanitize_images( get_post_meta( $post->ID, PostMeta::IMAGES, true ) );
+	public function image_ids( WP_Post $post, array $profile, bool $own = true ): array {
+		$chosen = $own ? PostMeta::sanitize_images( get_post_meta( $post->ID, PostMeta::IMAGES, true ) ) : array();
 
 		if ( array( PostMeta::NO_IMAGES ) === $chosen ) {
 			$ids = array();

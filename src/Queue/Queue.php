@@ -76,12 +76,16 @@ final class Queue implements Module {
 	/**
 	 * Queues a share job for a post.
 	 *
-	 * @param int $post_id Post id.
-	 * @param int $delay   Seconds to wait before running.
-	 * @param int $attempt Attempt number, starting at 1.
+	 * @param int    $post_id Post id.
+	 * @param int    $delay   Seconds to wait before running.
+	 * @param int    $attempt Attempt number, starting at 1.
+	 * @param string $source  Who asked for it: empty for the normal share, or an add-on's
+	 *                        source such as "evergreen" (see ShareService::handle()).
 	 */
-	public function enqueue_share( int $post_id, int $delay = 10, int $attempt = 1 ): void {
-		$args = array( $post_id, $attempt );
+	public function enqueue_share( int $post_id, int $delay = 10, int $attempt = 1, string $source = '' ): void {
+		$source = sanitize_key( $source );
+		// Normal shares keep the two-argument form, so jobs queued by older versions still match.
+		$args = '' === $source ? array( $post_id, $attempt ) : array( $post_id, $attempt, $source );
 
 		if ( function_exists( 'as_schedule_single_action' ) && function_exists( 'as_has_scheduled_action' ) ) {
 			// Not using the $unique flag: Action Scheduler compares only hook and group, so it

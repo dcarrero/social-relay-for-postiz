@@ -67,6 +67,18 @@ final class SettingsPage implements Module {
 				'docsUrl'   => 'https://docs.postiz.com/public-api/introduction',
 			)
 		);
+
+		if ( $this->loaded ) {
+			/**
+			 * Fires after the settings screen enqueued its app, for add-ons that add tabs.
+			 *
+			 * Enqueue the add-on script with `socialrelaycvi-settings` as a dependency and add
+			 * its tabs with the `socialrelaycvi.settingsTabs` JavaScript filter.
+			 *
+			 * @param string $handle Script handle of the settings app.
+			 */
+			do_action( 'socialrelaycvi_settings_enqueue', 'socialrelaycvi-settings' );
+		}
 	}
 
 	/**

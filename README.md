@@ -73,7 +73,7 @@ add_filter( 'socialrelaycvi_modules', function ( array $modules, \SocialRelayCvi
 }, 10, 2 );
 ```
 
-Other hooks: `socialrelaycvi_gateway`, `socialrelaycvi_status_changed`, `socialrelaycvi_cancel_on_unpublish`, `socialrelaycvi_template_context`, `socialrelaycvi_payload`, `socialrelaycvi_should_share`, `socialrelaycvi_shared`, `socialrelaycvi_post_types`, `socialrelaycvi_allow_local_instance`, `socialrelaycvi_log_retention_days`.
+Other hooks: `socialrelaycvi_gateway`, `socialrelaycvi_status_changed`, `socialrelaycvi_cancel_on_unpublish`, `socialrelaycvi_template_context`, `socialrelaycvi_payload`, `socialrelaycvi_should_share`, `socialrelaycvi_shared` (post id, batch, Postiz ids, source), `socialrelaycvi_share_profile`, `socialrelaycvi_settings_enqueue` (and the `socialrelaycvi.settingsTabs` JavaScript filter), `socialrelaycvi_post_types`, `socialrelaycvi_allow_local_instance`, `socialrelaycvi_log_retention_days`.
 
 ## Releases
 

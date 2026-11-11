@@ -41,10 +41,11 @@ final class ShareRepository {
 				'publish_at'     => $row['publish_at'],
 				'content_hash'   => $row['content_hash'],
 				'error'          => $row['error'] ?? null,
+				'source'         => sanitize_key( (string) ( $row['source'] ?? '' ) ),
 				'created_at'     => $now,
 				'updated_at'     => $now,
 			),
-			array( '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
+			array( '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
 		);
 
 		return (int) $wpdb->insert_id;

@@ -4,6 +4,13 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 
 ## [Unreleased]
 
+### Added
+- Extension points for add-ons (used by the Pro add-on):
+  - Shares with a source: `Queue::enqueue_share( $post_id, $delay, $attempt, $source )` queues a share of a published post on behalf of an add-on (for example `evergreen`). It ignores the post's own editor settings (on/off, text, channels, images, timing, "Retry"), never counts as a duplicate of an earlier share, keeps the source through retries, and stores it in the new `source` column of the shares table (database version 3).
+  - Filter `socialrelaycvi_share_profile( $profile, $post, $source )`: the profile used for one share. A changed profile is sanitised like a saved one.
+  - The `socialrelaycvi_shared` action gets the source as a fourth argument.
+  - Settings tabs: action `socialrelaycvi_settings_enqueue` (to enqueue an add-on script after the settings app) and JavaScript filter `socialrelaycvi.settingsTabs` (a list of `{ name, title, render( props ) }`, shown before "Advanced").
+
 ## [1.0.0] - 2026-11-11
 
 First public release: the changes below, on top of the development versions 0.1.0 to 0.3.1.
