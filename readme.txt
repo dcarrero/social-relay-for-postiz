@@ -4,7 +4,7 @@ Tags: postiz, social media, auto post, schedule, self-hosted
 Requires at least: 7.0
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 0.3.1
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -148,18 +148,12 @@ The editor panel and the admin screens are built from the JavaScript sources in 
 
 == Changelog ==
 
-= 0.3.1 =
-* Editor panel rebuilt with JSX and @wordpress/scripts.
-* {slug} works for drafts; long URLs wrap in the preview.
-
-= 0.3.0 =
-* Block editor panel, pre-publish summary and classic editor metabox.
-* Status sync with Postiz and webhook receiver.
-* Dashboard widget.
-
-= 0.2.0 =
-* Per-network templates and settings, term conditions, UTM parameters, Postiz shortener and tags.
-* Cancels pending Postiz posts when a post is unpublished.
-
-= 0.1.0 =
-* First development version.
+= 1.0.0 =
+* First public release.
+* Publishing profiles per post type: channels, templates per network, conditions by category and tag, timing (now, a delay, a date, the next free slot or a Postiz draft), UTM parameters, Postiz shortener and tags. Export and import as JSON.
+* Block editor panel with one tab per channel, preview drawn like each network, images, timing, pre-publish summary, "Share again", "Retry" and "Cancel pending"; classic editor metabox.
+* Optional "Suggest with AI" through the WordPress 7 AI Client.
+* Status sync with Postiz every 15 minutes and through the Postiz webhook, with its own tab (status, guide, URL check, last calls).
+* "Social networks" column in the posts list, failure alerts (dashboard and optional email), activity log, dashboard widget.
+* WP-CLI commands and Abilities API for AI agents.
+* Spanish (es_ES) translation.

@@ -4,6 +4,10 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-11
+
+First public release: the changes below, on top of the development versions 0.1.0 to 0.3.1.
+
 ### Added
 - Webhook tab: status of the Postiz webhook (last call, never received, or no calls for days), a step-by-step guide to set it up in Postiz, a "Check URL" button that calls the webhook from the site itself and explains a 404 (REST API off) or 401/403 (security plugin, Cloudflare, firewall), a warning when the site address is not reachable from the internet (localhost, .test, private IPs), and the last 20 calls with the shares each one named, their current status and the published link. The list refreshes every 10 seconds while the tab is open. The Connection tab says whether statuses update at once or every 15 minutes. Admin REST routes `GET socialrelaycvi/v1/admin/webhook` and `POST …/admin/webhook/check`.
 - The webhook call is read as a hint: each call queues its own status sync, right away, for the shares whose Postiz ids it names (a narrower request to Postiz; the 15-minute sync is untouched, and a failed request falls back to a full sync). Statuses still come only from the Postiz API, since webhooks are not signed. Calls carrying the "Check URL" header are never counted as Postiz calls. The Webhook tab refreshes its list only while the window is visible and for 15 minutes.
@@ -155,7 +159,8 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - Shares and log tables, settings and log screens, `socialrelaycvi/v1` status and channels routes.
 - Module registry (`socialrelaycvi_modules` filter) for the Pro add-on.
 
-[Unreleased]: https://github.com/dcarrero/social-relay-for-postiz/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/dcarrero/social-relay-for-postiz/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/dcarrero/social-relay-for-postiz/compare/v0.3.1...v1.0.0
 [0.3.1]: https://github.com/dcarrero/social-relay-for-postiz/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/dcarrero/social-relay-for-postiz/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/dcarrero/social-relay-for-postiz/compare/v0.1.0...v0.2.0

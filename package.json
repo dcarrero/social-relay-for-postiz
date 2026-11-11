@@ -1,6 +1,6 @@
 {
 	"name": "social-relay-for-postiz",
-	"version": "0.3.1",
+	"version": "1.0.0",
 	"private": true,
 	"description": "Build tooling for the Social Relay for Postiz editor panel.",
 	"license": "GPL-2.0-or-later",

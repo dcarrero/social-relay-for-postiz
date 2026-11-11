@@ -3,7 +3,7 @@
 WordPress plugin that auto-publishes and schedules your content on social networks through **your own Postiz instance** (self-hosted or Postiz Cloud). WordPress talks directly to the Postiz public API: no middleman service.
 
 - Requires WordPress 7.0+ and PHP 8.2+.
-- Status: early development, version 0.3.1 (see [CHANGELOG.md](CHANGELOG.md)).
+- Status: version 1.0.0 (see [CHANGELOG.md](CHANGELOG.md)).
 
 ## Features
 
