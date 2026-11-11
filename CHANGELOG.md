@@ -9,6 +9,9 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
   - Shares with a source: `Queue::enqueue_share( $post_id, $delay, $attempt, $source )` queues a share of a published post on behalf of an add-on (for example `evergreen`). It ignores the post's own editor settings (on/off, text, channels, images, timing, "Retry"), never counts as a duplicate of an earlier share, keeps the source through retries, and stores it in the new `source` column of the shares table (database version 3).
   - Filter `socialrelaycvi_share_profile( $profile, $post, $source )`: the profile used for one share. A changed profile is sanitised like a saved one.
   - The `socialrelaycvi_shared` action gets the source as a fourth argument.
+  - Filter `socialrelaycvi_profile_sanitize( $clean, $raw, $identifiers )`: an add-on keeps its own (cleaned) keys in a profile, so they are saved, exported and imported with it.
+  - Filter `socialrelaycvi_share_conditions( $passes, $post, $profile, $source )`: add-on rules on top of the category and tag conditions, for shares and for the editor preview.
+  - JavaScript filters in the profile editor: `socialrelaycvi.profileSections` (extra cards, as `{ key, render() }`, before "Links and tags") and `socialrelaycvi.channelTemplateExtra` (controls under each channel template). The settings app renders again when an add-on adds any `socialrelaycvi.*` hook.
   - The settings screen opens the tab named in `?tab=` (built-in or added by an add-on).
   - Settings tabs: action `socialrelaycvi_settings_enqueue` (to enqueue an add-on script after the settings app) and JavaScript filter `socialrelaycvi.settingsTabs` (a list of `{ name, title, render( props ) }`, shown before "Advanced").
 

@@ -123,7 +123,7 @@ final class ShareService implements Module {
 
 		$log = $this->plugin->logger;
 
-		if ( ! $this->passes_conditions( $post, $profile['include_terms'], $profile['exclude_terms'] ) ) {
+		if ( ! $this->matches( $post, $profile ) ) {
 			$log->info( 'share', __( 'The post does not match the profile conditions; not shared.', 'social-relay-for-postiz' ), $post_id );
 			return;
 		}
@@ -531,7 +531,7 @@ final class ShareService implements Module {
 
 		return array(
 			'enabled'           => $profile['enabled'] && (bool) get_post_meta( $post->ID, PostMeta::ENABLED, true ),
-			'passes_conditions' => $this->passes_conditions( $post, $profile['include_terms'], $profile['exclude_terms'] ),
+			'passes_conditions' => $this->matches( $post, $profile ),
 			'mode'              => $timing['mode'],
 			'publish_at'        => 'schedule' === $timing['mode'] ? gmdate( 'c', $timing['at'] ) : null,
 			'short_link'        => $profile['short_link'],
@@ -812,11 +812,34 @@ final class ShareService implements Module {
 	}
 
 	/**
-	 * Whether the post passes the include/exclude term rules.
+	 * Whether the post matches the conditions of the profile (terms, plus add-on rules).
 	 *
-	 * @param WP_Post   $post    Post.
-	 * @param list<int> $required  Required term ids (any).
-	 * @param list<int> $forbidden Forbidden term ids.
+	 * @param WP_Post              $post    Post.
+	 * @param array<string, mixed> $profile Profile.
+	 */
+	private function matches( WP_Post $post, array $profile ): bool {
+		$passes = $this->passes_conditions( $post, (array) $profile['include_terms'], (array) $profile['exclude_terms'] );
+
+		/**
+		 * Filters whether a post matches the conditions of its profile.
+		 *
+		 * The default is the category and tag conditions; an add-on adds its own rules
+		 * (author, custom fields, other taxonomies…). Also used by the editor preview.
+		 *
+		 * @param bool                 $passes  Default decision.
+		 * @param WP_Post              $post    Post.
+		 * @param array<string, mixed> $profile Profile used for this share.
+		 * @param string               $source  Source of the share, empty for the normal share.
+		 */
+		return (bool) apply_filters( 'socialrelaycvi_share_conditions', $passes, $post, $profile, $this->source );
+	}
+
+	/**
+	 * Category and tag conditions.
+	 *
+	 * @param WP_Post   $post      Post.
+	 * @param list<int> $required  Term ids, at least one needed (none = any).
+	 * @param list<int> $forbidden Term ids, none allowed.
 	 */
 	private function passes_conditions( WP_Post $post, array $required, array $forbidden ): bool {
 		if ( array() === $required && array() === $forbidden ) {

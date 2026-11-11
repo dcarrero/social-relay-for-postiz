@@ -38,7 +38,8 @@ function useExtraTabs() {
 
 	useEffect( () => {
 		addAction( 'hookAdded', 'socialrelaycvi/settings', ( name ) => {
-			if ( name === TABS_FILTER ) {
+			// Tabs, profile sections and the rest of the add-on hooks render again.
+			if ( name.startsWith( 'socialrelaycvi.' ) ) {
 				bump();
 			}
 		} );

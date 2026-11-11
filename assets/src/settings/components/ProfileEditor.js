@@ -9,6 +9,8 @@ import {
 	TextControl,
 	ToggleControl,
 } from '@wordpress/components';
+import { Fragment } from '@wordpress/element';
+import { applyFilters } from '@wordpress/hooks';
 import { __, _n, sprintf } from '@wordpress/i18n';
 
 import { ChannelLabel } from '../../common/ChannelAvatar';
@@ -275,6 +277,17 @@ export default function ProfileEditor( {
 					</CardBody>
 				</Card>
 			) }
+
+			{ /* Add-ons (Pro) add whole cards here: advanced conditions… */ }
+			{ applyFilters( 'socialrelaycvi.profileSections', [], {
+				postType,
+				info,
+				profile,
+				settings,
+				update,
+			} ).map( ( section ) => (
+				<Fragment key={ section.key }>{ section.render() }</Fragment>
+			) ) }
 
 			<Card>
 				<CardHeader>

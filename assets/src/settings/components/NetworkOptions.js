@@ -4,6 +4,7 @@ import {
 	SelectControl,
 	TextControl,
 } from '@wordpress/components';
+import { applyFilters } from '@wordpress/hooks';
 import { __, sprintf } from '@wordpress/i18n';
 
 import { network } from '../../common/networks';
@@ -68,6 +69,14 @@ export default function NetworkOptions( {
 					onChange( { ...options, template } )
 				}
 			/>
+
+			{ /* Add-ons (Pro) add controls under the channel template: rotation… */ }
+			{ applyFilters( 'socialrelaycvi.channelTemplateExtra', null, {
+				channel,
+				options,
+				limit,
+				onChange,
+			} ) }
 
 			{ Object.entries( fields || {} ).map( ( [ key, field ] ) => {
 				if ( field.type === 'bool' ) {

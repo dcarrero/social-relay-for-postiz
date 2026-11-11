@@ -146,7 +146,7 @@ final class ProfileRepository {
 			}
 		}
 
-		return array(
+		$clean = array(
 			'enabled'         => ! empty( $raw['enabled'] ),
 			'channels'        => $channels,
 			'template'        => isset( $raw['template'] ) ? sanitize_textarea_field( (string) $raw['template'] ) : $defaults['template'],
@@ -162,6 +162,25 @@ final class ProfileRepository {
 			'short_link'      => ! empty( $raw['short_link'] ),
 			'postiz_tags'     => ! empty( $raw['postiz_tags'] ),
 		);
+
+		if ( ! function_exists( 'apply_filters' ) ) {
+			return $clean;
+		}
+
+		/**
+		 * Filters a sanitized profile, so an add-on can keep its own keys in it.
+		 *
+		 * The profile is stored, exported and imported with whatever this returns: an
+		 * add-on reads its keys from $raw, cleans them and adds them to $clean (prefixed,
+		 * e.g. `pro_rules`). Never return keys from $raw without cleaning them.
+		 *
+		 * @param array<string, mixed>  $clean       Sanitized profile.
+		 * @param array<string, mixed>  $raw         Raw profile (REST, import or stored option).
+		 * @param array<string, string> $identifiers Channel id => provider identifier, when known.
+		 */
+		$filtered = apply_filters( 'socialrelaycvi_profile_sanitize', $clean, $raw, $identifiers );
+
+		return is_array( $filtered ) ? $filtered + $clean : $clean;
 	}
 
 	/**
