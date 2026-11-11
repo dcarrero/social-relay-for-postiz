@@ -31,6 +31,7 @@ All notable changes to Social Relay for Postiz. The format follows [Keep a Chang
 - Release workflow: on a `v*` tag, builds the zip, attaches it to a GitHub release and deploys to wordpress.org SVN once the `SVN_USERNAME`/`SVN_PASSWORD` secrets exist.
 
 ### Fixed
+- `bin/build-release.sh` failed to write the zip when given a relative output directory (as the release workflow does): the path is now resolved before the script changes directory.
 - Stability review:
   - When Postiz is down, admin screens no longer wait for it on every page: a failed channel request is remembered for 3 minutes and answered once per request, and screens that only show names (failure notice, posts list, dashboard widget, log) use the cached or last good list and never call Postiz.
   - Imports (`WP_IMPORTING`) and posts created already published with a date older than a day are not shared (the `socialrelaycvi_should_share` filter can change it).

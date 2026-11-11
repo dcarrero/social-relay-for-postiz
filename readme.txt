@@ -131,7 +131,7 @@ In the editor panel of each post, in Social Relay → Log, and in the dashboard 
 
 This plugin sends data to the Postiz instance whose URL you configure: your own server, or Postiz Cloud (api.postiz.com) if you choose it. It is needed to publish your posts on the social networks you connected in Postiz.
 
-When a post is shared, the plugin sends the generated message, the post URL, the featured image URL and the selected channel ids. It also reads the list of channels and the status of the posts it created. Nothing is sent until you configure the connection and enable a publishing profile.
+When a post is shared, the plugin sends the generated message, the post URL, the URLs of the chosen images (Postiz downloads them from your site) and the selected channel ids. It also reads the list of channels and the status of the posts it created. If you add the webhook in Postiz, Postiz calls your site when a post goes out, with that post's id, status and public link. Nothing is sent until you configure the connection and enable a publishing profile.
 
 Postiz Cloud terms of service: https://postiz.com/terms
 Postiz Cloud privacy policy: https://postiz.com/privacy
