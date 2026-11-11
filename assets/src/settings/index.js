@@ -24,6 +24,10 @@ import './style.css';
 // setSettings and goTo, like the built-in tabs.
 const TABS_FILTER = 'socialrelaycvi.settingsTabs';
 
+// ?tab=webhook (or an add-on tab) opens that tab, e.g. after an add-on reloads the page.
+const URL_TAB =
+	new URLSearchParams( window.location.search ).get( 'tab' ) || '';
+
 /**
  * Tabs added by add-ons, read again when one adds its filter after the app started.
  *
@@ -125,6 +129,9 @@ function SettingsApp() {
 				tabs={ tabs }
 				initialTabName={
 					tab.name ||
+					( tabs.some( ( item ) => item.name === URL_TAB )
+						? URL_TAB
+						: '' ) ||
 					( settings.connection.configured
 						? 'profiles'
 						: 'connection' )
